@@ -1,9 +1,9 @@
 #include "mainWindow.h"
-#include "teachingMainWindow.h"
-#include <QStatusBar>
 #include <QScrollArea>
-MainWindow::MainWindow(TeachingMainWindow *teachingWindow, ExperimentType expType, QWidget* parent)
-    :m_teachingWindow(teachingWindow)
+#include <QStatusBar>
+#include "teachingMainWindow.h"
+MainWindow::MainWindow(TeachingMainWindow *teachingWindow, ExperimentType expType, QWidget *parent)
+    : m_teachingWindow(teachingWindow)
 {
     initUI();
 }
@@ -31,7 +31,7 @@ void MainWindow::initUI()
     bodyLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop); // 👈 关键！
 
     // 按顺序添加：左 -> 中 -> 右
-    bodyLayout->addWidget(m_leftSidebarContainer);    // 固定宽度
+    bodyLayout->addWidget(m_leftSidebarContainer); // 固定宽度
     bodyLayout->addWidget(m_centerStack);
     bodyLayout->addWidget(m_rightPanelContainer);
     //bodyLayout->addWidget(m_rightPanelContainer);  // 固定宽度
@@ -40,20 +40,20 @@ void MainWindow::initUI()
     // 5. 将 Header 和 Body 加入主布局
     //m_rootLayout->addWidget(m_leftSidebarContainer);
     m_rootLayout->addWidget(bodyContainer);
-    resize(1920,1033);
+    resize(1920, 1033);
 }
 
 void MainWindow::setupWindowBase()
 {
     //获取CentralWidget(父类构造函数中通常已经setCentralWidget了),如果父类没做，就自己new一个
-    QWidget* mainContainer = this->centralWidget;
-    if (!mainContainer)
-    {
+    QWidget *mainContainer = this->centralWidget;
+    if (!mainContainer) {
         mainContainer = new QWidget(this);
         setCentralWidget(mainContainer);
     }
     mainContainer->setObjectName("mainContainer");
-    mainContainer->setStyleSheet("#mainContainer { background-image: none; background-color: #E9EEF8; }");
+    mainContainer->setStyleSheet(
+        "#mainContainer { background-image: none; background-color: #E9EEF8; }");
     m_rootContainer = mainContainer;
 
     //核心布局：顶层垂直布局
@@ -63,8 +63,7 @@ void MainWindow::setupWindowBase()
     m_rootLayout = mainLayout;
 
     // 添加标题栏 (复用父类的成果)
-    if (this->titleBar)
-    {
+    if (this->titleBar) {
         mainLayout->addWidget(this->titleBar);
         setupWindowStyle(); //设置样式表
     }
@@ -89,22 +88,22 @@ void MainWindow::setupLeftSidebar()
 {
     m_leftSidebarContainer = new QWidget(this);
     //m_leftSidebarContainer->setFixedWidth(280);  //设置固定宽度
-    m_leftSidebarContainer->setFixedSize(280,963);
+    m_leftSidebarContainer->setFixedSize(280, 963);
     m_leftSidebarContainer->setObjectName("leftSidebarContainer");
     m_leftSidebarContainer->setStyleSheet("background-color:blue;");
 
     //为外层容器设置布局
-    QVBoxLayout* leftSidebarLayout = new QVBoxLayout(m_leftSidebarContainer);
+    QVBoxLayout *leftSidebarLayout = new QVBoxLayout(m_leftSidebarContainer);
     leftSidebarLayout->setContentsMargins(0, 0, 0, 0);
     leftSidebarLayout->setSpacing(0);
 
     // 创建 QScrollArea
     QScrollArea *scrollArea = new QScrollArea(m_leftSidebarContainer);
     //scrollArea->setFixedWidth(270);  // 固定宽度270px
-    scrollArea->setWidgetResizable(true); //内部部件随滚动区缩放
-    scrollArea->setFrameShape(QFrame::NoFrame); // 无边框
+    scrollArea->setWidgetResizable(true);                             //内部部件随滚动区缩放
+    scrollArea->setFrameShape(QFrame::NoFrame);                       // 无边框
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 屏蔽横向滚动条
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);  // 禁用纵向滚动条，避免展开时闪烁
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 禁用纵向滚动条，避免展开时闪烁
     //scrollArea->setStyleSheet("background-color:yellow;");
     leftSidebarLayout->addWidget(scrollArea);
 }
@@ -134,12 +133,14 @@ void MainWindow::setupCenterArea()
 
     // 暂时用占位符，以后直接 addWidget(m_radarDisplay) 即可
     QFrame *radarBox = new QFrame();
-    radarBox->setStyleSheet("background-color: #001529; border-radius: 10px; border: 2px solid #3E4F5F;");
+    radarBox->setStyleSheet(
+        "background-color: #001529; border-radius: 10px; border: 2px solid #3E4F5F;");
     QFrame *oscilloBox = new QFrame();
-    oscilloBox->setStyleSheet("background-color: #000; border-radius: 10px; border: 2px solid #3E4F5F;");
+    oscilloBox->setStyleSheet(
+        "background-color: #000; border-radius: 10px; border: 2px solid #3E4F5F;");
 
-    topLayout->addWidget(radarBox, 1);     // 比例 1
-    topLayout->addWidget(oscilloBox, 1);   // 比例 1
+    topLayout->addWidget(radarBox, 1);   // 比例 1
+    topLayout->addWidget(oscilloBox, 1); // 比例 1
 
     // 下方操作区：这就是你的 m_centerStack
     // 创建最外层的堆叠容器
@@ -147,17 +148,15 @@ void MainWindow::setupCenterArea()
     m_centerStack->setObjectName("centerStack");
     m_centerStack->setStyleSheet("QWidget#centerStack { background-color: #F7F9FF;}");
 
-
     // 将两个大块放入主垂直布局，并精准分配比例
     mainVLayout->addWidget(topArea, 6);       // 上方占 6 份高度
-    mainVLayout->addWidget(m_centerStack, 4);  // 下方占 4 份高度
-
+    mainVLayout->addWidget(m_centerStack, 4); // 下方占 4 份高度
 }
 void MainWindow::setupRightPanel()
 {
     // 1. 创建右侧固定宽度的容器
     m_rightPanelContainer = new QWidget(this);
-    m_rightPanelContainer->setFixedSize(200,963); // 根据你之前的 UI 设定宽度
+    m_rightPanelContainer->setFixedSize(200, 963); // 根据你之前的 UI 设定宽度
     m_rightPanelContainer->setObjectName("rightPanelContainer");
     // 设置背景色，通常是稍微深一点的蓝色或灰色，以区分中央区域
     m_rightPanelContainer->setStyleSheet("QWidget#rightPanelContainer { background-color: pink; }");

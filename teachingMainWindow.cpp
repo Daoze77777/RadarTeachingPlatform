@@ -1,16 +1,14 @@
-
-#include <qwidget.h>
 #include "teachingMainWindow.h"
 #include <QApplication>
 #include <QScreen>
+#include <qwidget.h>
 
-#include <QVBoxLayout>
-#include <QStyle>
 #include <QGridLayout>
+#include <QStyle>
+#include <QVBoxLayout>
 
-TeachingMainWindow::TeachingMainWindow(QWidget* parent)
+TeachingMainWindow::TeachingMainWindow(QWidget *parent)
 {
-
     //加载窗口样式
     setupWindowStyle();
     //设置自定义标题栏
@@ -18,17 +16,17 @@ TeachingMainWindow::TeachingMainWindow(QWidget* parent)
     //设置基本布局
     setupBasicLayout();
     //设置窗口标题和图标
-    setCustomMainWindowTitle(":/icons/resources/icons/title.png","气象雷达测量原理实验平台");
+    setCustomMainWindowTitle(":/icons/resources/icons/title.png", "气象雷达测量原理实验平台");
     //设置菜单
     setupMenu();
     //设置窗口大小
-    resize(1920,1033);
+    resize(1920, 1033);
 
     initUI();
 }
 
-TeachingMainWindow::~TeachingMainWindow(){}
-QWidget* TeachingMainWindow::createHomePage()
+TeachingMainWindow::~TeachingMainWindow() {}
+QWidget *TeachingMainWindow::createHomePage()
 {
     // 创建主页容器
     QWidget *homePage = new QWidget(this);
@@ -60,8 +58,8 @@ QWidget* TeachingMainWindow::createHomePage()
     titleArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     QVBoxLayout *titleLayout = new QVBoxLayout(titleArea);
-    titleLayout->setSpacing(8); // 中文与英文间距
-    titleLayout->setContentsMargins(0, 0, 0, 0); // 无内边距
+    titleLayout->setSpacing(8);                              // 中文与英文间距
+    titleLayout->setContentsMargins(0, 0, 0, 0);             // 无内边距
     titleLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft); // 左上对齐
 
     m_cnTitleLabel = new QLabel("测距原理实验平台", titleArea);
@@ -170,18 +168,16 @@ QWidget* TeachingMainWindow::createHomePage()
     }
 )");
     // 10 个测距实验
-    QStringList distanceLinks = {
-        "实验科目1. 脉冲法距离测量-原理演示实验",
-        "实验科目2. 脉冲法距离测量-测试验证实验",
-        "实验科目3. 调频法距离测量-原理演示实验",
-        "实验科目4. 调频法距离测量-测试验证实验",
-        "实验科目5. 相位法距离测量-原理演示实验",
-        "实验科目6. 相位法距离测量-测试验证实验",
-        "实验科目7. 距离退模糊-原理演示实验",
-        "实验科目8. 距离退模糊-自主设计实验",
-        "实验科目9. 距离跟踪-原理演示实验",
-        "实验科目10. 距离跟踪-测试验证实验"
-    };
+    QStringList distanceLinks = {"实验科目1. 脉冲法距离测量-原理演示实验",
+                                 "实验科目2. 脉冲法距离测量-测试验证实验",
+                                 "实验科目3. 调频法距离测量-原理演示实验",
+                                 "实验科目4. 调频法距离测量-测试验证实验",
+                                 "实验科目5. 相位法距离测量-原理演示实验",
+                                 "实验科目6. 相位法距离测量-测试验证实验",
+                                 "实验科目7. 距离退模糊-原理演示实验",
+                                 "实验科目8. 距离退模糊-自主设计实验",
+                                 "实验科目9. 距离跟踪-原理演示实验",
+                                 "实验科目10. 距离跟踪-测试验证实验"};
 
     // 创建并布局按钮（两列，每列最多5行）
     qDeleteAll(m_experimentButtons);
@@ -191,7 +187,7 @@ QWidget* TeachingMainWindow::createHomePage()
         QPushButton *btn = new QPushButton(distanceLinks[i], linksWidget);
 
         // 设置固定尺寸（建议考虑使用 setMinimumSize 配合布局拉伸）
-        btn->setMinimumSize(680,70);
+        btn->setMinimumSize(680, 70);
         // 存储指针
         m_experimentButtons.append(btn);
         // 计算行列：i % 5 得到行 (0-4)，i / 5 得到列 (0-1)
@@ -200,18 +196,47 @@ QWidget* TeachingMainWindow::createHomePage()
         linksLayout->addWidget(btn, row, col);
     }
 
-    if (m_experimentButtons.size() >= 10)
-    {
-        connect(m_experimentButtons[0], &QPushButton::clicked, this, &TeachingMainWindow::onPulseMethodClicked);
-        connect(m_experimentButtons[1], &QPushButton::clicked, this, &TeachingMainWindow::onPulseMethodTestClicked);
-        connect(m_experimentButtons[2], &QPushButton::clicked, this, &TeachingMainWindow::onFrequencyModulationClicked);
-        connect(m_experimentButtons[3], &QPushButton::clicked, this, &TeachingMainWindow::onFrequencyModulationTestClicked);
-        connect(m_experimentButtons[4], &QPushButton::clicked, this, &TeachingMainWindow::onPhaseMethodClicked);
-        connect(m_experimentButtons[5], &QPushButton::clicked, this, &TeachingMainWindow::onPhaseMethodTestClicked);
-        connect(m_experimentButtons[6], &QPushButton::clicked, this, &TeachingMainWindow::onRangeAmbiguityClicked);
-        connect(m_experimentButtons[7], &QPushButton::clicked, this, &TeachingMainWindow::onRangeAmbiguityTestClicked);
-        connect(m_experimentButtons[8], &QPushButton::clicked, this, &TeachingMainWindow::onRangeTrackingClicked);
-        connect(m_experimentButtons[9], &QPushButton::clicked, this, &TeachingMainWindow::onRangeTrackingTestClicked);
+    if (m_experimentButtons.size() >= 10) {
+        connect(m_experimentButtons[0],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onPulseMethodClicked);
+        connect(m_experimentButtons[1],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onPulseMethodTestClicked);
+        connect(m_experimentButtons[2],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onFrequencyModulationClicked);
+        connect(m_experimentButtons[3],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onFrequencyModulationTestClicked);
+        connect(m_experimentButtons[4],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onPhaseMethodClicked);
+        connect(m_experimentButtons[5],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onPhaseMethodTestClicked);
+        connect(m_experimentButtons[6],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onRangeAmbiguityClicked);
+        connect(m_experimentButtons[7],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onRangeAmbiguityTestClicked);
+        connect(m_experimentButtons[8],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onRangeTrackingClicked);
+        connect(m_experimentButtons[9],
+                &QPushButton::clicked,
+                this,
+                &TeachingMainWindow::onRangeTrackingTestClicked);
     }
 
     qDebug() << "主页创建完成";
@@ -254,7 +279,8 @@ void TeachingMainWindow::setupMenu()
         }
     )";
     // 设置文件菜单窗口属性以支持圆角和透明
-    fileMenu->setWindowFlags(fileMenu->windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    fileMenu->setWindowFlags(fileMenu->windowFlags() | Qt::FramelessWindowHint
+                             | Qt::NoDropShadowWindowHint);
     fileMenu->setAttribute(Qt::WA_TranslucentBackground);
     fileMenu->setStyleSheet(menuStyle);
 
@@ -262,11 +288,11 @@ void TeachingMainWindow::setupMenu()
     setupExperimentMenu();
 
     // 设置帮助菜单窗口属性以支持圆角和透明
-    helpMenu->setWindowFlags(helpMenu->windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    helpMenu->setWindowFlags(helpMenu->windowFlags() | Qt::FramelessWindowHint
+                             | Qt::NoDropShadowWindowHint);
     helpMenu->setAttribute(Qt::WA_TranslucentBackground);
     helpMenu->setMinimumWidth(helpButton->width());
     helpMenu->setStyleSheet(menuStyle);
-
 
     // 添加帮助菜单项
     QAction *aboutAction = new QAction("关于(A)", this);
@@ -293,43 +319,38 @@ void TeachingMainWindow::setupExperimentMenu()
     connect(action3, &QAction::triggered, this, &TeachingMainWindow::onFrequencyModulationClicked);
     fileMenu->addAction(action3);
 
-
     // 实验科目4：调频法距离测量测试验证实验
     QAction *action4 = new QAction("实验科目4. 调频法距离测量-测试验证实验", this);
-    connect(action4, &QAction::triggered, this, &TeachingMainWindow::onFrequencyModulationTestClicked);
+    connect(action4,
+            &QAction::triggered,
+            this,
+            &TeachingMainWindow::onFrequencyModulationTestClicked);
     fileMenu->addAction(action4);
 }
 void TeachingMainWindow::onPulseMethodClicked()
 {
     // 使用丝滑转场进入脉冲法实验
     //enterExperiment(EXP_PULSE_METHOD);
-    qDebug()<<"脉冲法距离测量-原理演示实验----进行中";
+    qDebug() << "脉冲法距离测量-原理演示实验----进行中";
 }
 void TeachingMainWindow::onPulseMethodTestClicked()
 {
-    qDebug()<<"脉冲法距离测量-测试验证实验----进行中";
-
+    qDebug() << "脉冲法距离测量-测试验证实验----进行中";
 }
 void TeachingMainWindow::onFrequencyModulationClicked()
 {
-    qDebug()<<"调频法距离测量-原理演示实验----进行中";
+    qDebug() << "调频法距离测量-原理演示实验----进行中";
 }
 void TeachingMainWindow::onFrequencyModulationTestClicked()
 {
-    qDebug()<<"调频法距离测量-测试验证实验----进行中";
+    qDebug() << "调频法距离测量-测试验证实验----进行中";
 }
-void TeachingMainWindow::onPhaseMethodClicked()
-{}
-void TeachingMainWindow::onPhaseMethodTestClicked()
-{}
-void TeachingMainWindow::onRangeAmbiguityClicked()
-{}
-void TeachingMainWindow::onRangeAmbiguityTestClicked()
-{}
-void TeachingMainWindow::onRangeTrackingClicked()
-{}
-void TeachingMainWindow::onRangeTrackingTestClicked()
-{}
+void TeachingMainWindow::onPhaseMethodClicked() {}
+void TeachingMainWindow::onPhaseMethodTestClicked() {}
+void TeachingMainWindow::onRangeAmbiguityClicked() {}
+void TeachingMainWindow::onRangeAmbiguityTestClicked() {}
+void TeachingMainWindow::onRangeTrackingClicked() {}
+void TeachingMainWindow::onRangeTrackingTestClicked() {}
 void TeachingMainWindow::initUI()
 {
     // 将主页面添加到contentWidget中
@@ -354,7 +375,7 @@ void TeachingMainWindow::initUI()
     // // 创建隐藏切换按钮
     // ensureSwitchPlatformButton();
 }
-QWidget* TeachingMainWindow::createPlatformPage(PlatformType type)
+QWidget *TeachingMainWindow::createPlatformPage(PlatformType type)
 {
     QWidget *page = new QWidget(this);
     page->setObjectName("platformPage");
@@ -438,51 +459,45 @@ QWidget* TeachingMainWindow::createPlatformPage(PlatformType type)
     QStringList experiments;
     switch (type) {
     case Platform_Distance:
-        experiments = {
-            "实验科目1. 脉冲法距离测量-原理演示实验",
-            "实验科目2. 脉冲法距离测量-测试验证实验",
-            "实验科目3. 调频法距离测量-原理演示实验",
-            "实验科目4. 调频法距离测量-测试验证实验",
-            "实验科目5. 相位法距离测量-原理演示实验",
-            "实验科目6. 相位法距离测量-测试验证实验",
-            "实验科目7. 距离退模糊-原理演示实验",
-            "实验科目8. 距离退模糊-自主设计实验",
-            "实验科目9. 距离跟踪-原理演示实验",
-            "实验科目10. 距离跟踪-测试验证实验"
-        };
+        experiments = {"实验科目1. 脉冲法距离测量-原理演示实验",
+                       "实验科目2. 脉冲法距离测量-测试验证实验",
+                       "实验科目3. 调频法距离测量-原理演示实验",
+                       "实验科目4. 调频法距离测量-测试验证实验",
+                       "实验科目5. 相位法距离测量-原理演示实验",
+                       "实验科目6. 相位法距离测量-测试验证实验",
+                       "实验科目7. 距离退模糊-原理演示实验",
+                       "实验科目8. 距离退模糊-自主设计实验",
+                       "实验科目9. 距离跟踪-原理演示实验",
+                       "实验科目10. 距离跟踪-测试验证实验"};
         break;
     case Platform_Angle:
-        experiments = {
-            "实验科目1. 单脉冲法测角-原理演示实验",
-            "实验科目2. 单脉冲法测角-测试验证实验",
-            "实验科目3. 圆锥扫描法测角-原理演示实验",
-            "实验科目4. 圆锥扫描法测角-测试验证实验",
-            "实验科目5. 振幅比较法测角-原理演示实验",
-            "实验科目6. 振幅比较法测角-测试验证实验",
-            "实验科目7. 相位比较法测角-原理演示实验",
-            "实验科目8. 相位比较法测角-自主设计实验",
-            "实验科目9. 多普勒测角-原理演示实验",
-            "实验科目10. 多普勒测角-测试验证实验"
-        };
+        experiments = {"实验科目1. 单脉冲法测角-原理演示实验",
+                       "实验科目2. 单脉冲法测角-测试验证实验",
+                       "实验科目3. 圆锥扫描法测角-原理演示实验",
+                       "实验科目4. 圆锥扫描法测角-测试验证实验",
+                       "实验科目5. 振幅比较法测角-原理演示实验",
+                       "实验科目6. 振幅比较法测角-测试验证实验",
+                       "实验科目7. 相位比较法测角-原理演示实验",
+                       "实验科目8. 相位比较法测角-自主设计实验",
+                       "实验科目9. 多普勒测角-原理演示实验",
+                       "实验科目10. 多普勒测角-测试验证实验"};
         break;
     case Platform_Speed:
-        experiments = {
-            "实验科目1. 多普勒效应测速-原理演示实验",
-            "实验科目2. 多普勒效应测速-测试验证实验",
-            "实验科目3. 脉冲多普勒测速-原理演示实验",
-            "实验科目4. 脉冲多普勒测速-测试验证实验",
-            "实验科目5. 连续波多普勒测速-原理演示实验",
-            "实验科目6. 连续波多普勒测速-测试验证实验",
-            "实验科目7. 速度退模糊-原理演示实验",
-            "实验科目8. 速度退模糊-自主设计实验",
-            "实验科目9. 速度跟踪-原理演示实验",
-            "实验科目10. 速度跟踪-测试验证实验"
-        };
+        experiments = {"实验科目1. 多普勒效应测速-原理演示实验",
+                       "实验科目2. 多普勒效应测速-测试验证实验",
+                       "实验科目3. 脉冲多普勒测速-原理演示实验",
+                       "实验科目4. 脉冲多普勒测速-测试验证实验",
+                       "实验科目5. 连续波多普勒测速-原理演示实验",
+                       "实验科目6. 连续波多普勒测速-测试验证实验",
+                       "实验科目7. 速度退模糊-原理演示实验",
+                       "实验科目8. 速度退模糊-自主设计实验",
+                       "实验科目9. 速度跟踪-原理演示实验",
+                       "实验科目10. 速度跟踪-测试验证实验"};
         break;
     }
 
     // 创建按钮
-    QList<QPushButton*> buttons;
+    QList<QPushButton *> buttons;
     const int cols = 2;
     const int rows = (experiments.size() + cols - 1) / cols;
 
@@ -499,8 +514,8 @@ QWidget* TeachingMainWindow::createPlatformPage(PlatformType type)
         // 第一个按钮设为选中状态
         if (i == 0) {
             btn->setProperty("selected", true);
-            btn->style() -> unpolish(btn);
-            btn->style() -> polish(btn);
+            btn->style()->unpolish(btn);
+            btn->style()->polish(btn);
         }
 
         buttons.append(btn);
@@ -561,7 +576,8 @@ void TeachingMainWindow::ensureSwitchPlatformButton()
             }
         )");
         connect(m_switchPlatformBtn, &QPushButton::clicked, this, [this]() {
-            if (!m_platformSwitchEnabled) return;
+            if (!m_platformSwitchEnabled)
+                return;
             int next = (m_currentPlatformIndex + 1) % 3;
             switchPlatform(next);
         });
@@ -590,8 +606,10 @@ void TeachingMainWindow::updateSwitchButtonPosition()
         int x = width() - 250;
         int y = 85;
         // 防止负坐标
-        if (x < 0) x = 0;
-        if (y < 0) y = 0;
+        if (x < 0)
+            x = 0;
+        if (y < 0)
+            y = 0;
         m_switchPlatformBtn->move(x, y);
     }
 }

@@ -1,11 +1,11 @@
 #include "customMainWindow.h"
+#include <QDialog>
 #include <QHBoxLayout>
 #include <QMouseEvent>
-#include <QDialog>
 #include <QVBoxLayout>
 
-CustomMainWindow::CustomMainWindow(QWidget* parent)
-    :QMainWindow(parent)
+CustomMainWindow::CustomMainWindow(QWidget *parent)
+    : QMainWindow(parent)
     , titleBar(nullptr)
     , iconLabel(nullptr)
     , titleLabel(nullptr)
@@ -21,13 +21,14 @@ CustomMainWindow::CustomMainWindow(QWidget* parent)
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
 }
 CustomMainWindow::~CustomMainWindow() {}
-void CustomMainWindow::setCustomMainWindowTitle(const QString& iconPath, const QString& title)
+void CustomMainWindow::setCustomMainWindowTitle(const QString &iconPath, const QString &title)
 {
     //设置窗口图标
     QMainWindow::setWindowIcon(QIcon(iconPath));
     if (iconLabel) {
         QPixmap titleIcon(iconPath);
-        iconLabel->setPixmap(titleIcon.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        iconLabel->setPixmap(
+            titleIcon.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
     //设置标题
     QMainWindow::setWindowTitle(title);
@@ -43,13 +44,14 @@ void CustomMainWindow::setupCustomTitleBar()
     titleBar->setFixedHeight(70);
 
     //创建标题栏布局
-    QHBoxLayout* titleLayout = new  QHBoxLayout(titleBar);
-    titleLayout->setContentsMargins(30,10,30,10);
+    QHBoxLayout *titleLayout = new QHBoxLayout(titleBar);
+    titleLayout->setContentsMargins(30, 10, 30, 10);
 
     //创建图标
     iconLabel = new QLabel();
-    iconLabel->setFixedSize(50,50);
-    iconLabel->setPixmap(QPixmap(":/icons/resources/icons/title.png").scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    iconLabel->setFixedSize(50, 50);
+    iconLabel->setPixmap(QPixmap(":/icons/resources/icons/title.png")
+                             .scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     iconLabel->setObjectName("iconLabel");
     titleLayout->addWidget(iconLabel);
 
@@ -62,8 +64,7 @@ void CustomMainWindow::setupCustomTitleBar()
     //创建文件按钮
     fileButton = new QPushButton("文件(F)");
     fileButton->setObjectName("menuButton");
-    fileButton->setFixedSize(160,50);
-
+    fileButton->setFixedSize(160, 50);
 
     //创建文件菜单
     fileMenu = new QMenu(this);
@@ -72,7 +73,7 @@ void CustomMainWindow::setupCustomTitleBar()
     //创建帮助按钮
     helpButton = new QPushButton("帮助(H)");
     helpButton->setObjectName("menuButton");
-    helpButton->setFixedSize(160,50);
+    helpButton->setFixedSize(160, 50);
 
     //创建帮助菜单
     helpMenu = new QMenu(this);
@@ -82,17 +83,16 @@ void CustomMainWindow::setupCustomTitleBar()
     titleLayout->addWidget(helpButton);
     titleLayout->addSpacing(68);
 
-
     //创建窗口控制按钮
     minButton = new QPushButton();
     minButton->setObjectName("minButton");
     minButton->setFixedSize(38, 38); // 使用38x38以完整显示图片
-    minButton->setFlat(true); // 设置为扁平按钮，避免边框干扰
+    minButton->setFlat(true);        // 设置为扁平按钮，避免边框干扰
 
     closeButton = new QPushButton();
     closeButton->setObjectName("closeButton");
     closeButton->setFixedSize(38, 38); // 使用38x38以完整显示图片
-    closeButton->setFlat(true); // 设置为扁平按钮，避免边框干扰
+    closeButton->setFlat(true);        // 设置为扁平按钮，避免边框干扰
 
     // 连接按钮信号
     connect(minButton, &QPushButton::clicked, this, &CustomMainWindow::showMinimized);
@@ -117,7 +117,7 @@ void CustomMainWindow::setupBasicLayout()
     mainLayout->addWidget(titleBar);
 
     // 创建内容区域
-    QWidget* contentContainer = new QWidget;
+    QWidget *contentContainer = new QWidget;
     contentContainer->setObjectName("contentContainer");
 
     QVBoxLayout *contentLayout = new QVBoxLayout(contentContainer);
@@ -232,8 +232,8 @@ void CustomMainWindow::setupWindowStyle()
 void CustomMainWindow::mousePressEvent(QMouseEvent *event)
 {
     // 只有点击标题栏时才允许拖拽
-    if (event->button() == Qt::LeftButton && titleBar && titleBar->geometry().contains(event->pos()))
-    {
+    if (event->button() == Qt::LeftButton && titleBar
+        && titleBar->geometry().contains(event->pos())) {
         isDragging = true;
         dragPosition = event->globalPosition().toPoint() - frameGeometry().topLeft();
         event->accept();
@@ -241,16 +241,14 @@ void CustomMainWindow::mousePressEvent(QMouseEvent *event)
 }
 void CustomMainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    if (isDragging && event->buttons() & Qt::LeftButton)
-    {
+    if (isDragging && event->buttons() & Qt::LeftButton) {
         move(event->globalPosition().toPoint() - dragPosition);
         event->accept();
     }
 }
 void CustomMainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton)
-    {
+    if (event->button() == Qt::LeftButton) {
         isDragging = false;
         event->accept();
     }
@@ -406,7 +404,7 @@ void CustomMainWindow::about()
 
     // OK按钮使用绝对定位，固定在右下角
     okBtn->setParent(container);
-    okBtn->move(380 - 90 - 40, 200 - 28 - 47);  // 右下角
+    okBtn->move(380 - 90 - 40, 200 - 28 - 47); // 右下角
 
     dialog->exec();
     dialog->deleteLater();

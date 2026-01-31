@@ -1,10 +1,10 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
 
-#include <QWidget>
-#include <QPushButton>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
+#include <QWidget>
 #include "teachingMainWindow.h"
 class loginWindow : public QWidget
 {
@@ -30,26 +30,26 @@ private:
 
 private:
     //最小化、关闭按钮
-    QPushButton* closeButton;
-    QPushButton* minimizeButton;
+    QPushButton *closeButton;
+    QPushButton *minimizeButton;
 
     //姓名
-    QLabel* nameLabel;
-    QLabel* nameLabelEn;
-    QLineEdit* usernameEdit;
+    QLabel *nameLabel;
+    QLabel *nameLabelEn;
+    QLineEdit *usernameEdit;
 
     //学号
-    QLabel* studentIdLabel;
-    QLabel* studentIdLabelEn;
-    QLineEdit* studentIdEdit;
+    QLabel *studentIdLabel;
+    QLabel *studentIdLabelEn;
+    QLineEdit *studentIdEdit;
 
     //登录按钮
-    QPushButton* loginButton;
+    QPushButton *loginButton;
 
     //注册和忘记密码
-    QLabel* registerLabel;
-    QLabel* forgotPasswordLabel;
-    TeachingMainWindow* m_teachingWindow;
+    QLabel *registerLabel;
+    QLabel *forgotPasswordLabel;
+    TeachingMainWindow *m_teachingWindow;
 
     //窗口移动
     bool m_moving;

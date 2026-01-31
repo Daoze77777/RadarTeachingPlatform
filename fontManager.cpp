@@ -1,8 +1,7 @@
-
 #include "fontManager.h"
 #include <QApplication>
-#include <QFontDatabase>
 #include <QDebug>
+#include <QFontDatabase>
 
 namespace FontManager {
 
@@ -32,4 +31,4 @@ bool setupGlobalFont(const QString &fontPath, int pointSize)
     return true;
 }
 
-}
+} // namespace FontManager

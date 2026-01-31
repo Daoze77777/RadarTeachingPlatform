@@ -1,8 +1,8 @@
 #include "loginwindow.h"
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPushButton>
-#include <QMouseEvent>
 #include "teachingMainWindow.h"
 
 loginWindow::loginWindow(QWidget *parent)
@@ -32,7 +32,6 @@ void loginWindow::setupUI()
 
     //设置窗口固定大小，匹配背景图片 820x600
     setFixedSize(820, 600);
-
 
     // 创建自定义标题栏按钮（右上角）
     const int buttonSize = 20;
@@ -99,23 +98,27 @@ void loginWindow::setupUI()
     loginButton->setFlat(true);
 
     // 注册
-    registerLabel = new QLabel(QString::fromUtf8("<a href=\"#\" style=\"color: #3E3D70; text-decoration: none;\">立即注册</a>"), this);
+    registerLabel = new QLabel(
+        QString::fromUtf8(
+            "<a href=\"#\" style=\"color: #3E3D70; text-decoration: none;\">立即注册</a>"),
+        this);
     registerLabel->setGeometry(465, 430, 70, 18);
     registerLabel->setOpenExternalLinks(false);
     registerLabel->setObjectName("registerLabel");
     registerLabel->setCursor(Qt::PointingHandCursor);
 
     // 忘记密码
-    forgotPasswordLabel = new QLabel(QString::fromUtf8("<a href=\"#\" style=\"color: #3E3D70; text-decoration: none;\">忘记密码？</a>"), this);
+    forgotPasswordLabel = new QLabel(
+        QString::fromUtf8(
+            "<a href=\"#\" style=\"color: #3E3D70; text-decoration: none;\">忘记密码？</a>"),
+        this);
     forgotPasswordLabel->setGeometry(620, 430, 85, 18);
     forgotPasswordLabel->setOpenExternalLinks(false);
     forgotPasswordLabel->setObjectName("forgotPasswordLabel");
     forgotPasswordLabel->setCursor(Qt::PointingHandCursor);
-
 }
 void loginWindow::setStyles()
 {
-
     QString style =
         // 姓名、学号标签样式
         "#nameLabel, #studentIdLabel {"
@@ -194,15 +197,14 @@ void loginWindow::setStyles()
         "#loginButton:pressed {"
         "   background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
         "       stop:0 #4488dd, stop:1 #2266bb);"
-        "}"
-        ;
+        "}";
     setStyleSheet(style);
 }
 void loginWindow::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event);  //标记参数未使用，避免编译器警告
+    Q_UNUSED(event); //标记参数未使用，避免编译器警告
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing); //抗锯齿
+    painter.setRenderHint(QPainter::Antialiasing);          //抗锯齿
     painter.setRenderHint(QPainter::SmoothPixmapTransform); //光滑变换
 
     //设置圆角裁剪，减小圆角避免模糊
@@ -217,7 +219,7 @@ void loginWindow::paintEvent(QPaintEvent *event)
 }
 void loginWindow::mousePressEvent(QMouseEvent *event)
 {
-    m_moving = true;  //开始移动
+    m_moving = true; //开始移动
     mouse_pos = event->globalPosition().toPoint();
     window_pos = this->pos();
     diff_pos = mouse_pos - window_pos;
@@ -226,17 +228,16 @@ void loginWindow::mouseMoveEvent(QMouseEvent *event)
 {
     QPoint pos = event->globalPosition().toPoint();
     this->move(pos - diff_pos);
-
 }
 void loginWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-     m_moving = false;  // 结束移动
+    m_moving = false; // 结束移动
 }
 void loginWindow::setupConnections()
 {
-    connect(closeButton,&QPushButton::clicked,this, &loginWindow::close);
-    connect(minimizeButton,&QPushButton::clicked,this, &loginWindow::showMinimized);
-    connect(loginButton,&QPushButton::clicked,this, &loginWindow::onLoginButtonClicked);
+    connect(closeButton, &QPushButton::clicked, this, &loginWindow::close);
+    connect(minimizeButton, &QPushButton::clicked, this, &loginWindow::showMinimized);
+    connect(loginButton, &QPushButton::clicked, this, &loginWindow::onLoginButtonClicked);
 }
 void loginWindow::onLoginButtonClicked()
 {
@@ -244,15 +245,14 @@ void loginWindow::onLoginButtonClicked()
     QString studentId = studentIdEdit->text();
     // 用户验证逻辑
     if (!username.isEmpty() && !studentId.isEmpty()) {
-        qDebug()<<"hello";
+        qDebug() << "hello";
         m_teachingWindow = new TeachingMainWindow();
         m_teachingWindow->show();
 
-        this->hide();     // 立即隐藏窗口
+        this->hide(); // 立即隐藏窗口
         //this->deleteLater();  // 稍后删除对象
 
     } else {
-        qDebug()<<"error";
+        qDebug() << "error";
     }
-
 }

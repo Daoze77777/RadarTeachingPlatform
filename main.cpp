@@ -1,11 +1,11 @@
-#include "loginwindow.h"
-#include "customMainWindow.h"
 #include <QApplication>
 #include <QFontDatabase>
-#include <qDebug>
+#include "customMainWindow.h"
 #include "fontManager.h"
-#include "teachingMainWindow.h"
+#include "loginwindow.h"
 #include "mainWindow.h"
+#include "teachingMainWindow.h"
+#include <qDebug>
 
 int main(int argc, char *argv[])
 {

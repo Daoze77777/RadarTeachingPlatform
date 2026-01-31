@@ -13,6 +13,6 @@ namespace FontManager {
  */
 bool setupGlobalFont(const QString &fontPath, int pointSize = 12);
 
-}
+} // namespace FontManager
 
 #endif // FONTMANAGER_H
