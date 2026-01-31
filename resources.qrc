@@ -1,0 +1,40 @@
+<RCC>
+    <qresource prefix="/login">
+        <file>resources/login/close.png</file>
+        <file>resources/login/login_background.png</file>
+        <file>resources/login/login_button.png</file>
+        <file>resources/login/minimize.png</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>resources/icons/arrow_down.png</file>
+        <file>resources/icons/checkmark.png</file>
+        <file>resources/icons/close-btn.png</file>
+        <file>resources/icons/close-btn-clicked.png</file>
+        <file>resources/icons/close-btn-hover.png</file>
+        <file>resources/icons/course.png</file>
+        <file>resources/icons/last-page.png</file>
+        <file>resources/icons/link-btn-circle.png</file>
+        <file>resources/icons/link-btn-hover.png</file>
+        <file>resources/icons/link-btn-hover3.png</file>
+        <file>resources/icons/link-btn-hovernew.png</file>
+        <file>resources/icons/link-btn-pressed.png</file>
+        <file>resources/icons/link-btn-pressed2.png</file>
+        <file>resources/icons/link-btn-pressed3.png</file>
+        <file>resources/icons/links-widget.png</file>
+        <file>resources/icons/main.png</file>
+        <file>resources/icons/main-bg.png</file>
+        <file>resources/icons/method.png</file>
+        <file>resources/icons/min-btn.png</file>
+        <file>resources/icons/min-btn-clicked.png</file>
+        <file>resources/icons/min-btn-hover.png</file>
+        <file>resources/icons/next-page.png</file>
+        <file>resources/icons/param.png</file>
+        <file>resources/icons/tanchuang.png</file>
+        <file>resources/icons/title.ico</file>
+        <file>resources/icons/title.png</file>
+        <file>resources/icons/titleBar-bg.jpg</file>
+    </qresource>
+    <qresource prefix="/font">
+        <file>resources/fonts/PingFang/PingFang Medium_downcc.otf</file>
+    </qresource>
+</RCC>
