@@ -27,8 +27,10 @@ private:
     // 左中右核心容器
     QWidget *m_headerWidget;
     QWidget *m_leftSidebarContainer;
-    QStackedWidget *m_centerStack;
+    QWidget * m_CenterContainer;
     QWidget *m_rightPanelContainer;
+
+    QStackedWidget *m_centerStack;
 
     //成员变量
     QWidget *m_rootContainer;  //顶层容器
