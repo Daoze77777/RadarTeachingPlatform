@@ -33,6 +33,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         customMainWindow.cpp
         mainWindow.cpp
         experimentTypes.h
+        collapsibleGroup.h
+        collapsibleGroup.cpp
+        experimentSidebar.h
+        experimentSidebar.cpp
 
 
 

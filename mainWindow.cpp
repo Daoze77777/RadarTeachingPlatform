@@ -1,14 +1,15 @@
 #include "mainWindow.h"
 #include <QScrollArea>
+#include <QScrollBar>
 #include <QStatusBar>
 #include "teachingMainWindow.h"
+#include "experimentSidebar.h"
 MainWindow::MainWindow(TeachingMainWindow *teachingWindow, ExperimentType expType, QWidget *parent)
     : m_teachingWindow(teachingWindow)
 {
     initUI();
 }
 MainWindow::~MainWindow() {}
-
 void MainWindow::initUI()
 {
     //基础窗口设置
@@ -39,7 +40,6 @@ void MainWindow::initUI()
     m_rootLayout->addWidget(bodyContainer);
     resize(1920, 1033);
 }
-
 void MainWindow::setupWindowBase()
 {
     //获取CentralWidget(父类构造函数中通常已经setCentralWidget了),如果父类没做，就自己new一个
@@ -105,16 +105,30 @@ void MainWindow::setupLeftSidebar()
     scrollArea->setStyleSheet("background-color:yellow;");
     leftSidebarContentLayout->addWidget(scrollArea);
 
-    // 创建滚动区内部的容器部件
-    QWidget *scrollContent = new QWidget();
-    scrollContent->setObjectName("scrollContent");
-    scrollContent->setStyleSheet("background-color: red;"); // 导航栏底色
+    // 美化滚动条样式
+    // scrollArea->verticalScrollBar()->setStyleSheet(R"(
+    //     QScrollBar:vertical { width: 6px; background: transparent; }
+    //     QScrollBar::handle:vertical { background: #C0C4CC; border-radius: 3px; min-height: 20px; }
+    //     QScrollBar::handle:vertical:hover { background: #909399; }
+    //     QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
+    // )");
 
+    ExperimentSidebar* sidebar = new ExperimentSidebar(this);
+    scrollArea->setWidget(sidebar);
+
+    // 创建滚动区内部的容器部件
+    // QWidget *scrollContent = new QWidget();
+    // scrollContent->setObjectName("scrollContent");
+    // scrollContent->setStyleSheet("background-color: red;"); // 导航栏底色
     // 为内部容器设置垂直布局，用来放你的那些 CollapsibleGroup
-    QVBoxLayout *contentLayout = new QVBoxLayout(scrollContent);
-    contentLayout->setContentsMargins(10, 10, 10, 10);
-    contentLayout->setSpacing(8);
-    contentLayout->setAlignment(Qt::AlignTop); // 确保内容从顶部开始排列
+    // QVBoxLayout *contentLayout = new QVBoxLayout(scrollContent);
+    // contentLayout->setContentsMargins(10, 10, 10, 10);
+    // contentLayout->setSpacing(8);
+    // contentLayout->setAlignment(Qt::AlignTop); // 确保内容从顶部开始排列
+
+    //  装载
+    //scrollArea->setWidget(scrollContent);
+    leftSidebarContentLayout->addWidget(scrollArea);
 
 }
 void MainWindow::setupCenterArea()

@@ -37,4 +37,29 @@
     <qresource prefix="/font">
         <file>resources/fonts/PingFang/PingFang Medium_downcc.otf</file>
     </qresource>
+    <qresource prefix="/mainicons">
+        <file>resources/mainIcons/521.png</file>
+        <file>resources/mainIcons/celiangyuanli.png</file>
+        <file>resources/mainIcons/chongzhi.png</file>
+        <file>resources/mainIcons/cl.png</file>
+        <file>resources/mainIcons/fangxiangClose.png</file>
+        <file>resources/mainIcons/gundongtiao.png</file>
+        <file>resources/mainIcons/hexinqijian.png</file>
+        <file>resources/mainIcons/Hi.png</file>
+        <file>resources/mainIcons/huideng.png</file>
+        <file>resources/mainIcons/kaishi (1).png</file>
+        <file>resources/mainIcons/ld.png</file>
+        <file>resources/mainIcons/ldeng.png</file>
+        <file>resources/mainIcons/leidazujian.png</file>
+        <file>resources/mainIcons/reddeng.png</file>
+        <file>resources/mainIcons/shiyanbuzouICon.png</file>
+        <file>resources/mainIcons/tip.png</file>
+        <file>resources/mainIcons/tishiwenzikuang.png</file>
+        <file>resources/mainIcons/titleBG.png</file>
+        <file>resources/mainIcons/welcome.png</file>
+        <file>resources/mainIcons/xaingguankechengICon.png</file>
+        <file>resources/mainIcons/fangxiangup.png</file>
+        <file>resources/mainIcons/fangxiangOpen.png</file>
+        <file>resources/mainIcons/fangxiangdown.png</file>
+    </qresource>
 </RCC>
