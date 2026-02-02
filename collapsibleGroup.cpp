@@ -24,12 +24,10 @@ CollapsibleButton::CollapsibleButton(const QString &text, const QIcon &leftIcon,
             color: #FFFFFF;
             padding: 5px 16px 5px 46px;
             border: none;
-            margin: 0px 20px 16px 20px;
             border-radius: 8px;
-            height: 30px;
             text-align: left;
             font-size: 18px;
-            font-weight: 400;
+            font-weight: 500;
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
         QPushButton:hover {
@@ -63,15 +61,7 @@ void CollapsibleButton::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // 绘制左侧图标（仅当图标存在时）
-    // if (!m_leftIcon.isNull()) {
-    //     // 图标位置：距左边26px，向上7px，20x20像素
-    //     QRect leftIconRect(35, (height() - 20) / 2 - 7, 20, 20);
-    //     m_leftIcon.paint(&painter, leftIconRect);
-    // }
-
-
-    // --- 1. 绘制左侧图标 ---
+    // 绘制左侧图标
     if (!m_leftIcon.isNull()) {
         int iconSize = 20;
         int leftPadding = 20; // 距离左边框的距离
@@ -81,28 +71,17 @@ void CollapsibleButton::paintEvent(QPaintEvent *event)
         m_leftIcon.paint(&painter, leftIconRect);
     }
 
-    // --- 2. 绘制右侧箭头 ---
+    // 绘制右侧箭头
     QIcon rightIcon = m_expanded ? m_rightExpandIcon : m_rightCollapseIcon;
     if (!rightIcon.isNull()) {
-        int arrowSize = 16;
+        int arrowSize = 20;
         int rightPadding = 20; // 距离右边框的距离
         // 自动计算右对齐和垂直居中
         int xPos = width() - rightPadding - arrowSize;
         int yPos = (height() - arrowSize) / 2;
-
         QRect rightIconRect(xPos,yPos, arrowSize, arrowSize);
         rightIcon.paint(&painter, rightIconRect);
     }
-
-
-    // 绘制右侧箭头图标（参考图二位置）
-    // QIcon rightIcon = m_expanded ? m_rightExpandIcon : m_rightCollapseIcon;
-    // if (!rightIcon.isNull()) {
-    //     // 使用16x16的尺寸，向左12px、向上5px
-    //     int arrowSize = 16;
-    //     QRect rightIconRect(width() - arrowSize - 33, (height() - arrowSize) / 2 - 7, arrowSize, arrowSize);
-    //     rightIcon.paint(&painter, rightIconRect);
-    // }
 }
 
 // CollapsibleGroup 实现
@@ -112,11 +91,12 @@ CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWid
 {
     // 创建主布局
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setContentsMargins(20, 20, 20, 0);
     mainLayout->setSpacing(0);
 
     // 创建头部按钮
     m_headerButton = new CollapsibleButton(title, icon, this);
+    m_headerButton->setFixedSize(230,40);
 
     // 创建内容容器
     m_contentWidget = new QWidget(this);
@@ -132,9 +112,9 @@ CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWid
     // 创建动画 - 进一步优化动画设置
     m_animation = new QPropertyAnimation(m_contentWidget, "maximumHeight", this);
     m_animation->setDuration(120);  // 更短的动画时间减少界面卡顿
-    m_animation->setEasingCurve(QEasingCurve::InOutQuad);  // 快速启动和结束，减少感知延迟
+    //m_animation->setEasingCurve(QEasingCurve::InOutQuad);  // 快速启动和结束，减少感知延迟
     //m_animation->setEasingCurve(QEasingCurve::OutQuad);
-    //m_animation->setEasingCurve(QEasingCurve::OutCubic);
+    m_animation->setEasingCurve(QEasingCurve::OutCubic);
 
     // 连接信号
     connect(m_headerButton, &QPushButton::clicked, this, &CollapsibleGroup::onHeaderClicked);

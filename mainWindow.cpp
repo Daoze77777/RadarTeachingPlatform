@@ -88,7 +88,7 @@ void MainWindow::setupLeftSidebar()
     m_leftSidebarContainer->setFixedSize(270, 963);
     //m_leftSidebarContainer->setFixedWidth(270);
     m_leftSidebarContainer->setObjectName("leftSidebarContainer");
-    m_leftSidebarContainer->setStyleSheet("background-color:blue;");
+    m_leftSidebarContainer->setStyleSheet("background-color:transparent;");
 
     //设置布局
     QVBoxLayout *leftSidebarContentLayout = new QVBoxLayout(m_leftSidebarContainer);
@@ -97,12 +97,12 @@ void MainWindow::setupLeftSidebar()
 
     // 创建 QScrollArea
     QScrollArea *scrollArea = new QScrollArea(m_leftSidebarContainer);
-    //scrollArea->setFixedWidth(270);  // 固定宽度270px
+    scrollArea->setFixedWidth(270);  // 固定宽度270px
     scrollArea->setWidgetResizable(true);                             //内部部件随滚动区缩放
-    //scrollArea->setFrameShape(QFrame::NoFrame);                       // 无边框
-    //scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 屏蔽横向滚动条
-    //scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 禁用纵向滚动条，避免展开时闪烁
-    scrollArea->setStyleSheet("background-color:yellow;");
+    scrollArea->setFrameShape(QFrame::NoFrame);                       // 无边框
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 屏蔽横向滚动条
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 禁用纵向滚动条，避免展开时闪烁
+    scrollArea->setStyleSheet("background-color:#FFFFFF;");
     leftSidebarContentLayout->addWidget(scrollArea);
 
     // 美化滚动条样式
@@ -113,8 +113,46 @@ void MainWindow::setupLeftSidebar()
     //     QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
     // )");
 
+    //创建折叠组按钮
     ExperimentSidebar* sidebar = new ExperimentSidebar(this);
     scrollArea->setWidget(sidebar);
+
+    // 标题区域
+    QWidget *titleArea = new QWidget(m_leftSidebarContainer);
+    titleArea->setFixedSize(270,130);
+    titleArea->setObjectName("titleArea");
+    titleArea->setStyleSheet(R"(
+    QWidget#titleArea {
+        background-image: url(:/mainicons/resources/mainIcons/titleBG.png);
+        background-repeat: no-repeat;
+        background-position: center;
+    })");
+
+    // 标题区域的布局
+    QVBoxLayout *titleLayout = new QVBoxLayout(titleArea);
+    titleLayout->setContentsMargins(0, 0, 0, 0);
+    titleLayout->setSpacing(0);
+    titleLayout->setAlignment(Qt::AlignCenter);
+
+    // 添加主标题（垂直居中）- 根据实验类型动态设置
+    //QString experimentTitle = getExperimentTitle(m_experimentType);
+    QLabel *titleLabel = new QLabel("气象雷达原理实验平台", titleArea);
+    titleLabel->setFixedSize(239,61);
+    titleLabel->setAlignment(Qt::AlignCenter);
+    titleLabel->setWordWrap(true);  // 允许文字换行
+    titleLabel->setStyleSheet(R"(
+    QLabel {
+        color: #31314B;
+        background: transparent;
+        font-weight: 500;
+        font-size: 24px;
+    })");
+
+    titleLayout->addWidget(titleLabel);
+    leftSidebarContentLayout->addWidget(titleArea);
+    leftSidebarContentLayout->addWidget(scrollArea);
+
+
 
     // 创建滚动区内部的容器部件
     // QWidget *scrollContent = new QWidget();
@@ -128,7 +166,17 @@ void MainWindow::setupLeftSidebar()
 
     //  装载
     //scrollArea->setWidget(scrollContent);
-    leftSidebarContentLayout->addWidget(scrollArea);
+
+
+    // ---------------------------------------------------------
+    // 6. 核心：把你以前创建导航项的代码搬到这里
+    // 比如：m_stepTreeWidget, m_collapsibleGroupPulse 等等
+    // ---------------------------------------------------------
+    //initNavigationItems(contentLayout); // 我们把这部分逻辑抽出来，避免 setup 函数太长
+
+    // 7. 将内部部件设置给滚动区域，滚动区域放入外层布局
+    //scrollArea->setWidget(scrollContent);
+    //leftSidebarContentLayout->addWidget(scrollArea);
 
 }
 void MainWindow::setupCenterArea()

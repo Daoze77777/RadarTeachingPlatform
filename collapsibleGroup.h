@@ -53,7 +53,7 @@ private slots:
     void onAnimationFinished();
 
 private:
-    CollapsibleButton *m_headerButton;
+    CollapsibleButton *m_headerButton;  //导航栏一级按钮
     QPropertyAnimation *m_animation;
     QVBoxLayout *m_contentLayout;
     QWidget *m_contentWidget;

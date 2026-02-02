@@ -18,10 +18,8 @@ public:
     };
 
     explicit ExperimentSidebar(QWidget *parent = nullptr);
-
     void resetAllGroups();
     CollapsibleGroup* getGroup(GroupType type);
-
 private:
     CollapsibleGroup* m_groups[4]; // 固定存储4个组
 };
