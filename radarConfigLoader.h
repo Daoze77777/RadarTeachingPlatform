@@ -1,9 +1,13 @@
+#ifndef RADAR_CONFIG_LOADER_H
+#define RADAR_CONFIG_LOADER_H
 #include "radarDataModel.h"
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QDebug>
 
-class RadarConfigLoader {
+class RadarConfigLoader
+{
+
 public:
     // 加载整个配置文件
     static QMap<int, ExperimentRadarConfig> loadAllConfigs(const QString& xmlPath) {
@@ -60,3 +64,4 @@ private:
         configs.insert(expId, config);
     }
 };
+#endif

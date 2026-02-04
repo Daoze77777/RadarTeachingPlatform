@@ -154,7 +154,7 @@ CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWid
     m_contentWidget->setMinimumHeight(0);  // 确保最小高度为0
     m_contentWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);  // 横向扩展
     // 设置内容区域透明背景，允许子组件的滚动条显示
-    m_contentWidget->setStyleSheet("QWidget { background-color: red; }");
+    m_contentWidget->setStyleSheet("QWidget { background-color: transparent`; }");
     m_contentLayout = new QVBoxLayout(m_contentWidget);
     m_contentLayout->setContentsMargins(0, 8, 0, 8);  // 默认值，雷达系统按钮不使用这个
     m_contentLayout->setSpacing(10);
