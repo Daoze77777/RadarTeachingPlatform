@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RadarConfig>
+    <Experiment id="1" visible="true">
+        <Component id="modulator" title="脉冲调制器">
+            <Image>:/assets/pulse/modulator_principle.png</Image>
+            <Description>脉冲调制器是雷达发射机的核心部件...</Description>
+        </Component>
+        
+        <Component id="trigger" title="触发脉冲">
+            <Image>:/assets/pulse/trigger_wave.png</Image>
+            <Description>触发脉冲用于同步...</Description>
+        </Component>
+        
+        </Experiment>
+
+    <Experiment id="5" visible="false" />
+
+</RadarConfig>

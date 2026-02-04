@@ -62,4 +62,7 @@
         <file>resources/mainIcons/fangxiangOpen.png</file>
         <file>resources/mainIcons/fangxiangdown.png</file>
     </qresource>
+    <qresource prefix="/xml">
+        <file>resources/xml/mcfjlcl.xml</file>
+    </qresource>
 </RCC>

@@ -37,6 +37,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         collapsibleGroup.cpp
         experimentSidebar.h
         experimentSidebar.cpp
+        radarDataModel.h
+        radarConfigLoader.h
+        radarSystemPanel.h
+        radarSystemPanel.cpp
 
 
 

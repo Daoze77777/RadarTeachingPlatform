@@ -50,8 +50,7 @@ void CustomMainWindow::setupCustomTitleBar()
     //创建图标
     iconLabel = new QLabel();
     iconLabel->setFixedSize(50, 50);
-    iconLabel->setPixmap(QPixmap(":/icons/resources/icons/title.png")
-                             .scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    iconLabel->setPixmap(QPixmap(":/icons/resources/icons/title.png").scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     iconLabel->setObjectName("iconLabel");
     titleLayout->addWidget(iconLabel);
 

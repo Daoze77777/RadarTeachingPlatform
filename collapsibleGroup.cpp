@@ -17,7 +17,7 @@ CollapsibleButton::CollapsibleButton(const QString &text, const QIcon &leftIcon,
     setCheckable(true);  // 允许选中状态
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    // 设置样式，参考图二设计 - 导航栏270px，左右各留20px空隙
+    // 设置样式，参考图二设计 - 导航栏270px，左右各留20px空隙  #525D94
     setStyleSheet(R"(
         QPushButton {
             background-color: #525D94;
@@ -84,6 +84,57 @@ void CollapsibleButton::paintEvent(QPaintEvent *event)
     }
 }
 
+// CheckboxButton实现
+CheckboxButton::CheckboxButton(const QString &text, QWidget *parent)
+    : QPushButton(text, parent)
+{
+    // 1. 基础配置
+    setCheckable(true);
+    setAutoExclusive(true);
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    setFixedHeight(28);
+    setMinimumWidth(80);
+
+    // 2. 事件处理
+    setAttribute(Qt::WA_Hover, true);
+    setMouseTracking(true);
+
+    // 3. 字体设置（通过 QFont API）
+    // QFont btnFont;
+    // btnFont.setFamily("PingFang SC");
+    // btnFont.setPixelSize(14);
+    // btnFont.setWeight(QFont::Normal);
+    // setFont(btnFont);
+
+    // 4. 样式表（移除 margin，由父布局控制）
+    setStyleSheet(R"(
+        QPushButton {
+            background: #F8F9FA;
+            color: #0A1424;
+            padding: 6px 12px 6px 16px;
+            border: 1px solid #E9ECEF;
+            border-radius: 8px;
+            text-align: left;
+        }
+        QPushButton:hover,
+        QPushButton:pressed,
+        QPushButton:checked {
+            background: #C4F4DC;
+            color: #0A1424;
+            border: 1px solid #C0E6DC;
+        }
+    )");
+
+// #ifdef QT_DEBUG
+//     // 调试信息（仅在 Debug 模式下）
+//     QFontInfo fontInfo(font());
+//     qDebug() << "CheckboxButton created:"
+//              << "Font:" << fontInfo.family()
+//              << "Size:" << fontInfo.pixelSize()
+//              << "Weight:" << font().weight();
+// #endif
+}
+
 // CollapsibleGroup 实现
 CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWidget *parent)
     : QWidget(parent)
@@ -102,9 +153,8 @@ CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWid
     m_contentWidget = new QWidget(this);
     m_contentWidget->setMinimumHeight(0);  // 确保最小高度为0
     m_contentWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);  // 横向扩展
-
     // 设置内容区域透明背景，允许子组件的滚动条显示
-    m_contentWidget->setStyleSheet("QWidget { background: transparent; }");
+    m_contentWidget->setStyleSheet("QWidget { background-color: red; }");
     m_contentLayout = new QVBoxLayout(m_contentWidget);
     m_contentLayout->setContentsMargins(0, 8, 0, 8);  // 默认值，雷达系统按钮不使用这个
     m_contentLayout->setSpacing(10);
@@ -123,6 +173,7 @@ CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWid
     // 添加到主布局
     mainLayout->addWidget(m_headerButton);
     mainLayout->addWidget(m_contentWidget);
+    //mainLayout->addStretch();
 
     // 初始状态为折叠 - 先隐藏内容区域
     m_contentWidget->setMaximumHeight(0);

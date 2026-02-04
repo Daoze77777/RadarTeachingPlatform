@@ -65,21 +65,10 @@ void MainWindow::setupWindowBase()
         mainLayout->addWidget(this->titleBar);
         setupWindowStyle(); //设置样式表
     }
-    // 创建实验内容专属的 StackedWidget (这就是你之后切换不同实验的舞台)
-    //     if (!this->contentWidget)
-    // {
-    //     this->contentWidget = new QStackedWidget(this);
-    // }
-    //mainLayout->addWidget(this->contentWidget);
 }
 void MainWindow::setupTitleBar()
 {
     setupCustomTitleBar();
-    // 1. 安全检查
-    //if (!m_teachingWindow || !titleBar) return;
-    // 2. 让教学窗口初始化它的菜单对象(fileMenu和helpMenu)
-    // 这样 fileMenu 里面就会装满 setupExperimentMenu()定义的内容
-    //m_teachingWindow->setupMenu();
 }
 void MainWindow::setupLeftSidebar()
 {
@@ -95,30 +84,8 @@ void MainWindow::setupLeftSidebar()
     leftSidebarContentLayout->setContentsMargins(0, 0, 0, 0);
     leftSidebarContentLayout->setSpacing(0);
 
-    // 创建 QScrollArea
-    QScrollArea *scrollArea = new QScrollArea(m_leftSidebarContainer);
-    scrollArea->setFixedWidth(270);  // 固定宽度270px
-    scrollArea->setWidgetResizable(true);                             //内部部件随滚动区缩放
-    scrollArea->setFrameShape(QFrame::NoFrame);                       // 无边框
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 屏蔽横向滚动条
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 禁用纵向滚动条，避免展开时闪烁
-    scrollArea->setStyleSheet("background-color:#FFFFFF;");
-    leftSidebarContentLayout->addWidget(scrollArea);
-
-    // 美化滚动条样式
-    // scrollArea->verticalScrollBar()->setStyleSheet(R"(
-    //     QScrollBar:vertical { width: 6px; background: transparent; }
-    //     QScrollBar::handle:vertical { background: #C0C4CC; border-radius: 3px; min-height: 20px; }
-    //     QScrollBar::handle:vertical:hover { background: #909399; }
-    //     QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
-    // )");
-
-    //创建折叠组按钮
-    ExperimentSidebar* sidebar = new ExperimentSidebar(this);
-    scrollArea->setWidget(sidebar);
-
     // 标题区域
-    QWidget *titleArea = new QWidget(m_leftSidebarContainer);
+{   QWidget *titleArea = new QWidget(m_leftSidebarContainer);
     titleArea->setFixedSize(270,130);
     titleArea->setObjectName("titleArea");
     titleArea->setStyleSheet(R"(
@@ -147,37 +114,43 @@ void MainWindow::setupLeftSidebar()
         font-weight: 500;
         font-size: 24px;
     })");
-
     titleLayout->addWidget(titleLabel);
     leftSidebarContentLayout->addWidget(titleArea);
+}
+
+    // 创建 QScrollArea
+    QScrollArea *scrollArea = new QScrollArea(m_leftSidebarContainer);
+    scrollArea->setFixedWidth(270);  // 固定宽度270px
+    scrollArea->setWidgetResizable(true);                             //内部部件随滚动区缩放
+    scrollArea->setFrameShape(QFrame::NoFrame);                       // 无边框
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 屏蔽横向滚动条
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 禁用纵向滚动条，避免展开时闪烁
+    scrollArea->setStyleSheet("background-color:purple;");
     leftSidebarContentLayout->addWidget(scrollArea);
 
+    // 美化滚动条样式
+    // scrollArea->verticalScrollBar()->setStyleSheet(R"(
+    //     QScrollBar:vertical { width: 6px; background: transparent; }
+    //     QScrollBar::handle:vertical { background: #C0C4CC; border-radius: 3px; min-height: 20px; }
+    //     QScrollBar::handle:vertical:hover { background: #909399; }
+    //     QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
+    // )");
 
+    //创建折叠组按钮
+    ExperimentSidebar* sidebar = new ExperimentSidebar(this);
+    //QIcon icon = QIcon(":/mainicons/resources/mainIcons/leidazujian.png");  // 展开状态
+    //CollapsibleGroup* sidebar = new CollapsibleGroup("雷达组件",icon,this);
+    scrollArea->setWidget(sidebar);
+    leftSidebarContentLayout->addWidget(scrollArea);
 
-    // 创建滚动区内部的容器部件
-    // QWidget *scrollContent = new QWidget();
-    // scrollContent->setObjectName("scrollContent");
-    // scrollContent->setStyleSheet("background-color: red;"); // 导航栏底色
-    // 为内部容器设置垂直布局，用来放你的那些 CollapsibleGroup
-    // QVBoxLayout *contentLayout = new QVBoxLayout(scrollContent);
-    // contentLayout->setContentsMargins(10, 10, 10, 10);
-    // contentLayout->setSpacing(8);
-    // contentLayout->setAlignment(Qt::AlignTop); // 确保内容从顶部开始排列
-
-    //  装载
-    //scrollArea->setWidget(scrollContent);
-
-
-    // ---------------------------------------------------------
-    // 6. 核心：把你以前创建导航项的代码搬到这里
-    // 比如：m_stepTreeWidget, m_collapsibleGroupPulse 等等
-    // ---------------------------------------------------------
-    //initNavigationItems(contentLayout); // 我们把这部分逻辑抽出来，避免 setup 函数太长
-
-    // 7. 将内部部件设置给滚动区域，滚动区域放入外层布局
-    //scrollArea->setWidget(scrollContent);
-    //leftSidebarContentLayout->addWidget(scrollArea);
-
+    // 加载配置
+    // m_allRadarConfigs = RadarConfigLoader::loadAllConfigs(":/xml/resources/xml/mcfjlcl.xml");
+    // // 创建左侧折叠组
+    // m_radarGroup = new CollapsibleGroup("雷达组件", QIcon(":/mainicons/resources/mainIcons/leidazujian.png"), sidebar);
+    // m_radarGroup->setObjectName("radarSystemGroup"); // 你的逻辑需要这个名字
+    // // 创建动态面板并放入折叠组
+    // m_radarPanel = new RadarSystemPanel(this);
+    // m_radarGroup->addWidget(m_radarPanel);
 }
 void MainWindow::setupCenterArea()
 {

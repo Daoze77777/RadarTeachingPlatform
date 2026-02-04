@@ -4,6 +4,10 @@
 #include "customMainWindow.h"
 #include "experimentTypes.h"
 #include "teachingMainWindow.h"
+#include "radarConfigLoader.h"
+#include "radarSystemPanel.h"
+#include "collapsibleGroup.h"
+#include <QTextBrowser>
 
 class MainWindow : public CustomMainWindow
 {
@@ -23,6 +27,13 @@ private:
     void setupLeftSidebar(); // 初始化左侧导航树
     void setupRightPanel();  // 初始化右侧仪器面板
     void setupCenterArea();  // 初始化中间区域
+
+    //26-2-4新增
+    CollapsibleGroup* m_radarGroup; // 左侧折叠组容器
+    RadarSystemPanel* m_radarPanel; // 我们刚才写的动态面板
+    QMap<int, ExperimentRadarConfig> m_allRadarConfigs; // 缓存所有配置
+    QLabel* m_rightImageLabel; // 右侧显示图片的控件
+    QTextBrowser* m_rightDescText; // 右侧显示文字的控件
 
     // 左中右核心容器
     QWidget *m_headerWidget;

@@ -23,6 +23,13 @@ private:
     bool m_expanded;
 };
 
+// CheckboxButton.h
+class CheckboxButton : public QPushButton {
+    Q_OBJECT
+public:
+    explicit CheckboxButton(const QString &text, QWidget *parent = nullptr);
+};
+
 // 可折叠组组件
 class CollapsibleGroup : public QWidget
 {
@@ -40,7 +47,6 @@ public:
     CollapsibleButton* getHeaderButton() const;
     bool containsPoint(const QPoint& point) const;
     QVBoxLayout* getContentLayout() const;  // 获取内容布局
-
 
 signals:
     void expandedChanged(bool expanded);
