@@ -5,7 +5,7 @@
 #include <QList>
 #include <QMap>
 
-// 1. 单个组件的数据（按钮+内容）
+// 1. 单个按钮组件的数据（按钮+内容）
 struct RadarComponentItem {
     QString id;           // 唯一标识，如 "modulator"
     QString title;        // 按钮显示的文字，如 "脉冲调制器"

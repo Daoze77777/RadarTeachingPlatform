@@ -5,7 +5,6 @@
 #include <QWidget>
 #include "collapsiblegroup.h" // 引用你现有的类
 #include "radarSystemPanel.h"   // 引入刚才写的雷达面板
-#include "radarConfigLoader.h"  // 引入配置加载器
 
 // 使用枚举，让调用者更清晰
 enum GroupType {
@@ -32,6 +31,7 @@ private:
     RadarSystemPanel* m_radarPanel = nullptr;
     // 【新增】保存所有加载的配置数据
     QMap<int, ExperimentRadarConfig> m_radarConfigs;
+
     // 内部初始化函数
     void initUI();         // 创建4个组的外壳（你现在的代码）
     void loadRadarData();    // 读取XML数据的函数

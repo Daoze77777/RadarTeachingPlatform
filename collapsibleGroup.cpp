@@ -98,15 +98,6 @@ CheckboxButton::CheckboxButton(const QString &text, QWidget *parent)
     // 2. 事件处理
     setAttribute(Qt::WA_Hover, true);
     setMouseTracking(true);
-
-    // 3. 字体设置（通过 QFont API）
-    // QFont btnFont;
-    // btnFont.setFamily("PingFang SC");
-    // btnFont.setPixelSize(14);
-    // btnFont.setWeight(QFont::Normal);
-    // setFont(btnFont);
-
-    // 4. 样式表（移除 margin，由父布局控制）
     setStyleSheet(R"(
         QPushButton {
             background: #F8F9FA;
@@ -124,15 +115,6 @@ CheckboxButton::CheckboxButton(const QString &text, QWidget *parent)
             border: 1px solid #C0E6DC;
         }
     )");
-
-// #ifdef QT_DEBUG
-//     // 调试信息（仅在 Debug 模式下）
-//     QFontInfo fontInfo(font());
-//     qDebug() << "CheckboxButton created:"
-//              << "Font:" << fontInfo.family()
-//              << "Size:" << fontInfo.pixelSize()
-//              << "Weight:" << font().weight();
-// #endif
 }
 
 // CollapsibleGroup 实现
@@ -153,11 +135,12 @@ CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWid
     m_contentWidget = new QWidget(this);
     m_contentWidget->setMinimumHeight(0);  // 确保最小高度为0
     m_contentWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);  // 横向扩展
+
     // 设置内容区域透明背景，允许子组件的滚动条显示
-    m_contentWidget->setStyleSheet("QWidget { background-color: transparent`; }");
+    m_contentWidget->setStyleSheet("QWidget { background-color: transparent; }");
     m_contentLayout = new QVBoxLayout(m_contentWidget);
-    m_contentLayout->setContentsMargins(0, 8, 0, 8);  // 默认值，雷达系统按钮不使用这个
-    m_contentLayout->setSpacing(10);
+    //->setContentsMargins(0, 8, 0, 8);  // 默认值，雷达系统按钮不使用这个
+    //m_contentLayout->setSpacing(10);
 
     // 创建动画 - 进一步优化动画设置
     m_animation = new QPropertyAnimation(m_contentWidget, "maximumHeight", this);
@@ -229,7 +212,8 @@ void CollapsibleGroup::setExpanded(bool expanded)
     m_expanded = expanded;
     m_headerButton->setExpanded(expanded);
     // 判断是否是雷达系统组，需要特殊处理
-    bool isRadarGroup = (objectName() == "radarSystemGroup");
+    //bool isRadarGroup = (objectName() == "radarSystemGroup");
+    bool isRadarGroup = (objectName() == "RadarComponents");
     // 如果是雷达系统组且正在折叠，使用更直接的处理方式
     if (isRadarGroup && !expanded) {
         // 雷达系统组直接折叠，只限制高度，不影响宽度
@@ -380,9 +364,30 @@ QVBoxLayout* CollapsibleGroup::getContentLayout() const
 }
 void CollapsibleGroup::onHeaderClicked()
 {
-    emit animationStarted();  // 通知动画开始，触发UI交互模式
-    setExpanded(!m_expanded);
-    emit clicked();  // 发出点击信号
+    // emit animationStarted();  // 通知动画开始，触发UI交互模式
+    // setExpanded(!m_expanded);
+    // emit clicked();  // 发出点击信号
+    emit animationStarted();
+
+    // 切换状态
+    bool newExpanded = !m_expanded;
+
+    // --- 核心修正：计算真实高度 ---
+    // sizeHint().height() 会根据你 updatePanel 里设置的 setFixedHeight 自动获取最新高度
+    int contentHeight = m_contentLayout->sizeHint().height();
+
+    if (newExpanded) {
+        m_contentWidget->show();
+        m_animation->setStartValue(m_contentWidget->height());
+        m_animation->setEndValue(contentHeight); // 动画终点设为实际子项高度
+    } else {
+        m_animation->setStartValue(m_contentWidget->height());
+        m_animation->setEndValue(0);
+    }
+
+    m_animation->start();
+    setExpanded(newExpanded); // 更新内部标志位
+    emit clicked();
 }
 void CollapsibleGroup::onAnimationFinished()
 {

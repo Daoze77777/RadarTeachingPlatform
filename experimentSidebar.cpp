@@ -1,17 +1,18 @@
 
 #include "experimentSidebar.h"
 #include <QVBoxLayout>
+#include "radarConfigLoader.h"
 
 ExperimentSidebar::ExperimentSidebar(QWidget *parent)
     : QWidget(parent)
 {
     loadRadarData();
     initUI();
-    // 3. 【核心步骤】分别为不同的组填充内容
-    // 这种写法清晰地将“容器创建”和“内容填充”分离开来
+    // 分别为不同的组填充内容，将“容器创建”和“内容填充”分离开来
     initRadarContent();     // 填充雷达组件
     //initPrincipleContent(); // 填充测量原理 (占位)
     //initStepContent();      // 填充实验步骤 (占位)
+    this->switchExperiment(1);
 }
 
 void ExperimentSidebar::initUI()
@@ -75,6 +76,7 @@ void ExperimentSidebar::initRadarContent()
     // 2. 创建我们在上一步封装好的 RadarSystemPanel
     // 这个 Panel 会自动管理里面的复选框、布局和滚动条
     m_radarPanel = new RadarSystemPanel(this);
+    m_radarPanel->setStyleSheet("background-color:blue");
 
     // 3. 将 Panel 添加到折叠组的内容区
     // 假设 CollapsibleGroup 有 addWidget 方法，或者你可以获得它的 layout
@@ -108,24 +110,19 @@ void ExperimentSidebar::switchExperiment(int experimentType)
     // --- 1. 处理雷达组件组 ---
     if (m_radarConfigs.contains(experimentType)) {
         ExperimentRadarConfig config = m_radarConfigs[experimentType];
-
         // 控制组的显隐
         m_groups[RadarComponents]->setVisible(config.isVisible);
-
         // 如果显示，让 Panel 刷新按钮
         if (config.isVisible && m_radarPanel) {
             m_radarPanel->updatePanel(config);
-
             // 自动展开雷达组（可选）
-            m_groups[RadarComponents]->setExpanded(true);
+            //m_groups[RadarComponents]->setExpanded(true);
         }
     } else {
         m_groups[RadarComponents]->setVisible(false);
     }
-
     // --- 2. 处理测量原理组 (如果有对应逻辑) ---
     // updatePrinciples(experimentType);
-
     // --- 3. 处理实验步骤组 ---
     // updateSteps(experimentType);
 }

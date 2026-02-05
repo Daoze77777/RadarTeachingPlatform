@@ -34,11 +34,17 @@ RadarSystemPanel::RadarSystemPanel(QWidget *parent)
 void RadarSystemPanel::updatePanel(const ExperimentRadarConfig& config) {
     // 清理：删除旧按钮
     QLayoutItem *child;
-    while ((child = m_containerLayout->takeAt(0)) != nullptr) {
+
+    while ((child = m_containerLayout->takeAt(0)) != nullptr)
+    {
         if (child->widget()) child->widget()->deleteLater();
         delete child;
     }
-    for (auto btn : m_btnGroup->buttons()) m_btnGroup->removeButton(btn);
+
+    for (auto btn : m_btnGroup->buttons())
+    {
+        m_btnGroup->removeButton(btn);
+    }
 
     // 同步数据
     m_currentItems = config.items;
@@ -51,6 +57,24 @@ void RadarSystemPanel::updatePanel(const ExperimentRadarConfig& config) {
         m_containerLayout->addWidget(btn);
         m_btnGroup->addButton(btn, i); //将索引作为 ID 绑定
     }
+
+    // --- 关键修改：布局与高度刷新 ---
+
+    // 4. 强制要求容器重新计算布局
+    m_container->adjustSize();
+
+    // 5. 动态计算面板高度 (假设按钮高度32 + 间距8)
+    // 必须设置这个高度，否则折叠组在展开时无法准确计算内容区域大小
+    int calculatedHeight = m_currentItems.size() * (32 + 8) + 10;
+
+    // 限制一个最大高度（例如 315px），超过则显示滚动条
+    int finalHeight = qMin(calculatedHeight, 315);
+
+    m_container->setFixedHeight(calculatedHeight); // 内容层撑开
+    this->setFixedHeight(finalHeight);              // 视图层固定高度
+
+    // 7. 通知上层 UI 刷新
+    this->updateGeometry();
 
     // 默认选中第一个并触发显示
     if (!m_btnGroup->buttons().isEmpty()) {

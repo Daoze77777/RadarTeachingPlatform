@@ -125,7 +125,7 @@ void MainWindow::setupLeftSidebar()
     scrollArea->setFrameShape(QFrame::NoFrame);                       // 无边框
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 屏蔽横向滚动条
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 禁用纵向滚动条，避免展开时闪烁
-    scrollArea->setStyleSheet("background-color:purple;");
+    scrollArea->setStyleSheet("background-color:transparent;");
     leftSidebarContentLayout->addWidget(scrollArea);
 
     // 美化滚动条样式
@@ -136,21 +136,9 @@ void MainWindow::setupLeftSidebar()
     //     QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
     // )");
 
-    //创建折叠组按钮
+    //创建折叠组
     ExperimentSidebar* sidebar = new ExperimentSidebar(this);
-    //QIcon icon = QIcon(":/mainicons/resources/mainIcons/leidazujian.png");  // 展开状态
-    //CollapsibleGroup* sidebar = new CollapsibleGroup("雷达组件",icon,this);
     scrollArea->setWidget(sidebar);
-    leftSidebarContentLayout->addWidget(scrollArea);
-
-    // 加载配置
-    // m_allRadarConfigs = RadarConfigLoader::loadAllConfigs(":/xml/resources/xml/mcfjlcl.xml");
-    // // 创建左侧折叠组
-    // m_radarGroup = new CollapsibleGroup("雷达组件", QIcon(":/mainicons/resources/mainIcons/leidazujian.png"), sidebar);
-    // m_radarGroup->setObjectName("radarSystemGroup"); // 你的逻辑需要这个名字
-    // // 创建动态面板并放入折叠组
-    // m_radarPanel = new RadarSystemPanel(this);
-    // m_radarGroup->addWidget(m_radarPanel);
 }
 void MainWindow::setupCenterArea()
 {
