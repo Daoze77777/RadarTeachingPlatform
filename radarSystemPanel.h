@@ -18,6 +18,8 @@ public:
 
     // 根据从 XML 解析的数据更新面板按钮
     void updatePanel(const ExperimentRadarConfig& config);
+    // 【新增】重写 sizeHint，这是 Qt 布局系统沟通尺寸的标准方式
+    QSize sizeHint() const override;
 
 signals:
     // 当某个按钮被选中时，发送该组件的完整数据（包含图片路径和描述）

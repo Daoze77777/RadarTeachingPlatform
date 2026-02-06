@@ -12,7 +12,7 @@ ExperimentSidebar::ExperimentSidebar(QWidget *parent)
     initRadarContent();     // 填充雷达组件
     //initPrincipleContent(); // 填充测量原理 (占位)
     //initStepContent();      // 填充实验步骤 (占位)
-    this->switchExperiment(1);
+    switchExperiment(1);
 }
 
 void ExperimentSidebar::initUI()
@@ -22,7 +22,7 @@ void ExperimentSidebar::initUI()
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0); // 紧密排列
 
-    // 2. 【关键优化】定义配置数据 将变化的参数（标题、图标）提取出来，而不是硬编码在 new 语句里
+    // 2. 定义配置数据 将变化的参数（标题、图标）提取出来，而不是硬编码在 new 语句里
     struct GroupConfig {
         QString title;
         QString iconPath;
@@ -36,7 +36,7 @@ void ExperimentSidebar::initUI()
         {"相关课程", ":/mainicons/resources/mainIcons/xaingguankechengICon.png"}   // 对应 GroupType::Courses (3)
     };
 
-    // 3. 循环创建对象（只写一次 new）
+    // 3. 循环创建对象
     for (int i = 0; i < 4; ++i) {
         // 调用构造函数,this 指针自动作为 parent 传入
         m_groups[i] = new CollapsibleGroup(configs[i].title, QIcon(configs[i].iconPath), this);
@@ -73,17 +73,13 @@ void ExperimentSidebar::initRadarContent()
     CollapsibleGroup* group = m_groups[RadarComponents];
     if (!group) return;
 
-    // 2. 创建我们在上一步封装好的 RadarSystemPanel
-    // 这个 Panel 会自动管理里面的复选框、布局和滚动条
+    // 2. 创建我们在上一步封装好的 RadarSystemPanel,这个 Panel会自动管理里面的复选框布局和滚动条
     m_radarPanel = new RadarSystemPanel(this);
-    m_radarPanel->setStyleSheet("background-color:blue");
 
     // 3. 将 Panel 添加到折叠组的内容区
-    // 假设 CollapsibleGroup 有 addWidget 方法，或者你可以获得它的 layout
-    // 如果 CollapsibleGroup 继承自 QWidget，通常我们需要把它加到内部的 contentLayout 中
     group->addWidget(m_radarPanel);
 
-    // 4. 连接信号：当 Panel 里的按钮被点击，转发出去
+    // 4. 连接信号:当Panel里的按钮被点击，转发出去
     //connect(m_radarPanel, &RadarSystemPanel::itemSelected,this, &ExperimentSidebar::radarComponentSelected);
 }
 // 实现获取组的接口
@@ -107,7 +103,7 @@ void ExperimentSidebar::resetAllGroups()
 // 切换实验的接口
 void ExperimentSidebar::switchExperiment(int experimentType)
 {
-    // --- 1. 处理雷达组件组 ---
+    //  1. 处理雷达组件组
     if (m_radarConfigs.contains(experimentType)) {
         ExperimentRadarConfig config = m_radarConfigs[experimentType];
         // 控制组的显隐
@@ -121,8 +117,8 @@ void ExperimentSidebar::switchExperiment(int experimentType)
     } else {
         m_groups[RadarComponents]->setVisible(false);
     }
-    // --- 2. 处理测量原理组 (如果有对应逻辑) ---
+    //  2. 处理测量原理组 (如果有对应逻辑)
     // updatePrinciples(experimentType);
-    // --- 3. 处理实验步骤组 ---
+    //  3. 处理实验步骤组
     // updateSteps(experimentType);
 }

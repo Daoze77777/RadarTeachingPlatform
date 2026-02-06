@@ -5,6 +5,7 @@
 #include <QPaintEvent>
 #include <QPropertyAnimation>
 #include <QVBoxLayout>
+#include <QScrollArea>
 // 自定义按钮，支持右侧箭头图标
 class CollapsibleButton : public QPushButton
 {
@@ -61,6 +62,7 @@ private slots:
 private:
     CollapsibleButton *m_headerButton;  //导航栏一级按钮
     QPropertyAnimation *m_animation;
+    QScrollArea* m_scrollArea;
     QVBoxLayout *m_contentLayout;
     QWidget *m_contentWidget;
     bool m_expanded;
