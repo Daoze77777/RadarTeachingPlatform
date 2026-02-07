@@ -11,11 +11,10 @@
             <Description>触发脉冲用于同步...</Description>
         </Component>
 
-
-
-
-
-
+        <Component id="trigger" title="触发脉冲">
+            <Image>:/assets/pulse/trigger_wave.png</Image>
+            <Description>触发脉冲用于同步...</Description>
+        </Component>
         </Experiment>
 
     <Experiment id="5" visible="false" />

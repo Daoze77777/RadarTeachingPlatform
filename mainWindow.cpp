@@ -75,9 +75,8 @@ void MainWindow::setupLeftSidebar()
     //创建左侧导航栏容器
     m_leftSidebarContainer = new QWidget(this);
     m_leftSidebarContainer->setFixedSize(270, 963);
-    //m_leftSidebarContainer->setFixedWidth(270);
     m_leftSidebarContainer->setObjectName("leftSidebarContainer");
-    m_leftSidebarContainer->setStyleSheet("background-color:transparent;");
+    m_leftSidebarContainer->setStyleSheet("background-color: #FFFFFF;");
 
     //设置布局
     QVBoxLayout *leftSidebarContentLayout = new QVBoxLayout(m_leftSidebarContainer);
@@ -118,27 +117,9 @@ void MainWindow::setupLeftSidebar()
     leftSidebarContentLayout->addWidget(titleArea);
 }
 
-    // 创建 QScrollArea
-    QScrollArea *scrollArea = new QScrollArea(m_leftSidebarContainer);
-    scrollArea->setFixedWidth(270);  // 固定宽度270px
-    scrollArea->setWidgetResizable(true);                             //内部部件随滚动区缩放
-    scrollArea->setFrameShape(QFrame::NoFrame);                       // 无边框
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 屏蔽横向滚动条
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 禁用纵向滚动条，避免展开时闪烁
-    scrollArea->setStyleSheet("background-color:transparent;");
-    leftSidebarContentLayout->addWidget(scrollArea);
-
-    // 美化滚动条样式
-    // scrollArea->verticalScrollBar()->setStyleSheet(R"(
-    //     QScrollBar:vertical { width: 6px; background: transparent; }
-    //     QScrollBar::handle:vertical { background: #C0C4CC; border-radius: 3px; min-height: 20px; }
-    //     QScrollBar::handle:vertical:hover { background: #909399; }
-    //     QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
-    // )");
-
     //创建折叠组
     ExperimentSidebar* sidebar = new ExperimentSidebar(this);
-    scrollArea->setWidget(sidebar);
+    leftSidebarContentLayout->addWidget(sidebar);
 }
 void MainWindow::setupCenterArea()
 {

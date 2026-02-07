@@ -29,6 +29,8 @@ private:
 
     // 【新增】保存雷达面板指针，因为我们需要频繁调用它的 updatePanel
     RadarSystemPanel* m_radarPanel = nullptr;
+    RadarSystemPanel* m_principlesPanel = nullptr;
+
     // 【新增】保存所有加载的配置数据
     QMap<int, ExperimentRadarConfig> m_radarConfigs;
 
@@ -36,7 +38,7 @@ private:
     void initUI();         // 创建4个组的外壳（你现在的代码）
     void loadRadarData();    // 读取XML数据的函数
     void initRadarContent();     // 填充第0组：雷达组件
-    //void initPrincipleContent(); // 填充第1组：测量原理
+    void initPrincipleContent(); // 填充第1组：测量原理
     //void initStepContent();      // 填充第2组：实验步骤
 };
 

@@ -135,7 +135,7 @@ CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWid
     m_contentWidget = new QWidget(this);
     m_contentWidget->setMinimumHeight(0);  // 确保最小高度为0
     m_contentWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);  // 横向扩展
-    m_contentWidget->setStyleSheet("QWidget { background-color: purple; }");
+    //m_contentWidget->setStyleSheet("QWidget { background-color: purple; }");
 
     //内容容器垂直布局
     m_contentLayout = new QVBoxLayout(m_contentWidget);

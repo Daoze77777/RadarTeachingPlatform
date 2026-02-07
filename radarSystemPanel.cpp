@@ -10,22 +10,46 @@ RadarSystemPanel::RadarSystemPanel(QWidget *parent)
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     // 1. 初始化滚动区域
-    // m_scrollArea = new QScrollArea(this);
-    // m_scrollArea->setWidgetResizable(true);
-    // m_scrollArea->setFrameShape(QFrame::NoFrame);
-    // m_scrollArea->setStyleSheet("QScrollArea { background: transparent; }");
+    m_scrollArea = new QScrollArea(this);
+    m_scrollArea->setWidgetResizable(true);
+    m_scrollArea->setFrameShape(QFrame::NoFrame);
+    m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);     // 屏蔽横向滚动条
+    m_scrollArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);    //必须设置为Fixed，防止自动扩张
+    m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);    // 让滚动条在不滚动时自动隐藏，且不占用布局空间
+    m_scrollArea->setStyleSheet(R"(
+    QScrollArea {
+        background: transparent;
+    }
+    QScrollBar:vertical {
+        width: 6px;                 /* 极简细长风格 */
+        background: transparent;    /* 背景透明 */
+        margin: 0px;
+    }
+    QScrollBar::handle:vertical {
+        background: rgba(255, 255, 255, 0.3); /* 半透明白色，适配深色背景 */
+        min-height: 30px;
+        border-radius: 3px;         /* 圆角滑块 */
+    }
+    QScrollBar::handle:vertical:hover {
+        background: rgba(255, 255, 255, 0.5); /* 悬停时稍微亮一点 */
+    }
+    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+        height: 0px;                /* 隐藏上下箭头 */
+    }
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+        background: none;           /* 隐藏轨道背景 */
+    }
+)");
 
     m_container = new QWidget();
-    m_container->setStyleSheet("background-color:cyan;");
     //垂直布局
     m_containerLayout = new QVBoxLayout(m_container);
-    m_containerLayout->setContentsMargins(0, 0, 0, 0);
+    m_containerLayout->setContentsMargins(0, 0, 8, 0);
     m_containerLayout->setSpacing(15); // 按钮间距
     m_containerLayout->setAlignment(Qt::AlignTop);
 
-    //m_scrollArea->setWidget(m_container);
-    //mainLayout->addWidget(m_scrollArea);
-    mainLayout->addWidget(m_container);
+    m_scrollArea->setWidget(m_container);
+    mainLayout->addWidget(m_scrollArea);
 
     // 2. 初始化按钮组（实现单选互斥）
     m_btnGroup = new QButtonGroup(this);
@@ -63,9 +87,6 @@ void RadarSystemPanel::updatePanel(const ExperimentRadarConfig& config) {
     // 4. 布局与高度刷新 强制要求容器重新计算布局
     m_container->adjustSize();
 
-    // 5. 动态计算面板高度 (假设按钮高度40 + 间距15)
-    //int totalHeight = m_currentItems.size() * (40 + 15) ;
-
     // 获取布局算出来的【真实总高度】（包含所有按钮高度、间距、边距）
     int totalHeight = m_containerLayout->sizeHint().height();
     qDebug()<<totalHeight;
@@ -73,7 +94,7 @@ void RadarSystemPanel::updatePanel(const ExperimentRadarConfig& config) {
     // 限制一个最大高度（例如 450px），超过则显示滚动条
     int displayHeight = qMin(totalHeight, 450);
 
-    m_container->setFixedHeight(totalHeight); // 内容层撑开
+    m_scrollArea->setFixedHeight(displayHeight);
     this->setFixedHeight(displayHeight);      // 视图层固定高度
 
     // 7. 通知上层 UI 刷新

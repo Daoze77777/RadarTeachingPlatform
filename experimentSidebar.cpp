@@ -10,7 +10,7 @@ ExperimentSidebar::ExperimentSidebar(QWidget *parent)
     initUI();
     // 分别为不同的组填充内容，将“容器创建”和“内容填充”分离开来
     initRadarContent();     // 填充雷达组件
-    //initPrincipleContent(); // 填充测量原理 (占位)
+    initPrincipleContent(); // 填充测量原理 (占位)
     //initStepContent();      // 填充实验步骤 (占位)
     switchExperiment(1);
 }
@@ -59,6 +59,7 @@ void ExperimentSidebar::initUI()
     // 5. 底部弹簧
     mainLayout->addStretch();
 }
+
 void ExperimentSidebar::loadRadarData()
 {
     // 1. 先加载数据 (避免后续卡顿)
@@ -66,7 +67,8 @@ void ExperimentSidebar::loadRadarData()
     // 调试一下，看看读到了没有
     qDebug() << "已加载雷达配置，共" << m_radarConfigs.size() << "个实验配置";
 }
-// 【关键实现】如何添加子选项
+
+// 初始化雷达组件面板
 void ExperimentSidebar::initRadarContent()
 {
     // 1. 获取第0个组（雷达组件组）
@@ -82,6 +84,22 @@ void ExperimentSidebar::initRadarContent()
     // 4. 连接信号:当Panel里的按钮被点击，转发出去
     //connect(m_radarPanel, &RadarSystemPanel::itemSelected,this, &ExperimentSidebar::radarComponentSelected);
 }
+
+//初始化测量原理面板
+void ExperimentSidebar::initPrincipleContent()
+{
+    // 1. 获取第1个组（测量原理组）
+    CollapsibleGroup* group = m_groups[Principles];
+    if (!group) return;
+
+    // 2. 创建我们在上一步封装好的 RadarSystemPanel,这个 Panel会自动管理里面的复选框布局和滚动条
+    m_principlesPanel = new RadarSystemPanel(this);
+
+    // 3. 将 Panel 添加到折叠组的内容区
+    group->addWidget(m_principlesPanel);
+
+}
+
 // 实现获取组的接口
 CollapsibleGroup* ExperimentSidebar::getGroup(GroupType type)
 {
