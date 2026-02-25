@@ -7,61 +7,78 @@
 
 class RadarConfigLoader
 {
-
 public:
-    // 加载整个配置文件
-    static QMap<int, ExperimentRadarConfig> loadAllConfigs(const QString& xmlPath) {
-        QMap<int, ExperimentRadarConfig> configs;
+    // 加载单个 XML 文件
+    static ExperimentConfig loadConfig(const QString& xmlPath) {
+        ExperimentConfig config;
         QFile file(xmlPath);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qDebug() << "无法打开雷达配置文件:" << xmlPath;
-            return configs;
+            qDebug() << "Error opening:" << xmlPath;
+            return config;
         }
 
         QXmlStreamReader xml(&file);
         while (!xml.atEnd() && !xml.hasError()) {
             QXmlStreamReader::TokenType token = xml.readNext();
-            if (token == QXmlStreamReader::StartElement && xml.name() == QStringLiteral("Experiment")) {
-                parseExperiment(xml, configs);
+            if (token == QXmlStreamReader::StartElement) {
+                if (xml.name() == QStringLiteral("Experiment")) {
+                    QXmlStreamAttributes attrs = xml.attributes();
+                    config.id = attrs.value("id").toInt();
+                    config.name = attrs.value("name").toString();
+                    config.fixedBottomImage = attrs.value("bottomImagePath").toString();
+                }
+                // 解析四个组
+                else if (xml.name() == QStringLiteral("GroupRadar")) {
+                    parseGroup(xml, config.radarGroup);
+                }
+                else if (xml.name() == QStringLiteral("GroupPrinciple")) {
+                    parseGroup(xml, config.principleGroup);
+                }
+                else if (xml.name() == QStringLiteral("GroupStep")) {
+                    parseGroup(xml, config.stepGroup);
+                }
+                else if (xml.name() == QStringLiteral("GroupCourse")) {
+                    parseGroup(xml, config.courseGroup);
+                }
             }
         }
-        return configs;
+        return config;
     }
 
 private:
-    static void parseExperiment(QXmlStreamReader& xml, QMap<int, ExperimentRadarConfig>& configs) {
+    // 通用的解析组函数
+    static void parseGroup(QXmlStreamReader& xml, GroupData& groupData) {
+        // 1. 读取可见性
         QXmlStreamAttributes attrs = xml.attributes();
-        int expId = attrs.value("id").toInt();
+        if (attrs.hasAttribute("visible")) {
+            groupData.isVisible = (attrs.value("visible").toString() != "false");
+        }
 
-        ExperimentRadarConfig config;
-        config.isVisible = (attrs.value("visible").toString() != "false");
+        // 2. 解析组内的 Item
+        QString groupTagName = xml.name().toString();
+        while (!(xml.tokenType() == QXmlStreamReader::EndElement && xml.name() == groupTagName)) {
+            xml.readNext();
+            if (xml.tokenType() == QXmlStreamReader::StartElement && xml.name() == QStringLiteral("Item")) {
+                ExperimentContentItem item;
+                QXmlStreamAttributes itemAttrs = xml.attributes();
+                item.id = itemAttrs.value("id").toString();
+                item.title = itemAttrs.value("title").toString();
 
-        // 如果可见，继续解析子节点
-        if (config.isVisible) {
-            while (!(xml.tokenType() == QXmlStreamReader::EndElement && xml.name() == QStringLiteral("Experiment"))) {
-                if (xml.readNext() == QXmlStreamReader::StartElement && xml.name() == QStringLiteral("Component")) {
-                    RadarComponentItem item;
-                    QXmlStreamAttributes itemAttrs = xml.attributes();
-                    item.id = itemAttrs.value("id").toString();
-                    item.title = itemAttrs.value("title").toString();
-
-                    // 解析内部标签 Image 和 Description
-                    while (!(xml.tokenType() == QXmlStreamReader::EndElement && xml.name() == QStringLiteral("Component"))) {
-                        xml.readNext();
+                // 解析 Item 内部
+                while (!(xml.tokenType() == QXmlStreamReader::EndElement && xml.name() == QStringLiteral("Item"))) {
+                    xml.readNext();
+                    if (xml.tokenType() == QXmlStreamReader::StartElement) {
                         if (xml.name() == QStringLiteral("Image"))
                             item.imagePath = xml.readElementText();
                         else if (xml.name() == QStringLiteral("Description"))
                             item.description = xml.readElementText();
+                        else
+                            xml.skipCurrentElement();
                     }
-                    config.items.append(item);
                 }
+                groupData.items.append(item);
             }
-        } else {
-            // 如果不可见，跳过直到结束标签
-            xml.skipCurrentElement();
         }
-
-        configs.insert(expId, config);
     }
 };
 #endif

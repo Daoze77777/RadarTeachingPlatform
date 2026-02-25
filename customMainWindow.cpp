@@ -3,6 +3,7 @@
 #include <QHBoxLayout>
 #include <QMouseEvent>
 #include <QVBoxLayout>
+#include "ExperimentManager.h"
 
 CustomMainWindow::CustomMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -408,3 +409,73 @@ void CustomMainWindow::about()
     dialog->exec();
     dialog->deleteLater();
 }
+void CustomMainWindow::setupMenu()
+{
+    //清空默认菜单
+    fileMenu->clear();
+    helpMenu->clear();
+
+    // 设置菜单样式
+    QString menuStyle = R"(
+        QMenu {
+            background-color:rgba(247, 249, 255, 0.5);
+            border-radius: 10px;
+            border: 2px solid #6796FE;
+            padding: 0px;
+        }
+
+        QMenu::item {
+            background-color: transparent ;
+            border-radius: 8px;
+            font-family: 'PingFang SC';
+            font-weight: 400;
+            font-size: 18px;
+            color: #252E5B;
+            padding: 5px 25px;
+            margin: 2px 2px;
+        }
+
+        QMenu::item:selected {
+            background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0, stop:0 #70A9FF, stop:1 #507CFF);
+            color: #FFFFFF;
+        }
+
+        QMenu::item:pressed {
+            background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0, stop:0 #5A99EF, stop:1 #406CEF);
+
+        }
+    )";
+    // 设置文件菜单窗口属性以支持圆角和透明
+    fileMenu->setWindowFlags(fileMenu->windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    fileMenu->setAttribute(Qt::WA_TranslucentBackground);
+    fileMenu->setStyleSheet(menuStyle);
+
+    // 添加文件菜单项
+    setupExperimentMenu();
+
+    // 设置帮助菜单窗口属性以支持圆角和透明
+    helpMenu->setWindowFlags(helpMenu->windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    helpMenu->setAttribute(Qt::WA_TranslucentBackground);
+    helpMenu->setMinimumWidth(helpButton->width());
+    helpMenu->setStyleSheet(menuStyle);
+
+    // 添加帮助菜单项
+    QAction *aboutAction = new QAction("关于(A)", this);
+    helpMenu->addAction(aboutAction);
+    connect(aboutAction, &QAction::triggered, this, &CustomMainWindow::about);
+}
+void CustomMainWindow::setupExperimentMenu()
+{
+    // 只获取【当前平台】的实验列表
+    SystemPlatformInfo currentPlatform = ExperimentManager::instance().getCurrentPlatform();
+
+    for (const ExperimentInfo& exp : currentPlatform.experiments) {
+        QAction* action = new QAction(exp.name, this);
+        action->setData(exp.expId); // 存入全局唯一的 expId
+        connect(action, &QAction::triggered, this, [this, action]() {
+            this->onMenuExperimentSelected(action->data().toInt());
+        });
+        fileMenu->addAction(action);
+    }
+}
+

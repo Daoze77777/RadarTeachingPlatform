@@ -61,8 +61,23 @@
         <file>resources/mainIcons/fangxiangup.png</file>
         <file>resources/mainIcons/fangxiangOpen.png</file>
         <file>resources/mainIcons/fangxiangdown.png</file>
+        <file>resources/mainIcons/hint.png</file>
     </qresource>
     <qresource prefix="/xml">
         <file>resources/xml/mcfjlcl.xml</file>
+        <file>resources/xml/mcfjlcl_test.xml</file>
+    </qresource>
+    <qresource prefix="/assets">
+        <file>resources/assets/MCFJLCL/1.png</file>
+        <file>resources/assets/MCFJLCL/2.png</file>
+        <file>resources/assets/MCFJLCL/3.png</file>
+        <file>resources/assets/MCFJLCL/4.png</file>
+        <file>resources/assets/MCFJLCL/5.png</file>
+        <file>resources/assets/MCFJLCL/6.png</file>
+        <file>resources/assets/MCFJLCL/7.png</file>
+        <file>resources/assets/MCFJLCL/8.png</file>
+        <file>resources/assets/MCFJLCL/9.png</file>
+        <file>resources/assets/MCFJLCL/MCFCJYLT.png</file>
+        <file>resources/assets/MCFJLCL/10.png</file>
     </qresource>
 </RCC>

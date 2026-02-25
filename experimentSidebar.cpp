@@ -2,17 +2,12 @@
 #include "experimentSidebar.h"
 #include <QVBoxLayout>
 #include "radarConfigLoader.h"
+#include "ExperimentManager.h"//
 
 ExperimentSidebar::ExperimentSidebar(QWidget *parent)
     : QWidget(parent)
 {
-    loadRadarData();
     initUI();
-    // 分别为不同的组填充内容，将“容器创建”和“内容填充”分离开来
-    initRadarContent();     // 填充雷达组件
-    initPrincipleContent(); // 填充测量原理 (占位)
-    //initStepContent();      // 填充实验步骤 (占位)
-    switchExperiment(1);
 }
 
 void ExperimentSidebar::initUI()
@@ -26,23 +21,27 @@ void ExperimentSidebar::initUI()
     struct GroupConfig {
         QString title;
         QString iconPath;
+        PanelStyle style; // 决定是普通复选还是带序号
     };
 
     // 配置列表：如果你想改名字或换图标，只用改这里
     GroupConfig configs[4] = {
-        {"雷达组件", ":/mainicons/resources/mainIcons/leidazujian.png"},  // 对应 GroupType::RadarComponents (0)
-        {"测量原理", ":/mainicons/resources/mainIcons/celiangyuanli.png"},  // 对应 GroupType::Principles (1)
-        {"实验步骤", ":/mainicons/resources/mainIcons/shiyanbuzouICon.png"},  // 对应 GroupType::Steps (2)
-        {"相关课程", ":/mainicons/resources/mainIcons/xaingguankechengICon.png"}   // 对应 GroupType::Courses (3)
+        {"雷达组件", ":/mainicons/resources/mainIcons/leidazujian.png", PanelStyle::Standard},  // 对应 GroupType::RadarComponents (0)
+        {"测量原理", ":/mainicons/resources/mainIcons/celiangyuanli.png", PanelStyle::Standard},  // 对应 GroupType::Principles (1)
+        {"实验步骤", ":/mainicons/resources/mainIcons/shiyanbuzouICon.png", PanelStyle:: Numbered },  // 对应 GroupType::Steps (2)
+        {"相关课程", ":/mainicons/resources/mainIcons/xaingguankechengICon.png", PanelStyle::Standard}   // 对应 GroupType::Courses (3)
     };
 
-    // 3. 循环创建对象
-    for (int i = 0; i < 4; ++i) {
+    // 3. 循环创建折叠组对象
+    for (int i = 0; i < GroupCount; ++i) {
         // 调用构造函数,this 指针自动作为 parent 传入
         m_groups[i] = new CollapsibleGroup(configs[i].title, QIcon(configs[i].iconPath), this);
 
-        // 记得设置 ObjectName，方便调试或特殊样式
-        m_groups[i]->setObjectName(QString("sidebarGroup_%1").arg(i));
+        // 创建内部通用面板 (根据配置传入样式)
+        m_panels[i] = new SidebarListPanel(configs[i].style, this);
+
+        // 放入主布局
+        m_groups[i]->addWidget(m_panels[i]);
 
         // 加入布局
         mainLayout->addWidget(m_groups[i]);
@@ -50,56 +49,16 @@ void ExperimentSidebar::initUI()
         // 4. 绑定互斥逻辑（手风琴效果）
         connect(m_groups[i], &CollapsibleGroup::expandedChanged, [this, i](bool expanded) {
             if (expanded) {
-                for (int j = 0; j < 4; ++j) {
+                for (int j = 0; j < GroupCount; ++j) {
                     if (i != j) m_groups[j]->setExpanded(false);
                 }
             }
         });
     }
+    initConnections();
     // 5. 底部弹簧
     mainLayout->addStretch();
 }
-
-void ExperimentSidebar::loadRadarData()
-{
-    // 1. 先加载数据 (避免后续卡顿)
-    m_radarConfigs = RadarConfigLoader::loadAllConfigs(":/xml/resources/xml/mcfjlcl.xml");
-    // 调试一下，看看读到了没有
-    qDebug() << "已加载雷达配置，共" << m_radarConfigs.size() << "个实验配置";
-}
-
-// 初始化雷达组件面板
-void ExperimentSidebar::initRadarContent()
-{
-    // 1. 获取第0个组（雷达组件组）
-    CollapsibleGroup* group = m_groups[RadarComponents];
-    if (!group) return;
-
-    // 2. 创建我们在上一步封装好的 RadarSystemPanel,这个 Panel会自动管理里面的复选框布局和滚动条
-    m_radarPanel = new RadarSystemPanel(this);
-
-    // 3. 将 Panel 添加到折叠组的内容区
-    group->addWidget(m_radarPanel);
-
-    // 4. 连接信号:当Panel里的按钮被点击，转发出去
-    //connect(m_radarPanel, &RadarSystemPanel::itemSelected,this, &ExperimentSidebar::radarComponentSelected);
-}
-
-//初始化测量原理面板
-void ExperimentSidebar::initPrincipleContent()
-{
-    // 1. 获取第1个组（测量原理组）
-    CollapsibleGroup* group = m_groups[Principles];
-    if (!group) return;
-
-    // 2. 创建我们在上一步封装好的 RadarSystemPanel,这个 Panel会自动管理里面的复选框布局和滚动条
-    m_principlesPanel = new RadarSystemPanel(this);
-
-    // 3. 将 Panel 添加到折叠组的内容区
-    group->addWidget(m_principlesPanel);
-
-}
-
 // 实现获取组的接口
 CollapsibleGroup* ExperimentSidebar::getGroup(GroupType type)
 {
@@ -119,24 +78,77 @@ void ExperimentSidebar::resetAllGroups()
     }
 }
 // 切换实验的接口
-void ExperimentSidebar::switchExperiment(int experimentType)
+void ExperimentSidebar::switchExperiment(int expId)
 {
-    //  1. 处理雷达组件组
-    if (m_radarConfigs.contains(experimentType)) {
-        ExperimentRadarConfig config = m_radarConfigs[experimentType];
-        // 控制组的显隐
-        m_groups[RadarComponents]->setVisible(config.isVisible);
-        // 如果显示，让 Panel 刷新按钮
-        if (config.isVisible && m_radarPanel) {
-            m_radarPanel->updatePanel(config);
-            // 自动展开雷达组（可选）
-            //m_groups[RadarComponents]->setExpanded(true);
+    // 1. 检查缓存中是否有数据,如果没有，构建路径加载 XML
+    if (!m_configCache.contains(expId)) {
+        QString xmlPath = ExperimentManager::instance().getXmlPathByExpId(expId);
+        if (xmlPath.isEmpty()) return;
+       ExperimentConfig loadedConfig = RadarConfigLoader::loadConfig(xmlPath);
+        // 简单校验加载是否成功
+        if (loadedConfig.id == 0 && loadedConfig.name.isEmpty()) {
+            qDebug() << "Failed to load experiment XML:" << xmlPath;
+            return;
         }
-    } else {
-        m_groups[RadarComponents]->setVisible(false);
+
+        // 存入缓存
+        m_configCache.insert(expId, loadedConfig);
     }
-    //  2. 处理测量原理组 (如果有对应逻辑)
-    // updatePrinciples(experimentType);
-    //  3. 处理实验步骤组
-    // updateSteps(experimentType);
+
+    // 2. 关键：在加载新实验前，强行重置所有折叠组的状态
+    for (int i = 0; i < GroupCount; ++i) {
+        if (m_groups[i]) {
+            // 假设你的 CollapsibleGroup 有一个 setExpanded(bool) 方法
+            // 强制设为 false，这会重置它们内部的高度逻辑
+            m_groups[i]->setExpanded(false);
+        }
+    }
+
+    // 2. ★ 关键修正：更新类成员 m_config ★确保整个 Sidebar 内部的状态变量指向当前选择的实验
+    this->m_config = m_configCache[expId];
+
+    // 3. 分别更新 4 个组
+    updateGroupContent(RadarComponents, m_config.radarGroup);
+    updateGroupContent(Principles, m_config.principleGroup);
+    updateGroupContent(Steps, m_config.stepGroup);
+    updateGroupContent(Courses, m_config.courseGroup);
+
+    // 5. 核心：强制触发侧边栏总布局的刷新
+    QCoreApplication::sendPostedEvents(this, QEvent::LayoutRequest);
+    this->layout()->activate();
+    this->adjustSize();
+
+
+    // 4. (可选) 默认策略：如果雷达组件可见，自动展开第一个组
+    // if (config.radarGroup.isVisible) {
+    //     m_groups[RadarComponents]->setExpanded(true);
+    // } else if (config.principleGroup.isVisible) {
+    //     m_groups[Principles]->setExpanded(true);
+    // }
+}
+// 辅助函数：统一处理 "是否显示组" 和 "更新数据"
+void ExperimentSidebar::updateGroupContent(int groupIndex, const GroupData& data)
+{
+    if (groupIndex < 0 || groupIndex >= GroupCount) return;
+
+    // 1. 设置组的可见性 (对应 XML 中的 visible 属性)
+    m_groups[groupIndex]->setVisible(data.isVisible);
+
+    // 2. 如果可见，则更新内部列表
+    if (data.isVisible) {
+        m_panels[groupIndex]->updateList(data.items);
+    }
+}
+//初始化连接信号
+void ExperimentSidebar::initConnections() {
+    for (int i = 0; i < GroupCount; ++i) {
+    // 防御性编程：防止空指针崩溃
+        if (m_panels[i] == nullptr) continue;
+    // 接力信号：当内部面板发出 itemClicked，侧边栏再发出 componentSelected
+    connect(m_panels[i], &SidebarListPanel::itemClicked, this, [this](const ExperimentContentItem& item) {
+            // ★ 关键 4：在这里把“底部原理图”的路径拿出来
+            QString bottomPath = m_config.fixedBottomImage;
+            emit componentSelected(item, bottomPath);
+        });
+    }
 }

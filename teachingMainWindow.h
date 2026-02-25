@@ -9,10 +9,12 @@ class TeachingMainWindow : public CustomMainWindow
 public:
     explicit TeachingMainWindow(QWidget *parent = nullptr);
     ~TeachingMainWindow();
-    void setupMenu();
 
 protected:
-    bool m_platformSwitchEnabled; // 切换平台按钮是否可用（true=可点击，false=禁用）
+    void onMenuExperimentSelected(int expId);
+
+protected:
+    //bool m_platformSwitchEnabled; // 切换平台按钮是否可用（true=可点击，false=禁用）
     QLabel *m_cnTitleLabel;       // 中文标题标签
     QLabel *m_enTitleLabel;       // 英文标题标签
 
@@ -31,33 +33,16 @@ protected:
 private:
     QStackedWidget *m_stackedWidget;
     QPushButton *m_switchPlatformBtn;
-    int m_currentPlatformIndex = 0; // 当前平台索引
-    QStringList m_platformNames = {"测距平台", "测角平台", "测速平台"};
+    //int m_currentPlatformIndex = 0; // 当前平台索引
+    //QStringList m_platformNames = {"测距平台", "测角平台", "测速平台"};
     QList<QWidget *> m_platformPages; // 存储三个页面
 
 private:
-    void ensureSwitchPlatformButton();
-    void switchPlatform(int index);
     void updateSwitchButtonPosition();
     void resizeEvent(QResizeEvent *event);
     void initUI();
-    QWidget *createPlatformPage(PlatformType type);
-    void setupExperimentMenu(); //设置实验菜单
-
+    //QWidget *createPlatformPage(PlatformType type);
     QWidget *createHomePage(); // 创建主页
-
-private slots:
-    //实验按钮槽函数
-    void onPulseMethodClicked();
-    void onPulseMethodTestClicked();
-    void onFrequencyModulationClicked();
-    void onFrequencyModulationTestClicked();
-    void onPhaseMethodClicked();
-    void onPhaseMethodTestClicked();
-    void onRangeAmbiguityClicked();
-    void onRangeAmbiguityTestClicked();
-    void onRangeTrackingClicked();
-    void onRangeTrackingTestClicked();
 };
 
 #endif // TEACHINGMAINWINDOW_H

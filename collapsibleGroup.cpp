@@ -17,7 +17,7 @@ CollapsibleButton::CollapsibleButton(const QString &text, const QIcon &leftIcon,
     setCheckable(true);  // 允许选中状态
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    // 设置样式，参考图二设计 - 导航栏270px，左右各留20px空隙  #525D94
+    // 设置样式，参考图二设计 - 导航栏270px，左右各留20px空隙
     setStyleSheet(R"(
         QPushButton {
             background-color: #525D94;
@@ -117,6 +117,109 @@ CheckboxButton::CheckboxButton(const QString &text, QWidget *parent)
     )");
 }
 
+// NumberedButton实现
+StepButton::StepButton(int index, const QString &text, QWidget *parent)
+    : QPushButton(parent)
+{
+    setupUi(index, text);
+
+    // 连接信号：当按钮选中状态改变时，刷新样式
+    connect(this, &StepButton::toggled, this, &StepButton::onToggled);
+
+    // 初始化为未选中状态
+    updateStyle(false);
+}
+void StepButton::setupUi(int index, const QString &text)
+{
+    // 1. 按钮整体属性
+    this->setCheckable(true);
+    this->setMinimumHeight(40);
+
+    // 2. 创建布局
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setContentsMargins(15,0,0,0); // 设置内边距
+    layout->setSpacing(9);  // 数字和文字的间距
+
+    // 3. 创建左侧圆形数字 Label
+    m_numLabel = new QLabel(QString::number(index), this);
+    m_numLabel->setFixedSize(26, 26);
+    m_numLabel->setAlignment(Qt::AlignCenter);
+    // 设置 Label 的对象名，方便在 QSS 中特异性定位（可选）
+    m_numLabel->setObjectName("NumLabel");
+    m_numLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    // 4. 创建右侧文字 Label
+    m_textLabel = new QLabel(text, this);
+    m_textLabel->setObjectName("TextLabel");
+
+    // 【关键】让 Label 不拦截鼠标事件，点击文字也能触发按钮点击
+    m_textLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    // 5. 添加到布局
+    layout->addWidget(m_numLabel);
+    layout->addWidget(m_textLabel);
+    layout->addStretch(); // 弹簧占位，让内容靠左
+}
+void StepButton::onToggled(bool checked)
+{
+    updateStyle(checked);
+}
+void StepButton::updateStyle(bool checked)
+{
+    if (checked) {
+        // 1. 按钮整体样式
+        this->setStyleSheet(R"(
+            StepButton {
+                background-color: #D1F2EB;
+                border: 1px solid #B5EAD7;
+                border-radius: 8px;
+            }
+            StepButton:hover {
+                background-color: #C6F3DE;
+            }
+        )");
+
+        // 2. 圆圈数字样式 (深绿底 + 白字)
+        m_numLabel->setStyleSheet(R"(
+            QLabel {
+                background-color: #00C853;
+                color: #FFFFFF;
+                border-radius: 13px;
+                font-weight: bold;
+            }
+        )");
+
+        // 3. 文字样式 (深绿色加粗)
+        m_textLabel->setStyleSheet("color: #0A1424;  background:transparent;");
+
+    } else {
+        // 1. 按钮整体样式
+        this->setStyleSheet(R"(
+            StepButton {
+                background-color: #F8F9FA;
+                border: 1px solid #DEE2EA;
+                border-radius: 8px;
+            }
+            StepButton:hover {
+                background-color: #C4F4DC;;
+            }
+        )");
+
+        // 2. 圆圈数字样式 (浅紫底 + 蓝紫字)
+        m_numLabel->setStyleSheet(R"(
+            QLabel {
+                background-color: #D7DDF9;
+                color: #2240E1;
+                border-radius: 13px;
+                font-weight: bold;
+            }
+        )");
+
+        // 3. 文字样式 (深灰正常)
+        m_textLabel->setStyleSheet("color: #0A1424;  background:transparent;");
+    }
+}
+
 // CollapsibleGroup 实现
 CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWidget *parent)
     : QWidget(parent)
@@ -140,13 +243,10 @@ CollapsibleGroup::CollapsibleGroup(const QString &title, const QIcon &icon, QWid
     //内容容器垂直布局
     m_contentLayout = new QVBoxLayout(m_contentWidget);
     m_contentLayout->setAlignment(Qt::AlignTop);
-    //m_contentLayout->setContentsMargins(20, 15, 20, 15);
 
     // 创建动画 - 进一步优化动画设置
     m_animation = new QPropertyAnimation(m_contentWidget, "maximumHeight", this);
-    m_animation->setDuration(120);  // 更短的动画时间减少界面卡顿
-    //m_animation->setEasingCurve(QEasingCurve::InOutQuad);  // 快速启动和结束，减少感知延迟
-    //m_animation->setEasingCurve(QEasingCurve::OutQuad);
+    m_animation->setDuration(100);  // 更短的动画时间减少界面卡顿
     m_animation->setEasingCurve(QEasingCurve::OutCubic);
 
     // 添加到主布局

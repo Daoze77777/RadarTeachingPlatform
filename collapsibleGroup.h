@@ -6,7 +6,9 @@
 #include <QPropertyAnimation>
 #include <QVBoxLayout>
 #include <QScrollArea>
-// 自定义按钮，支持右侧箭头图标
+#include <QLabel>
+
+// 自定义折叠组按钮
 class CollapsibleButton : public QPushButton
 {
     Q_OBJECT
@@ -24,14 +26,39 @@ private:
     bool m_expanded;
 };
 
-// CheckboxButton.h
+// Standerd组件按钮
 class CheckboxButton : public QPushButton {
     Q_OBJECT
 public:
     explicit CheckboxButton(const QString &text, QWidget *parent = nullptr);
 };
 
-// 可折叠组组件
+//Numbered步骤按钮
+class StepButton : public QPushButton
+{
+    Q_OBJECT
+public:
+    explicit StepButton(int index, const QString &text, QWidget *parent = nullptr);
+
+protected:
+
+private slots:
+    // 处理选中状态切换时的样式更新
+    void onToggled(bool checked);
+
+private:
+    // 内部初始化函数
+    void setupUi(int index, const QString &text);
+
+    // 更新样式的核心逻辑
+    void updateStyle(bool checked);
+
+private:
+    QLabel *m_numLabel;  // 左侧圆圈数字
+    QLabel *m_textLabel; // 右侧文字描述
+};
+
+// 可折叠组
 class CollapsibleGroup : public QWidget
 {
     Q_OBJECT
@@ -48,6 +75,8 @@ public:
     CollapsibleButton* getHeaderButton() const;
     bool containsPoint(const QPoint& point) const;
     QVBoxLayout* getContentLayout() const;  // 获取内容布局
+
+private:
 
 signals:
     void expandedChanged(bool expanded);

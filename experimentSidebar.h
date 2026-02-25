@@ -1,45 +1,45 @@
-// experimentsidebar.h
+
 #ifndef EXPERIMENTSIDEBAR_H
 #define EXPERIMENTSIDEBAR_H
 
 #include <QWidget>
-#include "collapsiblegroup.h" // 引用你现有的类
-#include "radarSystemPanel.h"   // 引入刚才写的雷达面板
-
-// 使用枚举，让调用者更清晰
-enum GroupType {
-    RadarComponents = 0, // 0 雷达组件
-    Principles,          // 1 测量原理
-    Steps,               // 2 实验步骤
-    Courses              // 3 相关课程
-};
+#include "collapsiblegroup.h"
+#include "sidebarListPanel.h"
 
 class ExperimentSidebar : public QWidget
 {
     Q_OBJECT
 public:
     explicit ExperimentSidebar(QWidget *parent = nullptr);
+
+    //重置所有组
     void resetAllGroups();
+
+    // 获取特定组（如果有外部需要控制展开/折叠）
     CollapsibleGroup* getGroup(GroupType type);
+
     // 切换实验的接口
-    void switchExperiment(int experimentType);
+    void switchExperiment(int expId);
+
+    void initConnections();
 
 private:
-    CollapsibleGroup* m_groups[4]; // 固定存储4个组
+    void initUI();                  // 创建4个组的外壳
 
-    // 【新增】保存雷达面板指针，因为我们需要频繁调用它的 updatePanel
-    RadarSystemPanel* m_radarPanel = nullptr;
-    RadarSystemPanel* m_principlesPanel = nullptr;
+    void updateGroupContent(int groupIndex, const GroupData& data);       // 辅助函数：更新单个组的数据和可见性
 
-    // 【新增】保存所有加载的配置数据
-    QMap<int, ExperimentRadarConfig> m_radarConfigs;
+private:
+    CollapsibleGroup* m_groups[GroupCount];    //4个折叠组
 
-    // 内部初始化函数
-    void initUI();         // 创建4个组的外壳（你现在的代码）
-    void loadRadarData();    // 读取XML数据的函数
-    void initRadarContent();     // 填充第0组：雷达组件
-    void initPrincipleContent(); // 填充第1组：测量原理
-    //void initStepContent();      // 填充第2组：实验步骤
+    SidebarListPanel* m_panels[GroupCount];   // 4个内容面板
+
+    ExperimentConfig m_config;
+
+    QMap<int, ExperimentConfig> m_configCache;  // 保存所有加载的配置数据
+
+signals:
+    // 定义一个向外发送数据的信号
+    void componentSelected(const ExperimentContentItem& item, const QString& bottomImgPath);
 };
 
 #endif // EXPERIMENTSIDEBAR_H

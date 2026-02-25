@@ -17,6 +17,15 @@ public:
 
     void setCustomMainWindowTitle(const QString &iconPath, const QString &title);
 
+    void setupMenu();  //设置菜单项
+
+protected:
+    // 定义一个虚函数，让子类去实现各自的点击逻辑
+    virtual void onMenuExperimentSelected(int expId) = 0;
+
+private:
+    void setupExperimentMenu(); //设置实验菜单
+
 protected:
     //子类可以访问成员
     //标题栏
