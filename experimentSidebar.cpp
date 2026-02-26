@@ -80,7 +80,7 @@ void ExperimentSidebar::resetAllGroups()
 // 切换实验的接口
 void ExperimentSidebar::switchExperiment(int expId)
 {
-    // 1. 检查缓存中是否有数据,如果没有，构建路径加载 XML
+    // 1. 检查缓存中是否有数据,如果没有，根据传入的是个实验id构建XML路径
     if (!m_configCache.contains(expId)) {
         QString xmlPath = ExperimentManager::instance().getXmlPathByExpId(expId);
         if (xmlPath.isEmpty()) return;
@@ -90,21 +90,11 @@ void ExperimentSidebar::switchExperiment(int expId)
             qDebug() << "Failed to load experiment XML:" << xmlPath;
             return;
         }
-
         // 存入缓存
         m_configCache.insert(expId, loadedConfig);
     }
 
-    // 2. 关键：在加载新实验前，强行重置所有折叠组的状态
-    for (int i = 0; i < GroupCount; ++i) {
-        if (m_groups[i]) {
-            // 假设你的 CollapsibleGroup 有一个 setExpanded(bool) 方法
-            // 强制设为 false，这会重置它们内部的高度逻辑
-            m_groups[i]->setExpanded(false);
-        }
-    }
-
-    // 2. ★ 关键修正：更新类成员 m_config ★确保整个 Sidebar 内部的状态变量指向当前选择的实验
+    // 2.确保整个 Sidebar 内部的状态变量指向当前选择的实验
     this->m_config = m_configCache[expId];
 
     // 3. 分别更新 4 个组
@@ -112,12 +102,6 @@ void ExperimentSidebar::switchExperiment(int expId)
     updateGroupContent(Principles, m_config.principleGroup);
     updateGroupContent(Steps, m_config.stepGroup);
     updateGroupContent(Courses, m_config.courseGroup);
-
-    // 5. 核心：强制触发侧边栏总布局的刷新
-    QCoreApplication::sendPostedEvents(this, QEvent::LayoutRequest);
-    this->layout()->activate();
-    this->adjustSize();
-
 
     // 4. (可选) 默认策略：如果雷达组件可见，自动展开第一个组
     // if (config.radarGroup.isVisible) {

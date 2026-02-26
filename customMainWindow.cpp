@@ -477,5 +477,9 @@ void CustomMainWindow::setupExperimentMenu()
         });
         fileMenu->addAction(action);
     }
+    fileMenu->addSeparator();
+    QAction* action = new QAction("退出", this);
+    connect(action, &QAction::triggered, this, &QMainWindow::close);
+    fileMenu->addAction(action);
 }
 

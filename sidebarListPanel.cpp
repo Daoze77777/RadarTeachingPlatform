@@ -2,7 +2,6 @@
 #include <QPushButton>
 #include <QDebug>
 #include "collapsibleGroup.h"
-#include "experimentSidebar.h"
 
 SidebarListPanel::SidebarListPanel(PanelStyle style, QWidget *parent)
     : QWidget(parent)
@@ -82,27 +81,23 @@ void SidebarListPanel::updateList(const QList<ExperimentContentItem>& items) {
         qDebug()<<"按钮已重置";
     }
 
-    // 2. 清除固定高度限制，让布局重置
-    this->setMinimumHeight(0);
-    this->setFixedHeight(QWIDGETSIZE_MAX);
-
     // 同步数据
-    m_currentItems = items;
+    //m_currentItems = items;
 
     // 动态创建新按钮
-    for (int i = 0; i < m_currentItems.size(); ++i) {
-        ExperimentContentItem item = m_currentItems[i];
+    for (int i = 0; i < items.size(); ++i) {
+        ExperimentContentItem item = items[i];
         // 使用你现有的 CheckboxButton 类
         QAbstractButton* btn = nullptr;
         if (m_style == PanelStyle::Standard) {
             // 创建之前的 CheckboxButton
-            btn = new CheckboxButton(m_currentItems[i].title, m_container);
+            btn = new CheckboxButton(items[i].title, m_container);
         } else {
             // 创建新的带序号按钮，传入序号 i+1
-            btn = new StepButton(i + 1, m_currentItems[i].title, m_container);
+            btn = new StepButton(i + 1, items[i].title, m_container);
         }
-        m_containerLayout->addWidget(btn);
         m_btnGroup->addButton(btn, i);  //将索引作为 ID 绑定
+        m_containerLayout->addWidget(btn);
 
         // 注意中括号 [=]：表示“按值捕获”当前循环里的 item 和 bottomImgPath，绝对不能用 [&] 按引用捕获，否则所有按钮最后都会指向最后一个 item
         connect(btn, &QPushButton::clicked, this, [this, item]() {
@@ -137,8 +132,6 @@ void SidebarListPanel::updateList(const QList<ExperimentContentItem>& items) {
     }
     // 布局与高度刷新 强制要求容器重新计算布局
     m_container->adjustSize();
-
-    QCoreApplication::processEvents(); // 给 OS 窗口系统一个喘息机会来同步位图
 
     // 通知上层 UI 刷新
     //this->updateGeometry();

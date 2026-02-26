@@ -34,6 +34,7 @@ private:
     // 左中右核心容器
     QWidget *m_headerWidget;
     QWidget *m_leftSidebarContainer;
+    QVBoxLayout *m_leftSidebarContentLayout;
     QWidget * m_CenterContainer;
     QWidget *m_rightPanelContainer;
     ExperimentSidebar* m_sidebar;

@@ -289,7 +289,7 @@ void CollapsibleGroup::clearContent()
      // 3. 重置状态
      m_contentWidget->setMaximumHeight(0); // 高度归零
      m_expanded = false;                   // 状态设为折叠
-     //m_headerButton->setExpanded(false);   // 按钮图标变回折叠态
+     m_headerButton->setExpanded(false);   // 按钮图标变回折叠态
 }
 void CollapsibleGroup::setExpanded(bool expanded)
 {
@@ -332,61 +332,89 @@ void CollapsibleGroup::setExpanded(bool expanded)
     emit expandedChanged(expanded);
 }
 // 无动画设置展开状态（用于初始化首帧就展开，避免可见动画/闪烁）
-void CollapsibleGroup::setInitialExpanded(bool expanded)
-{
-    // 直接停止可能存在的动画
-    if (m_animation && m_animation->state() == QPropertyAnimation::Running) {
-        m_animation->stop();
-    }
-    m_expanded = expanded;
-    if (m_headerButton) {
-        m_headerButton->setExpanded(expanded);
-    }
-    if (expanded) {
-        // 直接展开：移除限制并显示内容区域
-        if (m_contentLayout) m_contentLayout->setEnabled(true);
-        if (m_contentWidget) {
-            m_contentWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-            m_contentWidget->setMinimumHeight(0);
-            m_contentWidget->setMaximumHeight(QWIDGETSIZE_MAX);
-            m_contentWidget->setMinimumWidth(0);
-            m_contentWidget->setMaximumWidth(QWIDGETSIZE_MAX);
-            m_contentWidget->show();
-            m_contentLayout->invalidate();
-            m_contentWidget->adjustSize();
-            m_contentWidget->updateGeometry();
-        }
-    } else {
-        // 直接折叠：限制高度并隐藏
-        if (m_contentLayout) m_contentLayout->setEnabled(false);
-        if (m_contentWidget) {
-            m_contentWidget->setMinimumHeight(0);
-            m_contentWidget->setMaximumHeight(0);
-            m_contentWidget->hide();
-        }
-    }
-    // 注意：初始化阶段不发射 expandedChanged，避免触发互斥折叠逻辑
-}
+// void CollapsibleGroup::setInitialExpanded(bool expanded)
+// {
+//     // 直接停止可能存在的动画
+//     if (m_animation && m_animation->state() == QPropertyAnimation::Running) {
+//         m_animation->stop();
+//     }
+//     m_expanded = expanded;
+//     if (m_headerButton) {
+//         m_headerButton->setExpanded(expanded);
+//     }
+//     if (expanded) {
+//         // 直接展开：移除限制并显示内容区域
+//         if (m_contentLayout) m_contentLayout->setEnabled(true);
+//         if (m_contentWidget) {
+//             m_contentWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//             m_contentWidget->setMinimumHeight(0);
+//             m_contentWidget->setMaximumHeight(QWIDGETSIZE_MAX);
+//             m_contentWidget->setMinimumWidth(0);
+//             m_contentWidget->setMaximumWidth(QWIDGETSIZE_MAX);
+//             m_contentWidget->show();
+//             m_contentLayout->invalidate();
+//             m_contentWidget->adjustSize();
+//             m_contentWidget->updateGeometry();
+//         }
+//     } else {
+//         // 直接折叠：限制高度并隐藏
+//         if (m_contentLayout) m_contentLayout->setEnabled(false);
+//         if (m_contentWidget) {
+//             m_contentWidget->setMinimumHeight(0);
+//             m_contentWidget->setMaximumHeight(0);
+//             m_contentWidget->hide();
+//         }
+//     }
+//     // 注意：初始化阶段不发射 expandedChanged，避免触发互斥折叠逻辑
+// }
 bool CollapsibleGroup::isExpanded() const
 {
     return m_expanded;
 }
-void CollapsibleGroup::setSelected(bool selected)
+// void CollapsibleGroup::setSelected(bool selected)
+// {
+//     m_headerButton->setChecked(selected);
+// }
+// bool CollapsibleGroup::isSelected() const
+// {
+//     return m_headerButton->isChecked();
+// }
+// CollapsibleButton* CollapsibleGroup::getHeaderButton() const
+// {
+//     return m_headerButton;
+// }
+// bool CollapsibleGroup::containsPoint(const QPoint& point) const
+// {
+//     // 检查点击是否在整个组件区域内（包括头部和内容区域）
+//     return geometry().contains(point);
+// }
+void CollapsibleGroup::resetStateForSwitch()
 {
-    m_headerButton->setChecked(selected);
+    // 1. 暴力打断可能正在运行的动画
+    if (m_animation->state() == QPropertyAnimation::Running) {
+        m_animation->stop();
+    }
+
+    // 2. 状态标识置为折叠
+    m_expanded = false;
+    m_headerButton->setExpanded(false);
+    //->setExpanded(false);
+
+    // 3. ★ 最关键的一步 ★
+    // 必须隐藏，视觉上它是折叠的
+    m_contentWidget->hide();
+
+    // 但是！【绝对不能】把 maximumHeight 设为 0，也不能禁用 layout
+    // 必须彻底放开限制，否则里面新塞入的 SidebarListPanel 算不出 sizeHint
+    m_contentWidget->setMaximumHeight(QWIDGETSIZE_MAX);
+
+    if (m_contentLayout) {
+        m_contentLayout->setEnabled(true); // 确保布局引擎是活的
+    }
 }
-bool CollapsibleGroup::isSelected() const
+QWidget* CollapsibleGroup::getContentWidget()
 {
-    return m_headerButton->isChecked();
-}
-CollapsibleButton* CollapsibleGroup::getHeaderButton() const
-{
-    return m_headerButton;
-}
-bool CollapsibleGroup::containsPoint(const QPoint& point) const
-{
-    // 检查点击是否在整个组件区域内（包括头部和内容区域）
-    return geometry().contains(point);
+    return m_contentWidget;
 }
 QVBoxLayout* CollapsibleGroup::getContentLayout() const
 {

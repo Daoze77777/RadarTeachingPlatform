@@ -68,13 +68,15 @@ public:
     void clearContent(); //清空布局
     void setExpanded(bool expanded);
     // 无动画设置展开状态（用于初始化首帧就展开，避免可见动画）
-    void setInitialExpanded(bool expanded);
+    //void setInitialExpanded(bool expanded);
     bool isExpanded() const;
-    void setSelected(bool selected);
-    bool isSelected() const;
-    CollapsibleButton* getHeaderButton() const;
-    bool containsPoint(const QPoint& point) const;
+    //void setSelected(bool selected);
+    //bool isSelected() const;
+    //CollapsibleButton* getHeaderButton() const;
+    //bool containsPoint(const QPoint& point) const;
     QVBoxLayout* getContentLayout() const;  // 获取内容布局
+    QWidget* getContentWidget();
+    void resetStateForSwitch();
 
 private:
 

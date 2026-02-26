@@ -101,9 +101,9 @@ void MainWindow::setupLeftSidebar()
     m_leftSidebarContainer->setStyleSheet("background-color: #FFFFFF;");
 
     //设置布局
-    QVBoxLayout *leftSidebarContentLayout = new QVBoxLayout(m_leftSidebarContainer);
-    leftSidebarContentLayout->setContentsMargins(0, 0, 0, 0);
-    leftSidebarContentLayout->setSpacing(0);
+    m_leftSidebarContentLayout = new QVBoxLayout(m_leftSidebarContainer);
+    m_leftSidebarContentLayout->setContentsMargins(0, 0, 0, 0);
+    m_leftSidebarContentLayout->setSpacing(0);
 
     // 标题区域
 {   QWidget *titleArea = new QWidget(m_leftSidebarContainer);
@@ -136,12 +136,12 @@ void MainWindow::setupLeftSidebar()
         font-size: 24px;
     })");
     titleLayout->addWidget(m_experimentTitle);
-    leftSidebarContentLayout->addWidget(titleArea);
+    m_leftSidebarContentLayout->addWidget(titleArea);
 }
 
     //创建折叠组
     m_sidebar = new ExperimentSidebar(this);
-    leftSidebarContentLayout->addWidget(m_sidebar);
+    m_leftSidebarContentLayout->addWidget(m_sidebar);
 }
 void MainWindow::setupCenterArea()
 {
@@ -425,12 +425,27 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
 }
 void MainWindow::onMenuExperimentSelected(int expId)
 {
-    //  增加拦截：防止重复加载相同实验
+    //  1. 增加拦截：防止重复加载相同实验
     if (this->m_currentExpId == expId) {
         qDebug() << "检测到重复点击相同实验，已拦截渲染请求。";
         return;
     }
     this->m_currentExpId = expId; // 更新当前 ID
-    // 逻辑：原地刷新数据
+
+    // 2. 彻底销毁旧的侧边栏
+    if (m_sidebar) {
+        m_leftSidebarContentLayout->removeWidget(m_sidebar);
+        m_sidebar->deleteLater();
+        m_sidebar = nullptr;
+    }
+    // 3. 重新创建侧边栏实例 (冷启动)
+    m_sidebar = new ExperimentSidebar(this);
+    m_leftSidebarContentLayout->addWidget(m_sidebar);
+
+    // 4. 重新连接侧边栏发出的组合信号
+    connect(m_sidebar, &ExperimentSidebar::componentSelected,
+            this, &MainWindow::onComponentSelected);
+
+    // 5. 刷新数据
     this->setupExperimentContext(expId);
 }
