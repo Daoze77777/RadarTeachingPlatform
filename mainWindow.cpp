@@ -230,14 +230,7 @@ QWidget* MainWindow::createWelcomePage()
 
     hiLayout->addWidget(hiIconLabel);
     hiLayout->addWidget(hiTitleLabel);
-
-    // 副标题
-    // QLabel *subTitleLabel = new QLabel("请点击左侧步骤开始实验");
-    // subTitleLabel->setStyleSheet("font-size: 24px; color:#345196;");
-    // subTitleLabel->setAlignment(Qt::AlignCenter);
-
     welcomeLayout->addWidget(hiWidget);
-    //welcomeLayout->addWidget(subTitleLabel);
 
     // --- 右侧：操作提示卡片 ---
     QFrame *tipsBox = new QFrame();
@@ -314,19 +307,25 @@ QWidget* MainWindow::createExperimentWorkPage()
 
     // 创建内层 Stack
     m_centerStack = new QStackedWidget;
+
+    //雷达组件、实验原理页面(index=0)
     m_componentDetailWidget = setupComponentDetailWidget();
     m_centerStack->addWidget(m_componentDetailWidget);
+
+    //实验步骤页面(index=1)
+    m_stepDetailWidget = setupStepDetailWidget();
+    m_centerStack->addWidget(m_stepDetailWidget);
 
     mainVLayout->addWidget(m_centerStack);
     return experimentPage;
 }
 QWidget* MainWindow::setupComponentDetailWidget()
 {
-    QWidget* detailWidget = new QWidget();
-    detailWidget->setStyleSheet("background-color: transparent;");
+    QWidget* componentDetailWidget = new QWidget();
+    componentDetailWidget->setStyleSheet("background-color: transparent;");
 
     // 总垂直布局
-    QVBoxLayout *mainVLayout = new QVBoxLayout(detailWidget);
+    QVBoxLayout *mainVLayout = new QVBoxLayout(componentDetailWidget);
     mainVLayout->setContentsMargins(0, 0, 0, 0);
     mainVLayout->setSpacing(15);
 
@@ -345,17 +344,16 @@ QWidget* MainWindow::setupComponentDetailWidget()
 
     // 标题
     m_detailTitleLabel = new QLabel();
-    m_detailTitleLabel->setStyleSheet("font-size: 32px; font-weight: bold; color: #2D2F4F;");
+    m_detailTitleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #2D2F4F;");
     m_detailTitleLabel->setAlignment(Qt::AlignCenter);
 
     // 描述 (必须开启自动换行)
     m_detailDescLabel = new QLabel();
     m_detailDescLabel->setWordWrap(true); // 允许文字换行
     m_detailDescLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    m_detailDescLabel->setStyleSheet("font-size: 24px; color: #2D2F4F;");
+    m_detailDescLabel->setStyleSheet("font-size: 16px; color: #2D2F4F;");
 
     textLayout->addWidget(m_detailTitleLabel);
-    textLayout->addSpacing(30);
     textLayout->addWidget(m_detailDescLabel, 1); // 给描述部分更多拉伸空间
 
     // --- 右侧：对应图片区 ---
@@ -386,7 +384,82 @@ QWidget* MainWindow::setupComponentDetailWidget()
     mainVLayout->addWidget(topArea, 5);     // 上面占一半
     mainVLayout->addWidget(bottomFrame, 5); // 下面占一半
 
-    return detailWidget;
+    return componentDetailWidget;
+}
+QWidget* MainWindow::setupStepDetailWidget()
+{
+    QWidget* stepDetailWidget = new QWidget();
+    stepDetailWidget->setStyleSheet("background-color: transparent;");
+
+    // 总垂直布局 (上部+下部原理图)
+    QVBoxLayout *mainVLayout = new QVBoxLayout(stepDetailWidget);
+    mainVLayout->setContentsMargins(0, 0, 0, 0);
+    mainVLayout->setSpacing(15);
+
+    // 上半部分：左右分栏
+    QWidget *topArea = new QWidget();
+    QHBoxLayout *topLayout = new QHBoxLayout(topArea);
+    topLayout->setContentsMargins(0, 0, 0, 0);
+    topLayout->setSpacing(15);
+
+    // 左侧：操作提示 + 操作图片 (上下结构)
+    QWidget *leftPanel = new QWidget();
+    QVBoxLayout *leftPanelLayout = new QVBoxLayout(leftPanel);
+    leftPanelLayout->setContentsMargins(0, 0, 0, 0);
+    leftPanelLayout->setSpacing(15);
+
+    // 1. 操作提示框
+    QFrame *promptFrame = new QFrame();
+    promptFrame->setStyleSheet("QFrame { background-color: #FFFFFF; border-radius: 10px; }");
+    QVBoxLayout *promptLayout = new QVBoxLayout(promptFrame);
+
+    // 操作提示 Label
+    QLabel *fixedTitle = new QLabel("操作提示: ");
+    fixedTitle->setAlignment(Qt::AlignTop);
+    fixedTitle->setStyleSheet("font-size: 24px; font-weight: bold; color: #70A9FF;");
+    promptLayout->addWidget(fixedTitle);
+
+    //描述 Label
+    m_stepPromptLabel = new QLabel();
+    m_stepPromptLabel->setWordWrap(true);
+    m_stepPromptLabel->setAlignment(Qt::AlignTop);
+    m_stepPromptLabel->setStyleSheet("font-size: 16px; color: #2D2F4F;");
+    promptLayout->addWidget(m_stepPromptLabel,1);
+
+
+    // 2. 操作图片框
+    QFrame *actionImageFrame = new QFrame();
+    actionImageFrame->setStyleSheet("QFrame { background-color: #FFFFFF; border-radius: 10px; }");
+    QVBoxLayout *actionImageLayout = new QVBoxLayout(actionImageFrame);
+    m_stepActionImage = new QLabel();
+    m_stepActionImage->setAlignment(Qt::AlignCenter);
+    actionImageLayout->addWidget(m_stepActionImage);
+
+    leftPanelLayout->addWidget(promptFrame, 5);      // 提示占小部分高度
+    leftPanelLayout->addWidget(actionImageFrame, 5); // 图片占大部分高度
+
+    // --- 右侧：波形图表区 ---
+    QFrame *chartFrame = new QFrame();
+    chartFrame->setStyleSheet("QFrame { background-color: #FFFFFF; border-radius: 10px; }");
+    QVBoxLayout *chartLayout = new QVBoxLayout(chartFrame);
+    m_oscilloscope = new OscilloscopeWidget();
+    chartLayout->addWidget(m_oscilloscope);
+
+    topLayout->addWidget(leftPanel, 5);
+    topLayout->addWidget(chartFrame, 5);
+
+    // ================== 下半部分：底部固定原理图 ==================
+    QFrame *bottomFrame = new QFrame();
+    bottomFrame->setStyleSheet("QFrame { background-color: #FFFFFF; border-radius: 10px; }");
+    QVBoxLayout *bottomLayout = new QVBoxLayout(bottomFrame);
+    m_stepBottomImage = new QLabel();
+    m_stepBottomImage->setAlignment(Qt::AlignCenter);
+    bottomLayout->addWidget(m_stepBottomImage);
+
+    mainVLayout->addWidget(topArea, 5);     // 上部高度占比
+    mainVLayout->addWidget(bottomFrame, 5); // 下部高度占比
+
+    return stepDetailWidget;
 }
 void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QString& bottomImgPath)
 {
@@ -396,32 +469,57 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
         return; // 直接返回，不再执行后续的右侧页面渲染逻辑
     }
 
-    // 1. 填充文本数据
-    m_detailTitleLabel->setText(item.title);
-    m_detailDescLabel->setText(item.description);
-
-    // 2. 填充右上角图片 (按比例缩放并保持平滑)
-    QPixmap topPix(item.imagePath);
-    if (!topPix.isNull()) {
-        // 注意：尺寸可以根据你的实际需求调整
-        m_detailTopImage->setPixmap(topPix.scaled(600, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    } else {
-        m_detailTopImage->setText("暂无图片"); // 容错处理
+    // 确保外层大 Stack 也切到了工作区
+    if (m_mainCenterStack->currentIndex() != 1) {
+        m_mainCenterStack->setCurrentIndex(1);
     }
 
-    // 3. 填充底部固定图片
-    QPixmap bottomPix(bottomImgPath);
-    if (!bottomPix.isNull()) {
-        m_detailBottomImage->setPixmap(bottomPix.scaled(800, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    // 根据模块类型选择填充哪个页面
+    if (item.moduleType == "Step")
+    {
+        // --- 实验步骤模式 ---
+        m_centerStack->setCurrentWidget(m_stepDetailWidget);
+
+        // 填充左侧操作提示
+        m_stepPromptLabel->setText(item.description);
+
+        // 更新示波器数据
+        m_oscilloscope->setData(item.id);
+
+        // 填充左侧操作图片 (例如滑轨图)
+        QPixmap actionPix(item.imagePath);
+        if (!actionPix.isNull()) {
+            m_stepActionImage->setPixmap(actionPix.scaled(m_stepActionImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
+
+        // 填充底部原理图
+        QPixmap bottomPix(bottomImgPath);
+        //m_stepBottomImage->setPixmap(bottomPix.scaled(800, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        m_stepBottomImage->setPixmap(bottomPix.scaled(m_stepBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        // TODO: 这里可以触发右侧图表的重置或更新
+        // m_waveformChart->reset();
+    }   else{
+        // --- 普通组件模式 (雷达组件/测量原理) ---
+        m_centerStack->setCurrentWidget(m_componentDetailWidget);
+
+        // 填充文本数据
+        m_detailTitleLabel->setText(item.title);
+        m_detailDescLabel->setText(item.description);
+
+        // 填充右上角图片 (按比例缩放)
+        QPixmap topPix(item.imagePath);
+        if (!topPix.isNull()) {
+            m_detailTopImage->setPixmap(topPix.scaled(600, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        } else {
+            m_detailTopImage->setText("暂无图片");  // 容错处理
+        }
+
+        // 填充底部固定图片
+        QPixmap bottomPix(bottomImgPath);
+        if (!bottomPix.isNull()) {
+            m_detailBottomImage->setPixmap(bottomPix.scaled(m_detailBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
     }
-
-    // 4. 确保外层大 Stack 也切到了工作区
-     if (m_mainCenterStack->currentIndex() != 1) {
-         m_mainCenterStack->setCurrentIndex(1);
-     }
-
-     // 控制内层小 Stack 显示具体的“详情页”
-     m_centerStack->setCurrentWidget(m_componentDetailWidget);
 }
 void MainWindow::onMenuExperimentSelected(int expId)
 {

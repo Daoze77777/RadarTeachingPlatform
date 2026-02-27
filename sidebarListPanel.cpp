@@ -82,19 +82,19 @@ void SidebarListPanel::updateList(const QList<ExperimentContentItem>& items) {
     }
 
     // 同步数据
-    //m_currentItems = items;
+    m_currentItems = items;
 
     // 动态创建新按钮
-    for (int i = 0; i < items.size(); ++i) {
-        ExperimentContentItem item = items[i];
+    for (int i = 0; i < m_currentItems.size(); ++i) {
+        ExperimentContentItem item = m_currentItems[i];
         // 使用你现有的 CheckboxButton 类
         QAbstractButton* btn = nullptr;
         if (m_style == PanelStyle::Standard) {
             // 创建之前的 CheckboxButton
-            btn = new CheckboxButton(items[i].title, m_container);
+            btn = new CheckboxButton(m_currentItems[i].title, m_container);
         } else {
             // 创建新的带序号按钮，传入序号 i+1
-            btn = new StepButton(i + 1, items[i].title, m_container);
+            btn = new StepButton(i + 1, m_currentItems[i].title, m_container);
         }
         m_btnGroup->addButton(btn, i);  //将索引作为 ID 绑定
         m_containerLayout->addWidget(btn);
@@ -106,10 +106,6 @@ void SidebarListPanel::updateList(const QList<ExperimentContentItem>& items) {
         btn->show(); // 确保显式显示
     }
 
-    // 3. 高度刷新修正
-    // 确保子项已经添加完毕后再强制计算
-    QCoreApplication::sendPostedEvents(this, QEvent::LayoutRequest);
-
     // 获取布局算出来的真实总高度（包含所有按钮高度、间距、边距）
     int totalHeight = m_containerLayout->sizeHint().height();
     qDebug()<<totalHeight;
@@ -120,21 +116,11 @@ void SidebarListPanel::updateList(const QList<ExperimentContentItem>& items) {
     m_scrollArea->setFixedHeight(displayHeight);
     this->setFixedHeight(displayHeight);      // 视图层固定高度
 
-    // 8. 刷新父容器（关键：必须逐级通知）
-    QWidget* parent = this->parentWidget();
-    while (parent) {
-        parent->updateGeometry();
-        // 如果父对象是 CollapsibleGroup，可能需要显式触发它的布局刷新
-        if (parent->layout()) {
-            parent->layout()->activate();
-        }
-        parent = parent->parentWidget();
-    }
     // 布局与高度刷新 强制要求容器重新计算布局
     m_container->adjustSize();
 
     // 通知上层 UI 刷新
-    //this->updateGeometry();
+    this->updateGeometry();
 }
 
 QSize SidebarListPanel::sizeHint() const {

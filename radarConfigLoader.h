@@ -29,16 +29,17 @@ public:
                 }
                 // 解析四个组
                 else if (xml.name() == QStringLiteral("GroupRadar")) {
-                    parseGroup(xml, config.radarGroup);
+                    parseGroup(xml, config.radarGroup, "Component");
                 }
                 else if (xml.name() == QStringLiteral("GroupPrinciple")) {
-                    parseGroup(xml, config.principleGroup);
+                    parseGroup(xml, config.principleGroup, "Component");
                 }
                 else if (xml.name() == QStringLiteral("GroupStep")) {
-                    parseGroup(xml, config.stepGroup);
+                    parseGroup(xml, config.stepGroup, "Step");
+
                 }
                 else if (xml.name() == QStringLiteral("GroupCourse")) {
-                    parseGroup(xml, config.courseGroup);
+                    parseGroup(xml, config.courseGroup, "Course");
                 }
             }
         }
@@ -47,7 +48,7 @@ public:
 
 private:
     // 通用的解析组函数
-    static void parseGroup(QXmlStreamReader& xml, GroupData& groupData) {
+    static void parseGroup(QXmlStreamReader& xml, GroupData& groupData, const QString& type) {
         // 1. 读取可见性
         QXmlStreamAttributes attrs = xml.attributes();
         if (attrs.hasAttribute("visible")) {
@@ -63,6 +64,7 @@ private:
                 QXmlStreamAttributes itemAttrs = xml.attributes();
                 item.id = itemAttrs.value("id").toString();
                 item.title = itemAttrs.value("title").toString();
+                item.moduleType = type;
 
                 // 解析 Item 内部
                 while (!(xml.tokenType() == QXmlStreamReader::EndElement && xml.name() == QStringLiteral("Item"))) {

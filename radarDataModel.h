@@ -22,10 +22,11 @@ enum class PanelStyle {
 
 // 单个按钮组件的数据
 struct ExperimentContentItem {
-    QString id;           // 唯一标识，如 "modulator"
+    QString id;           // 唯一标识
     QString title;        // 按钮显示的文字，如 "脉冲调制器"
     QString imagePath;    // 右侧要显示的图片路径
     QString description;  // 右侧要显示的文字内容
+    QString moduleType; //  模块类型："Component" (组件/原理), "Step" (实验步骤), "Course" (相关课程)
 };
 
 // 单个折叠组的数据包

@@ -5,6 +5,7 @@
 #include "teachingMainWindow.h"
 #include "radarDataModel.h"
 #include "experimentSidebar.h"
+#include "OscilloscopeWidget.h"
 #include <QTextBrowser>
 
 class MainWindow : public CustomMainWindow
@@ -27,7 +28,8 @@ private:
     void setupCenterArea();  // 初始化中间区域
     QWidget* createWelcomePage();   //默认欢迎页面
     QWidget* createExperimentWorkPage();    //工作区页面
-    QWidget* setupComponentDetailWidget(); // 根据ID初始化该页面的函数
+    QWidget* setupComponentDetailWidget(); // 根据ID初始化雷达组件、实验原理页面的函数
+    QWidget* setupStepDetailWidget();       // 根据ID初始化实验步骤页面的函数
     void setupExperimentContext(int expId);     // 统一的数据加载与界面刷新函数
 
 private:
@@ -48,10 +50,15 @@ private:
     TeachingMainWindow *m_teachingWindow;
     QLabel *m_experimentTitle;   //实验标题
     QWidget* m_componentDetailWidget; // 通用的组件展示页
-    QLabel* m_detailTitleLabel;       // 标题
-    QLabel* m_detailDescLabel;        // 描述文本
-    QLabel* m_detailTopImage;         // 右上图片
-    QLabel* m_detailBottomImage;      // 底部固定图片
+    QWidget* m_stepDetailWidget;        //实验步骤专用页面
+    QLabel* m_stepPromptLabel;      //实验步骤操作提示
+    QLabel* m_stepActionImage;      //实验步骤操作图
+    OscilloscopeWidget* m_oscilloscope;     //实验步骤右侧示波器
+    QLabel* m_stepBottomImage;      //实验步骤底部图片
+    QLabel* m_detailTitleLabel;       // 组件、原理通用标题
+    QLabel* m_detailDescLabel;        // 组件、原理通用描述文本
+    QLabel* m_detailTopImage;         // 组件、原理通用右上图片
+    QLabel* m_detailBottomImage;      // 组件、原理通用底部固定图片
     QWidget* m_experimentPage;
 
 private slots:

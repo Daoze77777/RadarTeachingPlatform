@@ -50,60 +50,60 @@
 
     <GroupStep visible="true">
         <Item id="s1" title="设置目标位置">
-            <Image>:/images/step1_power.png</Image>
-            <Description>按下控制柜左侧的绿色按钮。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/huagui.png</Image>
+            <Description>设置目标物体的位置参数，请手动设置滑轨上的目标位置。</Description>
         </Item>
         <Item id="s2" title="触发脉冲信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/14.png</Image>
+            <Description>触发脉冲信号由系统定时电路产生，用于控制整个测距过程的时间基准。它作为起始信号，触发发射机产生调制脉冲，同时启动接收通道的时间计数，为距离测量提供统一的时间参考。</Description>
         </Item>
         <Item id="s3" title="调制脉冲信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/15.png</Image>
+            <Description>调制脉冲信号是在触发信号的作用下生成的矩形脉冲，用于控制发射机的工作。脉冲宽度与发射能量、距离分辨率相关，是决定测距性能的重要参数。脉宽越窄，距离分辨率越高。</Description>
         </Item>
         <Item id="s4" title="中频信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/16.png</Image>
+            <Description>雷达发射机的中频信号是经由频率综合器生成的、已调制特定波形且频率介于基带与射频之间的模拟信号。其核心作用在于利用中频便于实现复杂波形的高精度生成与调理，再通过上变频至射频，从而有效简化系统结构、保证信号质量，并为频率捷变和相干处理奠定基础。</Description>
         </Item>
         <Item id="s5" title="本振信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/17.png</Image>
+            <Description>接收机的本振信号由振荡器产生，为混频器提供稳定的参考频率，用于实现射频到中频的变换。其频率稳定性和相位噪声直接影响中频信号的质量和测距精度。</Description>
         </Item>
         <Item id="s6" title="射频发射信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/18.png</Image>
+            <Description>射频发射信号是在调制脉冲的控制下，由发射机产生并通过天线向目标辐射的高频电磁波。信号功率与波束方向决定了雷达的探测距离与分辨能力。</Description>
         </Item>
         <Item id="s7" title="射频接收信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/19.png</Image>
+            <Description>射频接收信号是目标反射回来的回波信号，经过天线接收后送入接收机。其幅度和到达时间反映目标的距离、反射特性和空间分布。</Description>
         </Item>
         <Item id="s8" title="基带信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/20.png</Image>
+            <Description>基带信号是经过检波后的低频信号，去除了高频载波，保留了目标回波的幅度包络信息，便于后续视频显示和距离计算。</Description>
         </Item>
         <Item id="s9" title="检波器输出信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/21.png</Image>
+            <Description>检波器输出的视频信号显示了发射与接收脉冲的时间延迟。视频信号的两个脉冲间距反映目标的往返传播时间，是计算距离的直接依据。</Description>
         </Item>
         <Item id="s10" title="门限电平信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/22.png</Image>
+            <Description>门限电平信号用于判定是否存在有效回波。系统通过设定门限电平区分噪声与目标回波，当接收信号超过门限时，目标才可能存在。</Description>
         </Item>
         <Item id="s11" title="和支路信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/23.png</Image>
+            <Description>来自接收机的视频回波与门限电平U0在比较器里作比较，输出宽度为τ的矩形脉冲，该脉冲作为和支路（Σ）的输出。</Description>
         </Item>
         <Item id="s12" title="微分信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/24.png</Image>
+            <Description>微分信号是通过对视频信号求导获得的信号，用于增强脉冲边缘特性，提高时间判定的精度，从而改善距离分辨率。</Description>
         </Item>
         <Item id="s13" title="差支路信号">
-            <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Image>:/assets/resources/assets/MCFJLCL/25.png</Image>
+            <Description>微分信号和和支路信号加载到过零点检测电路形成差支路信号，用于提取目标方向性信息或时间差信号。它与触发脉冲配合，计算出回波延迟时间Δt。</Description>
         </Item>
         <Item id="s14" title="计算目标距离">
             <Image>:/images/step2_osc.png</Image>
-            <Description>调节时基旋钮至 10us/div。</Description>
+            <Description>显示触发脉冲与差支路信号，通过测量它们之间的时间延迟Δt，计算目标距离：d = c⋅Δt/2（c为光速，Δt为发射与回波间的往返时间差）。</Description>
         </Item>
 
     </GroupStep>
