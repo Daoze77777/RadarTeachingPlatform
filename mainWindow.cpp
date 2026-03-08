@@ -5,6 +5,7 @@
 #include <QPainter>
 #include "ExperimentManager.h"
 #include "experimentSidebar.h"
+
 MainWindow::MainWindow(int expId, QWidget *parent)
 {
     initUI();
@@ -180,12 +181,16 @@ void MainWindow::setupRightPanel()
     m_rightPanelContainer->setFixedSize(200, 963); // 根据你之前的 UI 设定宽度
     m_rightPanelContainer->setObjectName("rightPanelContainer");
     m_rightPanelContainer->setStyleSheet("QWidget#rightPanelContainer { background-color: #FFFFFF; }"); // 设置背景色，通常是稍微深一点的蓝色或灰色，以区分中央区域
-
     // 2. 创建垂直布局
     QVBoxLayout *rightPanelLayout = new QVBoxLayout(m_rightPanelContainer);
-    rightPanelLayout->setContentsMargins(5, 10, 5, 10);
-    rightPanelLayout->setSpacing(15);
+    //rightPanelLayout->setContentsMargins(5, 10, 5, 10);
+    rightPanelLayout->setContentsMargins(0, 0, 0, 0);
+    rightPanelLayout->setSpacing(0);
     rightPanelLayout->setAlignment(Qt::AlignTop);
+
+    // 直接实例化我们封装好的面板
+    m_instrumentPanel = new InstrumentPanel(this);
+    rightPanelLayout->addWidget(m_instrumentPanel);
 }
 QWidget* MainWindow::createWelcomePage()
 {

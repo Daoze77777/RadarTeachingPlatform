@@ -36,6 +36,8 @@
     </qresource>
     <qresource prefix="/font">
         <file>resources/fonts/PingFang/PingFang Medium_downcc.otf</file>
+        <file>resources/fonts/SourceHanSansSC-Normal.otf</file>
+        <file>resources/fonts/NotoSansCJKsc-Medium.otf</file>
     </qresource>
     <qresource prefix="/mainicons">
         <file>resources/mainIcons/521.png</file>
@@ -68,29 +70,6 @@
         <file>resources/xml/mcfjlcl_test.xml</file>
     </qresource>
     <qresource prefix="/assets">
-        <file>resources/assets/MCFJLCL/1.png</file>
-        <file>resources/assets/MCFJLCL/2.png</file>
-        <file>resources/assets/MCFJLCL/3.png</file>
-        <file>resources/assets/MCFJLCL/4.png</file>
-        <file>resources/assets/MCFJLCL/5.png</file>
-        <file>resources/assets/MCFJLCL/6.png</file>
-        <file>resources/assets/MCFJLCL/7.png</file>
-        <file>resources/assets/MCFJLCL/8.png</file>
-        <file>resources/assets/MCFJLCL/9.png</file>
         <file>resources/assets/MCFJLCL/MCFCJYLT.png</file>
-        <file>resources/assets/MCFJLCL/10.png</file>
-        <file>resources/assets/MCFJLCL/huagui.png</file>
-        <file>resources/assets/MCFJLCL/14.png</file>
-        <file>resources/assets/MCFJLCL/15.png</file>
-        <file>resources/assets/MCFJLCL/16.png</file>
-        <file>resources/assets/MCFJLCL/17.png</file>
-        <file>resources/assets/MCFJLCL/18.png</file>
-        <file>resources/assets/MCFJLCL/19.png</file>
-        <file>resources/assets/MCFJLCL/20.png</file>
-        <file>resources/assets/MCFJLCL/21.png</file>
-        <file>resources/assets/MCFJLCL/22.png</file>
-        <file>resources/assets/MCFJLCL/23.png</file>
-        <file>resources/assets/MCFJLCL/24.png</file>
-        <file>resources/assets/MCFJLCL/25.png</file>
     </qresource>
 </RCC>

@@ -6,6 +6,7 @@
 #include "radarDataModel.h"
 #include "experimentSidebar.h"
 #include "OscilloscopeWidget.h"
+#include "InstrumentPanel.h"
 #include <QTextBrowser>
 
 class MainWindow : public CustomMainWindow
@@ -60,6 +61,8 @@ private:
     QLabel* m_detailTopImage;         // 组件、原理通用右上图片
     QLabel* m_detailBottomImage;      // 组件、原理通用底部固定图片
     QWidget* m_experimentPage;
+
+    InstrumentPanel* m_instrumentPanel;
 
 private slots:
     void onComponentSelected(const ExperimentContentItem& item, const QString& bottomImgPath);

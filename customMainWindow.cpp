@@ -42,7 +42,7 @@ void CustomMainWindow::setupCustomTitleBar()
     //创建标题栏
     titleBar = new QWidget(this);
     titleBar->setObjectName("titleBar");
-    titleBar->setFixedHeight(70);
+    titleBar->setMinimumHeight(70);
 
     //创建标题栏布局
     QHBoxLayout *titleLayout = new QHBoxLayout(titleBar);
@@ -50,7 +50,7 @@ void CustomMainWindow::setupCustomTitleBar()
 
     //创建图标
     iconLabel = new QLabel();
-    iconLabel->setFixedSize(50, 50);
+    iconLabel->setMinimumSize(50, 50);
     iconLabel->setPixmap(QPixmap(":/icons/resources/icons/title.png").scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     iconLabel->setObjectName("iconLabel");
     titleLayout->addWidget(iconLabel);
@@ -64,7 +64,7 @@ void CustomMainWindow::setupCustomTitleBar()
     //创建文件按钮
     fileButton = new QPushButton("文件(F)");
     fileButton->setObjectName("menuButton");
-    fileButton->setFixedSize(160, 50);
+    fileButton->setMinimumSize(160, 50);
 
     //创建文件菜单
     fileMenu = new QMenu(this);
@@ -73,7 +73,7 @@ void CustomMainWindow::setupCustomTitleBar()
     //创建帮助按钮
     helpButton = new QPushButton("帮助(H)");
     helpButton->setObjectName("menuButton");
-    helpButton->setFixedSize(160, 50);
+    helpButton->setMinimumSize(160, 50);
 
     //创建帮助菜单
     helpMenu = new QMenu(this);
@@ -86,12 +86,12 @@ void CustomMainWindow::setupCustomTitleBar()
     //创建窗口控制按钮
     minButton = new QPushButton();
     minButton->setObjectName("minButton");
-    minButton->setFixedSize(38, 38); // 使用38x38以完整显示图片
+    minButton->setMinimumSize(38, 38); // 使用38x38以完整显示图片
     minButton->setFlat(true);        // 设置为扁平按钮，避免边框干扰
 
     closeButton = new QPushButton();
     closeButton->setObjectName("closeButton");
-    closeButton->setFixedSize(38, 38); // 使用38x38以完整显示图片
+    closeButton->setMinimumSize(38, 38); // 使用38x38以完整显示图片
     closeButton->setFlat(true);        // 设置为扁平按钮，避免边框干扰
 
     // 连接按钮信号
@@ -404,7 +404,7 @@ void CustomMainWindow::about()
 
     // OK按钮使用绝对定位，固定在右下角
     okBtn->setParent(container);
-    okBtn->move(380 - 90 - 40, 200 - 28 - 47); // 右下角
+    okBtn->move(380 - 90 - 40, 200 - 28 - 47);  // 右下角
 
     dialog->exec();
     dialog->deleteLater();
@@ -418,10 +418,9 @@ void CustomMainWindow::setupMenu()
     // 设置菜单样式
     QString menuStyle = R"(
         QMenu {
-            background-color:rgba(247, 249, 255, 0.5);
+            background-color:rgba(247, 249, 255, 0.8);
             border-radius: 10px;
             border: 2px solid #6796FE;
-            padding: 0px;
         }
 
         QMenu::item {
@@ -456,7 +455,7 @@ void CustomMainWindow::setupMenu()
     // 设置帮助菜单窗口属性以支持圆角和透明
     helpMenu->setWindowFlags(helpMenu->windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
     helpMenu->setAttribute(Qt::WA_TranslucentBackground);
-    helpMenu->setMinimumWidth(helpButton->width());
+    helpMenu->setFixedWidth(160);
     helpMenu->setStyleSheet(menuStyle);
 
     // 添加帮助菜单项

@@ -10,10 +10,10 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    a.setStyle("Fusion");
 
     // 设置自定义全局字体
-    FontManager::setupGlobalFont(":/font/resources/fonts/PingFang/PingFang Medium_downcc.otf", 13);
-    a.setStyle("Fusion");
+    FontManager::setupGlobalFont(":/font/resources/fonts/PingFang/PingFang Medium_downcc.otf", 12);
     loginWindow w;
     //CustomMainWindow w;
     //TeachingMainWindow w;
