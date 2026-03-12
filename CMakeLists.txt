@@ -10,8 +10,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Debug)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets PrintSupport)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets PrintSupport)
 find_package(Qt6 REQUIRED COMPONENTS Widgets Svg)
 find_package(Qt6 REQUIRED COMPONENTS Widgets Charts)
 
@@ -45,8 +45,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         sidebarListPanel.h
         sidebarListPanel.cpp
         ExperimentManager.h
-        OscilloscopeWidget.h
-        instrumentpanel.h instrumentpanel.cpp
+        OscilloScopeWidget.h
+        instrumentpanel.h
+        instrumentpanel.cpp
+        qcustomplot.h
+        qcustomplot.cpp
+        oscilloscopeWidget.cpp
     )
 
 file(COPY ${CMAKE_SOURCE_DIR}/resources
@@ -73,7 +77,10 @@ else()
     endif()
 endif()
 
-target_link_libraries(RadarTeachingPlatform PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(RadarTeachingPlatform PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::PrintSupport
+)
 target_link_libraries(RadarTeachingPlatform PRIVATE Qt6::Widgets Qt6::Svg)
 target_link_libraries(RadarTeachingPlatform PRIVATE Qt6::Widgets Qt6::Charts)
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
