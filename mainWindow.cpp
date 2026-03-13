@@ -488,9 +488,6 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
         // 填充左侧操作提示
         m_stepPromptLabel->setText(item.description);
 
-        // 更新示波器数据
-        m_oscilloscope->setData(item.id);
-
         // 填充左侧操作图片 (例如滑轨图)
         QPixmap actionPix(item.imagePath);
         if (!actionPix.isNull()) {
@@ -501,8 +498,12 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
         QPixmap bottomPix(bottomImgPath);
         //m_stepBottomImage->setPixmap(bottomPix.scaled(800, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         m_stepBottomImage->setPixmap(bottomPix.scaled(m_stepBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        // TODO: 这里可以触发右侧图表的重置或更新
-        // m_waveformChart->reset();
+
+        // 更新示波器数据
+        m_oscilloscope->setData(item.id);
+        //m_oscilloscope->setWaveMode(Sine, 4.0, 1.5);
+
+
     }   else{
         // --- 普通组件模式 (雷达组件/测量原理) ---
         m_centerStack->setCurrentWidget(m_componentDetailWidget);
@@ -514,7 +515,7 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
         // 填充右上角图片 (按比例缩放)
         QPixmap topPix(item.imagePath);
         if (!topPix.isNull()) {
-            m_detailTopImage->setPixmap(topPix.scaled(600, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            m_detailTopImage->setPixmap(topPix.scaled(m_detailBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         } else {
             m_detailTopImage->setText("暂无图片");  // 容错处理
         }

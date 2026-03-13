@@ -12,8 +12,8 @@ set(CMAKE_BUILD_TYPE Debug)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Widgets Svg)
-find_package(Qt6 REQUIRED COMPONENTS Widgets Charts)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Svg Charts)
+
 
 set(PROJECT_SOURCES
         main.cpp
@@ -45,8 +45,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         sidebarListPanel.h
         sidebarListPanel.cpp
         ExperimentManager.h
-        OscilloscopeWidget.h
-        instrumentpanel.h instrumentpanel.cpp
+        instrumentpanel.h
+        instrumentpanel.cpp
+        oscilloScopeWidget.h oscilloScopeWidget.cpp
     )
 
 file(COPY ${CMAKE_SOURCE_DIR}/resources
