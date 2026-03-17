@@ -69,68 +69,99 @@ void OscilloscopeWidget::onRefreshTick()
     {
     case None:
     {
-        m_graph->setBrush(Qt::NoBrush);
-        m_graph->data()->clear(); // 清空数据，不画任何波形
-
+        m_graph->data()->clear(); // 清空数据
         m_plot->xAxis->setLabel("时间 (µs)");
         m_plot->yAxis->setLabel("电压 (V)");
-        m_plot->xAxis->setRange(0, 3000);
-        m_plot->yAxis->setRange(-0.1, 1.2);
+        m_plot->xAxis->setRange(0, 3050);
+        m_plot->yAxis->setRange(-0.1, 1.3);
         m_plot->yAxis->setNumberFormat("f");
         m_plot->yAxis->setNumberPrecision(1);
-
-        QSharedPointer<QCPAxisTickerFixed> fixedTicker(new QCPAxisTickerFixed);
-        fixedTicker->setTickStep(0.1);
-        m_plot->yAxis->setTicker(fixedTicker);
-
-        m_plot->xAxis->setTicker(QSharedPointer<QCPAxisTicker>(new QCPAxisTicker));
+        QSharedPointer<QCPAxisTickerText> yTicker(new QCPAxisTickerText);
+        QVector<double> yTicks = {-0.1, 0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3};
+        for (double v : yTicks)
+            yTicker->addTick(v, QString::number(v, 'f', 1));
+        m_plot->yAxis->setTicker(yTicker);
 
         m_plot->replot();
-        return; // 不执行后面的 setData 和 replot
+        return; // 跳过后面的 setData 和 replot
     }
     case TriggerPulse:
     {
         m_plot->xAxis->setLabel("时间(µs)");
         m_plot->yAxis->setLabel("电压(V)");
-        m_plot->xAxis->setRange(0, 3100);
+        m_plot->xAxis->setRange(0, 3050);
         m_plot->yAxis->setRange(-0.1, 1.3);
         m_plot->yAxis->setNumberFormat("f");
         m_plot->yAxis->setNumberPrecision(1);
-
-        QVector<double> pulsePos = {250, 1200, 2250}; // 三个脉冲中心位置
-
-        for (int i = 0; i < points; ++i) {
-            x[i] = i * (3000.0 / (points - 1));
-
+        QSharedPointer<QCPAxisTickerText> yTicker(new QCPAxisTickerText);
+        QVector<double> yTicks = {-0.1, 0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3};
+        for (double v : yTicks)
+            yTicker->addTick(v, QString::number(v, 'f', 1));
+        m_plot->yAxis->setTicker(yTicker);
+        QVector<double> pulsePos = {250, 1200, 2250};
+        // 先生成均匀点，再插入峰顶点
+        int n = 200;
+        QVector<double> xAll, yAll;
+        xAll.reserve(n + pulsePos.size());
+        yAll.reserve(n + pulsePos.size());
+        // 强制插入峰顶点
+        for (double pos : pulsePos) {
+            xAll.append(pos);
+            yAll.append(0.97); // 峰顶强制赋值
+        }
+        // 均匀采样点
+        for (int i = 0; i < n; ++i) {
+            double xi = i * (3050.0 / (n - 1));
+            // 跳过已经插入的峰顶附近（避免重复）
+            bool nearPeak = false;
+            for (double pos : pulsePos) {
+                if (qAbs(xi - pos) < 1.5) { nearPeak = true; break; }
+            }
+            if (nearPeak) continue;
             double baseVal = 0.0;
             for (double pos : pulsePos) {
-                double dt = x[i] - pos;
-                if (dt >= 0 && dt < 200) {
-                    // 快速上升 + 指数衰减
-                    double pulse = 0.95 * qExp(-dt / 20.0);
-                    baseVal = qMax(baseVal, pulse);
+                double dt = xi - pos;
+                if (dt >= 0 && dt < 300) {
+                    baseVal = qMax(baseVal, 0.97 * qExp(-dt / 30.0));
                 }
             }
-
             double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.02;
-            y[i] = baseVal + jitter;
+            xAll.append(xi);
+            yAll.append(qBound(-0.1, baseVal + jitter, 1.3));
         }
+        // 按X排序后设置数据
+        // 用 QMap 自动排序
+        QMap<double, double> sorted;
+        for (int i = 0; i < xAll.size(); ++i)
+            sorted[xAll[i]] = yAll[i];
+
+        x = sorted.keys().toVector();
+        y = sorted.values().toVector();
+
         break;
     }
     case PulseModulation:
     {
         m_plot->xAxis->setLabel("时间(µs)");
         m_plot->yAxis->setLabel("电压(V)");
-        m_plot->xAxis->setRange(0, 3100);
+        m_plot->xAxis->setRange(0, 3050);
         m_plot->yAxis->setRange(-0.1, 1.3);
         m_plot->yAxis->setNumberFormat("f");
         m_plot->yAxis->setNumberPrecision(1);
+
+        // 手动指定Y轴刻度，强制显示-0.1
+        QSharedPointer<QCPAxisTickerText> yTicker(new QCPAxisTickerText);
+        QVector<double> yTicks = {-0.1, 0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3};
+        for (double v : yTicks)
+            yTicker->addTick(v, QString::number(v, 'f', 1));
+        m_plot->yAxis->setTicker(yTicker);
+
 
         // 脉冲区间 [起始, 结束]
         QVector<QPair<double,double>> pulses = {{0, 100}, {1000, 1200}, {1900, 2100}};
 
         for (int i = 0; i < points; ++i) {
-            x[i] = i * (3000.0 / (points - 1));
+            x[i] = i * (3050.0 / (points - 1));
 
             bool inPulse = false;
             bool isRisingEdge = false;
@@ -166,19 +197,29 @@ void OscilloscopeWidget::onRefreshTick()
     {
         m_plot->xAxis->setLabel("时间(µs)");
         m_plot->yAxis->setLabel("电压(V)");
-        m_plot->xAxis->setRange(0, 100);
-        m_plot->yAxis->setRange(-0.1, 1.2);
+        m_plot->xAxis->setRange(0, 102);
+        m_plot->yAxis->setRange(-0.1, 1.3);
         m_plot->yAxis->setNumberFormat("f");
         m_plot->yAxis->setNumberPrecision(1);
 
+        // 手动指定Y轴刻度
+        QSharedPointer<QCPAxisTickerText> yTicker(new QCPAxisTickerText);
+        QVector<double> yTicks = {-0.1, 0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3};
+        for (double v : yTicks)
+            yTicker->addTick(v, QString::number(v, 'f', 1));
+        m_plot->yAxis->setTicker(yTicker);
+
+        // 4个峰顶位置约在 7, 35, 63, 92µs，周期约28µs
+        // 从相位-π/2开始，让第一个峰在x≈7附近
+        double T = 28.0;  // 周期28µs
+        double phase = -M_PI / 2.0 + (2 * M_PI / T) * 7.0; // 相位偏移让峰顶对齐
+
         for (int i = 0; i < points; ++i) {
-            x[i] = i * (100.0 / (points - 1));
+            x[i] = i * (102.0 / (points - 1));
 
-            // 周期22µs，中心0.50，幅度0.44
-            double baseVal = 0.50 + 0.44 * qSin(2 * M_PI / 22.0 * x[i]);
+            double baseVal = 0.50 + 0.44 * qSin(2 * M_PI / T * x[i] - phase);
 
-            // 峰顶附近加小过冲
-            double sinVal = qSin(2 * M_PI / 22.0 * x[i]);
+            double sinVal = qSin(2 * M_PI / T * x[i] - phase);
             double noiseAmp = (sinVal > 0.85) ? 0.025 : 0.015;
             double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * noiseAmp;
 
@@ -192,7 +233,7 @@ void OscilloscopeWidget::onRefreshTick()
 
         m_plot->xAxis->setLabel("频率 (GHz)");
         m_plot->yAxis->setLabel("功率 (dBm)");
-        m_plot->xAxis->setRange(9.3, 9.385); // 两端加余量确保9.30和9.38都显示
+        m_plot->xAxis->setRange(9.3, 9.381); // 两端加余量确保9.30和9.38都显示
 
         QSharedPointer<QCPAxisTickerFixed> xTicker(new QCPAxisTickerFixed);
         xTicker->setTickStep(0.01);
@@ -211,7 +252,7 @@ void OscilloscopeWidget::onRefreshTick()
         double peakPower  = -43.0;
 
         for (int i = 0; i < points; ++i) {
-            x[i] = 9.30 + i * (0.08 / (points - 1));
+            x[i] = 9.30 + i * (0.081 / (points - 1));
 
             double dist = x[i] - centerFreq;
             double signal = noiseFloor + (peakPower - noiseFloor)
@@ -250,9 +291,7 @@ void OscilloscopeWidget::onRefreshTick()
 
             double dist = x[i] - centerFreq;
             // 峰比LocalOscillator稍宽，sigma大一点
-            double signal = noiseFloor + (peakPower - noiseFloor)
-                                             * qExp(-qPow(dist / 0.005, 2));
-
+            double signal = noiseFloor + (peakPower - noiseFloor) * qExp(-qPow(dist / 0.005, 2));
             double noise = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 2.5;
 
             if (qAbs(dist) < 0.008)
@@ -309,20 +348,19 @@ void OscilloscopeWidget::onRefreshTick()
         m_plot->yAxis->setRange(0, 1.0);
         m_plot->yAxis->setNumberFormat("f");
         m_plot->yAxis->setNumberPrecision(1);
-        // 恢复默认均匀刻度（避免上个case的TextTicker残留）
-        //m_plot->yAxis->setTicker(QSharedPointer<QCPAxisTicker>(new QCPAxisTicker));
-        //m_plot->yAxis->setTickStep(0.1); // 每隔0.1一个刻度
+
         QSharedPointer<QCPAxisTickerFixed> fixedTicker(new QCPAxisTickerFixed);
         fixedTicker->setTickStep(0.1);
         m_plot->yAxis->setTicker(fixedTicker);
+        QSharedPointer<QCPAxisTickerFixed> fixedTickerx(new QCPAxisTickerFixed);
+        fixedTickerx->setTickStep(1);
+        m_plot->xAxis->setTicker(fixedTickerx);
 
         for (int i = 0; i < points; ++i) {
             x[i] = i * (8.0 / (points - 1));
-
             // 周期2us，占空比50%：0~1高，1~2低，2~3高...
             double t = fmod(x[i], 2.0);
             double baseVal = (t < 1.0) ? 0.95 : 0.05;
-
             double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.02;
             y[i] = baseVal + jitter;
         }
@@ -363,7 +401,7 @@ void OscilloscopeWidget::onRefreshTick()
 
         m_plot->xAxis->setLabel("时间 (µs)");
         m_plot->yAxis->setLabel("电压 (V)");
-        m_plot->xAxis->setRange(0, 100);
+        m_plot->xAxis->setRange(0, 101);
         m_plot->yAxis->setRange(0, 1.0);
         m_plot->yAxis->setNumberFormat("f");
         m_plot->yAxis->setNumberPrecision(1);
@@ -373,7 +411,7 @@ void OscilloscopeWidget::onRefreshTick()
         m_plot->yAxis->setTicker(fixedTicker);
 
         for (int i = 0; i < points; ++i) {
-            x[i] = i * (100.0 / (points - 1));
+            x[i] = i * (101.0 / (points - 1));
             double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.012;
             y[i] = 0.50 + jitter;
         }
@@ -409,8 +447,6 @@ void OscilloscopeWidget::onRefreshTick()
     }
     case Differential:
     {
-        m_graph->setBrush(Qt::NoBrush);
-
         m_plot->xAxis->setLabel("时间 (µs)");
         m_plot->yAxis->setLabel("电压 (V)");
         m_plot->xAxis->setRange(0, 80);
@@ -422,24 +458,27 @@ void OscilloscopeWidget::onRefreshTick()
         fixedTicker->setTickStep(0.1);
         m_plot->yAxis->setTicker(fixedTicker);
 
-        double center = 40.0; // 高斯中心
-        double sigma  = 6.0;  // 宽度
+        // 正峰34µs，负峰48µs，两峰间距14µs
+        // 高斯导数正负峰间距 = sigma*sqrt(2)，所以 sigma = 14/sqrt(2) ≈ 7.5
+        // 高斯中心在两峰中间：(34+48)/2 = 41µs
+        double center = 41.0;
+        double sigma  = 7.5;
 
         for (int i = 0; i < points; ++i) {
             x[i] = i * (80.0 / (points - 1));
 
-            // 高斯一阶导数：-((t-u)/sigma^2) * exp(-((t-u)^2)/(2*sigma^2))
             double t = x[i] - center;
             double gaussian_diff = -(t / (sigma * sigma))
-                                   * qExp(-qPow(t, 2) / (2 * sigma * sigma));
+                                   * qExp(-qPow(t, 2) / (2.0 * sigma * sigma));
 
-            // 缩放到目标幅度：正峰~0.14，负峰~-0.12
-            double baseVal = gaussian_diff * 2.0;
+            // 峰值目标±0.14，gaussian_diff峰值=1/(sigma*sqrt(e))≈0.049
+            // 缩放系数 = 0.14 / 0.049 ≈ 2.85
+            double baseVal = gaussian_diff * 3.0;
 
-            double noiseAmp = (qAbs(baseVal) > 0.05) ? 0.008 : 0.004;
+            double noiseAmp = (qAbs(baseVal) > 0.03) ? 0.006 : 0.003;
             double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * noiseAmp;
 
-            y[i] = qBound(-0.2, baseVal + jitter, 0.2);
+            y[i] = qBound(-0.4, baseVal + jitter, 0.4);
         }
         break;
     }
@@ -450,7 +489,7 @@ void OscilloscopeWidget::onRefreshTick()
         m_plot->xAxis->setLabel("时间 (µs)");
         m_plot->yAxis->setLabel("电压 (V)");
         m_plot->xAxis->setRange(0, 80);
-        m_plot->yAxis->setRange(0, 0.8);
+        m_plot->yAxis->setRange(0, 0.8);  // 范围改大
         m_plot->yAxis->setNumberFormat("f");
         m_plot->yAxis->setNumberPrecision(1);
 
@@ -461,13 +500,12 @@ void OscilloscopeWidget::onRefreshTick()
         for (int i = 0; i < points; ++i) {
             x[i] = i * (80.0 / (points - 1));
 
-            // 高斯包络，中心40µs，sigma≈6，峰值0.42
-            double baseVal = 0.42 * qExp(-qPow((x[i] - 40.0) / 6.0, 2));
+            double baseVal = 0.72 * qExp(-qPow((x[i] - 40.0) / 6.0, 2)) + 0.008; // 峰值改为0.72
 
-            double noiseAmp = (baseVal > 0.05) ? 0.008 : 0.005;
+            double noiseAmp = (baseVal > 0.05) ? 0.008 : 0.012;
             double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * noiseAmp;
 
-            y[i] = qBound(0.0, baseVal + jitter, 0.4);
+            y[i] = qBound(0.0, baseVal + jitter, 0.8);
         }
         break;
     }
