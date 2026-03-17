@@ -1,10 +1,7 @@
 #include <QApplication>
 #include <QFontDatabase>
-#include "customMainWindow.h"
 #include "fontManager.h"
 #include "loginwindow.h"
-#include "mainWindow.h"
-#include "teachingMainWindow.h"
 #include <qDebug>
 
 int main(int argc, char *argv[])
@@ -19,5 +16,6 @@ int main(int argc, char *argv[])
     //TeachingMainWindow w;
     //MainWindow w;
     w.show();
+    //w.showFullScreen();
     return a.exec();
 }

@@ -12,18 +12,9 @@ class OscilloscopeWidget : public QWidget {
 public:
     enum WaveType {
         None,
-        TriggerPulse,
-        PulseModulation,
-        IntermediateFrequency,
-        LocalOscillator,
-        RFEmit,
-        RFReceive,
-        Baseband,
-        Detector,
-        Threshold,
-        Branch,
-        Differential,
-        Tributary
+        TargetSetup,  // s1
+        PulseTrigger, // s2
+        RadarEcho     // 带有渐变填充的雷达波形
     };
 
     explicit OscilloscopeWidget(QWidget *parent = nullptr);

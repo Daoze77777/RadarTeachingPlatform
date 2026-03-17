@@ -5,7 +5,7 @@
 #include "teachingMainWindow.h"
 #include "radarDataModel.h"
 #include "experimentSidebar.h"
-#include "OscilloscopeWidget.h"
+#include "OscilloScopeWidget.h"
 #include "InstrumentPanel.h"
 #include <QTextBrowser>
 

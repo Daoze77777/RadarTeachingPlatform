@@ -10,9 +10,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Debug)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Widgets Svg Charts)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets PrintSupport)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets PrintSupport)
 
 
 set(PROJECT_SOURCES
@@ -47,14 +47,18 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ExperimentManager.h
         instrumentpanel.h
         instrumentpanel.cpp
-        oscilloScopeWidget.h oscilloScopeWidget.cpp
+        instrumentpanel.h
+        instrumentpanel.cpp
+        qcustomplot.h
+        qcustomplot.cpp
+        OscilloScopeWidget.h
+        oscilloscopeWidget.cpp
+
     )
 
 file(COPY ${CMAKE_SOURCE_DIR}/resources
      DESTINATION ${CMAKE_BINARY_DIR})
 
-#qt_add_big_resources(BIG_RES_FILES resources.qrc)
-#arget_sources(RadarTeachingPlatform PRIVATE ${BIG_RES_FILES})
 
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET RadarTeachingPlatform APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -74,7 +78,10 @@ else()
     endif()
 endif()
 
-target_link_libraries(RadarTeachingPlatform PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(RadarTeachingPlatform PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::PrintSupport
+)
 target_link_libraries(RadarTeachingPlatform PRIVATE Qt6::Widgets Qt6::Svg)
 target_link_libraries(RadarTeachingPlatform PRIVATE Qt6::Widgets Qt6::Charts)
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -24,7 +24,6 @@ TeachingMainWindow::TeachingMainWindow(QWidget *parent)
     initUI();
     //设置窗口大小
     resize(1920, 1033);
-    //this->showFullScreen();
 
 
 
