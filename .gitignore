@@ -27,3 +27,8 @@ Release/
 # OS
 .DS_Store
 Thumbs.db
+
+CMakeLists_*BACKUP*.txt
+CMakeLists_*BASE*.txt
+CMakeLists_*LOCAL*.txt
+CMakeLists_*REMOTE*.txt
