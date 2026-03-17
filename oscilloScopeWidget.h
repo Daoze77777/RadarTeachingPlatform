@@ -23,7 +23,8 @@ public:
         Threshold,
         Branch,
         Differential,
-        Tributary
+        Tributary,
+        Distance
     };
 
     explicit OscilloscopeWidget(QWidget *parent = nullptr);
