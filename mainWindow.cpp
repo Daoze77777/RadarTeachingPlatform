@@ -438,8 +438,10 @@ QWidget* MainWindow::setupStepDetailWidget()
     QVBoxLayout *actionImageLayout = new QVBoxLayout(actionImageFrame);
     m_stepActionImage = new QLabel();
     m_stepActionImage->setAlignment(Qt::AlignCenter);
+    m_radarRangingDisply = new RadarRangingDisplay;
+    m_radarRangingDisply->setVisible(false); // 初始状态隐藏
     actionImageLayout->addWidget(m_stepActionImage);
-
+    actionImageLayout->addWidget(m_radarRangingDisply);
     leftPanelLayout->addWidget(promptFrame, 5);      // 提示占小部分高度
     leftPanelLayout->addWidget(actionImageFrame, 5); // 图片占大部分高度
 
@@ -489,20 +491,29 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
         m_stepPromptLabel->setText(item.description);
 
         // 填充左侧操作图片 (例如滑轨图)
-        QPixmap actionPix(item.imagePath);
-        if (!actionPix.isNull()) {
-            m_stepActionImage->setPixmap(actionPix.scaled(m_stepActionImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        if(item.id == "s14")
+        {
+            // 展示雷达动画，隐藏图片框
+            m_stepActionImage->setVisible(false);
+            m_radarRangingDisply->setVisible(true);
+            // 可选：切换到该步时自动重置动画状态
+            //m_radarRangingDisply->onResetClicked();
+        } else{
+            // 展示图片，隐藏雷达动画
+            m_radarRangingDisply->setVisible(false);
+            m_stepActionImage->setVisible(true);
+            QPixmap actionPix(item.imagePath);
+            if (!actionPix.isNull()) {
+                m_stepActionImage->setPixmap(actionPix.scaled(m_stepActionImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            }
         }
 
         // 填充底部原理图
         QPixmap bottomPix(bottomImgPath);
-        //m_stepBottomImage->setPixmap(bottomPix.scaled(800, 400, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         m_stepBottomImage->setPixmap(bottomPix.scaled(m_stepBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
         // 更新示波器数据
         m_oscilloscope->setData(item.id);
-        //m_oscilloscope->setWaveMode(Sine, 4.0, 1.5);
-
 
     }   else{
         // --- 普通组件模式 (雷达组件/测量原理) ---

@@ -53,6 +53,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         qcustomplot.cpp
         OscilloScopeWidget.h
         oscilloscopeWidget.cpp
+        radarRangingDisplay.h radarRangingDisplay.cpp
 
     )
 

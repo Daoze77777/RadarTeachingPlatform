@@ -22,9 +22,9 @@ InstrumentPanel::InstrumentPanel(QWidget *parent) : QWidget(parent)
     mainLayout->addSpacing(10); // 模块间距
 
     // 添加指示灯条目（文本，内部ID，初始颜色）
-    mainLayout->addWidget(createPanelItem("电源", "power", "gray"));
-    mainLayout->addWidget(createPanelItem("通信", "comm", "red")); // 截图里通信是红的
-    mainLayout->addWidget(createPanelItem("传感", "sensor", "green"));
+    mainLayout->addWidget(createPanelItem("电源", "power", "green"));
+    mainLayout->addWidget(createPanelItem("通信", "comm", "green")); // 截图里通信是红的
+    mainLayout->addWidget(createPanelItem("传感", "sensor", "gray"));
     mainLayout->addWidget(createPanelItem("端口", "port", "gray"));
     mainLayout->addSpacing(10); // 模块间距
 

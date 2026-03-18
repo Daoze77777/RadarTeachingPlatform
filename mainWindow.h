@@ -7,6 +7,7 @@
 #include "experimentSidebar.h"
 #include "OscilloScopeWidget.h"
 #include "InstrumentPanel.h"
+#include "radarRangingDisplay.h"
 #include <QTextBrowser>
 
 class MainWindow : public CustomMainWindow
@@ -54,6 +55,7 @@ private:
     QWidget* m_stepDetailWidget;        //实验步骤专用页面
     QLabel* m_stepPromptLabel;      //实验步骤操作提示
     QLabel* m_stepActionImage;      //实验步骤操作图
+    RadarRangingDisplay* m_radarRangingDisply;
     OscilloscopeWidget* m_oscilloscope;     //实验步骤右侧示波器
     QLabel* m_stepBottomImage;      //实验步骤底部图片
     QLabel* m_detailTitleLabel;       // 组件、原理通用标题
