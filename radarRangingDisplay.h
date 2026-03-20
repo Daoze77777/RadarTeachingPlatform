@@ -47,5 +47,8 @@ private:
     bool m_isReturning;
     bool m_isRunning;
     const double C_KM_US = 0.3; // 光速常量
+
+signals:
+    void animationFinished(double pulseTimeUs); // 动画结束，传递脉冲时间
 };
 #endif

@@ -30,8 +30,13 @@ public:
     explicit OscilloscopeWidget(QWidget *parent = nullptr);
     void setData(const QString& stepId);
 
+public slots:
+    void onRadarAnimationFinished(double pulseTimeUs);
+
+
 private slots:
     void onRefreshTick(); // 刷新数据和噪声
+
 
 private:
     void setupPlot();
@@ -40,6 +45,7 @@ private:
     QCPGraph    *m_graph;
     QTimer      *m_timer;
     WaveType     m_currentMode = None;
+    double m_distancePulseTime = 0.0; // 存储脉冲时间
 };
 
 #endif

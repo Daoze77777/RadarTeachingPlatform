@@ -5,6 +5,7 @@
 #include <QPainter>
 #include "ExperimentManager.h"
 #include "experimentSidebar.h"
+#include "oscilloScopeWidget.h"
 
 MainWindow::MainWindow(int expId, QWidget *parent)
 {
@@ -465,6 +466,9 @@ QWidget* MainWindow::setupStepDetailWidget()
 
     mainVLayout->addWidget(topArea, 5);     // 上部高度占比
     mainVLayout->addWidget(bottomFrame, 5); // 下部高度占比
+
+    connect(m_radarRangingDisply, &RadarRangingDisplay::animationFinished,
+            m_oscilloscope,  &OscilloscopeWidget::onRadarAnimationFinished);
 
     return stepDetailWidget;
 }

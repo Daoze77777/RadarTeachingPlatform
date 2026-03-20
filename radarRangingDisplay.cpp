@@ -29,7 +29,6 @@ void RadarRangingDisplay::setupUI() {
     m_spinDistance->setValue(m_targetDistance);
     m_spinDistance->setSuffix(" km");
     m_spinDistance->setMinimumWidth(100);
-    // 解决白色看不见的问题：设置深色文字和浅灰色背景
     m_spinDistance->setStyleSheet(" background-color: #f0f0f0; color: #000000;");
 
 
@@ -37,7 +36,7 @@ void RadarRangingDisplay::setupUI() {
     m_lblTime = new QLabel("脉冲时间: 0.0 µs", this);
     m_lblTime->setMinimumWidth(150);
     m_lblTime->setAlignment(Qt::AlignCenter);
-    m_lblTime->setStyleSheet("background-color: #2c3e50; color: #ecf0f1; border-radius: 4px; padding: 5px; font-family: 'Consolas'; font-size: 14px;");
+    m_lblTime->setStyleSheet("background-color: #f0f0f0; color: #000000; border-radius: 4px; padding: 5px; font-size: 14px;");
 
     m_btnStart = new QPushButton("开始", this);
     m_btnReset = new QPushButton("重置", this);
@@ -122,10 +121,16 @@ void RadarRangingDisplay::updateAnimationTick() {
             m_currentPos = m_targetDistance;
             m_isReturning = true;
 
-            // ===== 到达目标：显示红色圆形标记 =====
-            double r = 1.5; // 固定标记半径
-            m_hitMarker->topLeft->setCoords(m_targetDistance - r, r);
-            m_hitMarker->bottomRight->setCoords(m_targetDistance + r, -r);
+            // 固定像素大小的红色圆形标记
+            double x0 = m_plot->xAxis->pixelToCoord(0);
+            double x1 = m_plot->xAxis->pixelToCoord(20); // 固定20像素
+            double y0 = m_plot->yAxis->pixelToCoord(0);
+            double y1 = m_plot->yAxis->pixelToCoord(20);
+            double rx  = qAbs(x1 - x0);
+            double ry  = qAbs(y1 - y0);
+
+            m_hitMarker->topLeft->setCoords(m_targetDistance - rx,  ry);
+            m_hitMarker->bottomRight->setCoords(m_targetDistance + rx, -ry);
             m_hitMarker->setVisible(true);
         }
     } else {
@@ -135,36 +140,49 @@ void RadarRangingDisplay::updateAnimationTick() {
             m_timer->stop();
             m_isRunning = false;
             m_spinDistance->setEnabled(true);
+
+            // 计算完整往返时间并发射信号
+            double totalTime = (m_targetDistance * 2.0) / C_KM_US;
+            emit animationFinished(totalTime);
         }
     }
 
-    double totalTraveled = m_isReturning
-                               ? (m_targetDistance + (m_targetDistance - m_currentPos))
-                               : m_currentPos;
+    double totalTraveled = m_isReturning ? (m_targetDistance + (m_targetDistance - m_currentPos)) : m_currentPos;
     m_lblTime->setText(QString("脉冲时间: %1 µs").arg(totalTraveled / C_KM_US, 0, 'f', 1));
-
     updatePulseVisuals();
     m_plot->replot();
 }
-void RadarRangingDisplay::updatePulseVisuals() {
+void RadarRangingDisplay::updatePulseVisuals()
+{
     QSharedPointer<QCPCurveDataContainer> data = m_pulseCurve->data();
     data->clear();
 
-    // 固定波束大小：用Y轴的固定比例，不随距离变化
-    const double fixedSize = 8.0; // 固定8km大小，视觉上固定
+    // 把像素大小转换为数据坐标
+    // 固定像素：长60px，宽30px
+    double x0 = m_plot->xAxis->pixelToCoord(0);
+    double x1 = m_plot->xAxis->pixelToCoord(30); // 60像素对应的x数据长度
+    double y0 = m_plot->yAxis->pixelToCoord(0);
+    double y1 = m_plot->yAxis->pixelToCoord(20); // 30像素对应的y数据长度
+
+    double fixedLength = qAbs(x1 - x0);
+    double fixedWidth  = qAbs(y1 - y0);
 
     if (!m_isReturning) {
-        data->add(QCPCurveData(0, m_currentPos, 0));
-        data->add(QCPCurveData(1, m_currentPos - fixedSize, fixedSize * 0.6));
-        data->add(QCPCurveData(2, m_currentPos - fixedSize, -fixedSize * 0.6));
-        data->add(QCPCurveData(3, m_currentPos, 0));
+        double tipX  = m_currentPos;
+        double wideX = m_currentPos - fixedLength;
+        data->add(QCPCurveData(0, tipX,  0));
+        data->add(QCPCurveData(1, wideX,  fixedWidth));
+        data->add(QCPCurveData(2, wideX, -fixedWidth));
+        data->add(QCPCurveData(3, tipX,  0));
         m_pulseCurve->setBrush(QBrush(QColor(52, 152, 219, 150)));
         m_pulseCurve->setPen(QPen(QColor(41, 128, 185), 2));
     } else {
-        data->add(QCPCurveData(0, m_currentPos, 0));
-        data->add(QCPCurveData(1, m_currentPos + fixedSize, fixedSize * 0.5));
-        data->add(QCPCurveData(2, m_currentPos + fixedSize, -fixedSize * 0.5));
-        data->add(QCPCurveData(3, m_currentPos, 0));
+        double tipX  = m_currentPos;
+        double wideX = m_currentPos + fixedLength;
+        data->add(QCPCurveData(0, tipX,  0));
+        data->add(QCPCurveData(1, wideX,  fixedWidth));
+        data->add(QCPCurveData(2, wideX, -fixedWidth));
+        data->add(QCPCurveData(3, tipX,  0));
         m_pulseCurve->setBrush(QBrush(QColor(231, 76, 60, 150)));
         m_pulseCurve->setPen(QPen(QColor(192, 57, 43), 2));
     }

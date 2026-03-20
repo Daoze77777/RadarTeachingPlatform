@@ -10,9 +10,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Debug)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Svg Charts)
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets PrintSupport)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets PrintSupport)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Svg Charts PrintSupport SerialPort)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Svg Charts PrintSupport SerialPort)
 
 
 set(PROJECT_SOURCES
@@ -54,6 +53,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         OscilloScopeWidget.h
         oscilloscopeWidget.cpp
         radarRangingDisplay.h radarRangingDisplay.cpp
+        radarDataParser.h radarDataParser.cpp
+        serialTestHelper.h serialTestHelper.cpp
 
     )
 
@@ -82,9 +83,11 @@ endif()
 target_link_libraries(RadarTeachingPlatform PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::PrintSupport
+    Qt${QT_VERSION_MAJOR}::SerialPort
+    Qt${QT_VERSION_MAJOR}::Svg
+    Qt${QT_VERSION_MAJOR}::Charts
 )
-target_link_libraries(RadarTeachingPlatform PRIVATE Qt6::Widgets Qt6::Svg)
-target_link_libraries(RadarTeachingPlatform PRIVATE Qt6::Widgets Qt6::Charts)
+
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
