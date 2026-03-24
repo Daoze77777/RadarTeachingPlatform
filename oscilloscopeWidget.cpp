@@ -41,6 +41,7 @@ void OscilloscopeWidget::setupPlot() {
 }
 
 void OscilloscopeWidget::setData(const QString& stepId) {
+    qDebug() << "[setData] called with stepId =" << stepId << "caller stack";
     if (stepId == "s2") m_currentMode = TriggerPulse;
     else if (stepId == "s3") m_currentMode = PulseModulation;
     else if (stepId == "s4") m_currentMode = IntermediateFrequency;
@@ -59,6 +60,12 @@ void OscilloscopeWidget::setData(const QString& stepId) {
 
 void OscilloscopeWidget::onRefreshTick()
 {
+    qDebug() << "[onRefreshTick] m_currentMode =" << m_currentMode;
+    if (m_currentMode == DistanceNs) {
+        qDebug() << "[onRefreshTick] DistanceNs, return";
+        return;
+    }
+
     // 清除Distance添加的额外graph，只保留graph(0)
     while (m_plot->graphCount() > 1)
         m_plot->removeGraph(m_plot->graphCount() - 1);
@@ -513,86 +520,6 @@ void OscilloscopeWidget::onRefreshTick()
         }
         break;
     }
-    // case Distance:
-    // {
-    //     m_graph->setBrush(Qt::NoBrush);
-
-    //     m_plot->xAxis->setLabel("时间 (µs)");
-    //     m_plot->yAxis->setLabel("电压 (V)");
-    //     m_plot->xAxis->setRange(0, 1050);
-    //     m_plot->yAxis->setRange(0, 1.0);
-    //     m_plot->yAxis->setNumberFormat("f");
-    //     m_plot->yAxis->setNumberPrecision(1);
-
-    //     QSharedPointer<QCPAxisTickerFixed> xTicker(new QCPAxisTickerFixed);
-    //     xTicker->setTickStep(100);
-    //     xTicker->setScaleStrategy(QCPAxisTickerFixed::ssNone);
-    //     m_plot->xAxis->setTicker(xTicker);
-    //     m_plot->xAxis->setRange(0, 1050);
-
-    //     QSharedPointer<QCPAxisTickerFixed> fixedTicker(new QCPAxisTickerFixed);
-    //     fixedTicker->setTickStep(0.1);
-    //     m_plot->yAxis->setTicker(fixedTicker);
-
-    //     // ===== graph(0)：绿色尖峰脉冲 =====
-    //     m_graph->setPen(QPen(QColor(0, 150, 80), 2)); // 保持setupPlot的绿色
-
-    //     int n = 2000;
-    //     x.resize(n);
-    //     y.resize(n);
-
-    //     // 强制插入峰顶点
-    //     QVector<QPair<double,double>> pts;
-    //     pts.append({400.0, 0.58}); // 峰顶强制插入
-
-    //     for (int i = 0; i < n; ++i) {
-    //         double xi = i * (1050.0 / (n - 1));
-    //         if (qAbs(xi - 400.0) < 0.5) continue; // 跳过峰顶附近避免重复
-
-    //         double baseVal = 0.0;
-    //         double dt = xi - 400.0;
-    //         if (dt >= 0 && dt < 200)
-    //             baseVal = 0.58 * qExp(-dt / 15.0);
-    //         else if (dt < 0 && dt > -200)
-    //             baseVal = 0.58 * qExp(dt / 15.0); // 上升沿对称
-
-    //         double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.008;
-    //         pts.append({xi, qBound(0.0, baseVal + jitter, 1.0)});
-    //     }
-
-    //     std::sort(pts.begin(), pts.end(), [](const QPair<double,double>& a, const QPair<double,double>& b){
-    //         return a.first < b.first;
-    //     });
-
-    //     x.resize(pts.size());
-    //     y.resize(pts.size());
-    //     for (int i = 0; i < pts.size(); ++i) {
-    //         x[i] = pts[i].first;
-    //         y[i] = pts[i].second;
-    //     }
-    //     m_graph->setData(x, y);
-
-    //     // ===== graph(1)：黄色垂直触发线 =====
-    //     if (m_plot->graphCount() < 2)
-    //         m_plot->addGraph();
-    //     m_plot->graph(1)->setPen(QPen(QColor(255, 200, 0), 1, Qt::DashLine));
-    //     m_plot->graph(1)->setBrush(Qt::NoBrush);
-    //     QVector<double> lx = {400.0, 400.0};
-    //     QVector<double> ly = {0.0, 1.0};
-    //     m_plot->graph(1)->setData(lx, ly);
-
-    //     // ===== graph(2)：黄色斜线（距离扫描） =====
-    //     if (m_plot->graphCount() < 3)
-    //         m_plot->addGraph();
-    //     m_plot->graph(2)->setPen(QPen(QColor(255, 200, 0), 2));
-    //     m_plot->graph(2)->setBrush(Qt::NoBrush);
-    //     QVector<double> sx = {0.0, 100.0};
-    //     QVector<double> sy = {0.58, 0.0}; // 从(0,0.58)线性降到(100,0)
-    //     m_plot->graph(2)->setData(sx, sy);
-
-    //     m_plot->replot();
-    //     return; // 已经手动replot，跳过外层
-    // }
     case Distance:
     {
         m_graph->setBrush(Qt::NoBrush);
@@ -657,6 +584,8 @@ void OscilloscopeWidget::onRefreshTick()
         m_plot->replot();
         return;
     }
+    case DistanceNs:
+        return;
     default:
         return;
     }
@@ -670,4 +599,100 @@ void OscilloscopeWidget::onRadarAnimationFinished(double pulseTimeUs)
     m_distancePulseTime = pulseTimeUs;
     m_currentMode = Distance;
     onRefreshTick(); // 立即触发一次绘制
+}
+
+void OscilloscopeWidget::onDistanceWaveformRequested(double timeNs)
+{
+    qDebug() << "[onDistanceWaveformRequested] timeNs =" << timeNs;
+    m_distanceTimeNs = timeNs;
+    m_currentMode    = DistanceNs;
+    qDebug() << "[onDistanceWaveformRequested] m_currentMode =" << m_currentMode;
+    drawDistanceNsWaveform();
+}
+
+void OscilloscopeWidget::drawDistanceNsWaveform()
+{
+    // 清除多余graph
+    while (m_plot->graphCount() > 1)
+        m_plot->removeGraph(m_plot->graphCount() - 1);
+
+    m_graph->setBrush(Qt::NoBrush);
+
+    double peakTime = m_distanceTimeNs;
+    double xMax     = qMax(peakTime * 1.5, 4.0);
+
+    // ===== 坐标轴设置 =====
+    m_plot->xAxis->setLabel("时间 (ns)");
+    m_plot->yAxis->setLabel("电压 (V)");
+    m_plot->xAxis->setRange(0, xMax);
+    m_plot->yAxis->setRange(0, 1.0);
+    m_plot->yAxis->setNumberFormat("f");
+    m_plot->yAxis->setNumberPrecision(1);
+
+    // Y轴固定步长
+    QSharedPointer<QCPAxisTickerFixed> yTicker(new QCPAxisTickerFixed);
+    yTicker->setTickStep(0.1);
+    yTicker->setScaleStrategy(QCPAxisTickerFixed::ssNone);
+    m_plot->yAxis->setTicker(yTicker);
+
+    // X轴动态步长
+    double xStep;
+    if      (xMax <= 1.0)  xStep = 0.1;
+    else if (xMax <= 5.0)  xStep = 0.5;
+    else if (xMax <= 10.0) xStep = 1.0;
+    else if (xMax <= 20.0) xStep = 2.0;
+    else if (xMax <= 50.0) xStep = 5.0;
+    else                   xStep = 10.0;
+
+    QSharedPointer<QCPAxisTickerFixed> xTicker(new QCPAxisTickerFixed);
+    xTicker->setTickStep(xStep);
+    xTicker->setScaleStrategy(QCPAxisTickerFixed::ssNone);
+    m_plot->xAxis->setTicker(xTicker);
+    m_plot->axisRect()->setMinimumMargins(QMargins(0, 0, 20, 0));
+
+    // ===== graph(0)：绿色尖峰脉冲 =====
+    int n = 2000;
+    QVector<QPair<double,double>> pts;
+    pts.append({peakTime, 0.58}); // 强制插入峰顶
+
+    for (int i = 0; i < n; ++i) {
+        double xi = i * (xMax / (n - 1));
+        if (qAbs(xi - peakTime) < xMax * 0.0005) continue;
+
+        double dt      = xi - peakTime;
+        double sigma   = xMax * 0.008;
+        double baseVal = 0.0;
+        if (qAbs(dt) < xMax * 0.3)
+            baseVal = 0.58 * qExp(-dt * dt / (2.0 * sigma * sigma));
+
+        double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.008;
+        pts.append({xi, qBound(0.0, baseVal + jitter, 1.0)});
+    }
+
+    std::sort(pts.begin(), pts.end(),
+              [](const QPair<double,double>& a, const QPair<double,double>& b){
+                  return a.first < b.first;
+              });
+
+    QVector<double> x(pts.size()), y(pts.size());
+    for (int i = 0; i < pts.size(); ++i) {
+        x[i] = pts[i].first;
+        y[i] = pts[i].second;
+    }
+    m_graph->setData(x, y);
+
+    // ===== graph(1)：黄色垂直虚线 =====
+    if (m_plot->graphCount() < 2) m_plot->addGraph();
+    m_plot->graph(1)->setPen(QPen(QColor(255, 200, 0), 1, Qt::DashLine));
+    m_plot->graph(1)->setBrush(Qt::NoBrush);
+    m_plot->graph(1)->setData({peakTime, peakTime}, {0.0, 1.0});
+
+    // ===== graph(2)：黄色斜线 =====
+    if (m_plot->graphCount() < 3) m_plot->addGraph();
+    m_plot->graph(2)->setPen(QPen(QColor(255, 200, 0), 2));
+    m_plot->graph(2)->setBrush(Qt::NoBrush);
+    double slopeEnd = xMax * 0.12;
+    m_plot->graph(2)->setData({0.0, slopeEnd}, {0.58, 0.0});
+
+    m_plot->replot();
 }

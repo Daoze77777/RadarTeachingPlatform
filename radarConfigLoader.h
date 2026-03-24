@@ -26,6 +26,8 @@ public:
                     config.id = attrs.value("id").toInt();
                     config.name = attrs.value("name").toString();
                     config.fixedBottomImage = attrs.value("bottomImagePath").toString();
+                    config.expType = attrs.value("type").toString();       // "demo"/"test"
+                    config.txCount = attrs.value("txCount").toInt();       // 12/4/7...
                 }
                 // 解析四个组
                 else if (xml.name() == QStringLiteral("GroupRadar")) {
@@ -65,6 +67,7 @@ private:
                 item.id = itemAttrs.value("id").toString();
                 item.title = itemAttrs.value("title").toString();
                 item.moduleType = type;
+                item.txBit = itemAttrs.value("txBit").toString();  // "s1:1" 等
 
                 // 解析 Item 内部
                 while (!(xml.tokenType() == QXmlStreamReader::EndElement && xml.name() == QStringLiteral("Item"))) {

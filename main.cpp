@@ -11,15 +11,15 @@ int main(int argc, char *argv[])
     a.setStyle("Fusion");
 
     // 设置自定义全局字体
-    //FontManager::setupGlobalFont(":/font/resources/fonts/PingFang/PingFang Medium_downcc.otf", 12);
-    //loginWindow w;
+    FontManager::setupGlobalFont(":/font/resources/fonts/PingFang/PingFang Medium_downcc.otf", 12);
+    loginWindow w;
     //CustomMainWindow w;
     //TeachingMainWindow w;
     //MainWindow w;
-    //w.show();
+    w.show();
     //w.showFullScreen();
-    SerialTestHelper helper;
-    helper.start("COM3"); // 串口号根据实际修改
+    //SerialTestHelper helper;
+    //helper.start("COM3"); // 串口号根据实际修改
 
     return a.exec();
 }

@@ -23,6 +23,10 @@ public:
 
     void initConnections();
 
+    QList<ExperimentContentItem> getStepItems() const {
+        return m_config.stepGroup.items;
+    }
+
 private:
     void initUI();                  // 创建4个组的外壳
 

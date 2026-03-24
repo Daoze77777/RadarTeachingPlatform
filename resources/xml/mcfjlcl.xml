@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Experiment id="1" name="脉冲法测距实验" bottomImagePath=":/assets/resources/assets/MCFJLCL/MCFCJYLT.png">
+<Experiment id="1" name="脉冲法测距实验" type="demo" txCount="12" bottomImagePath=":/assets/resources/assets/MCFJLCL/MCFCJYLT.png" >
 
     <GroupRadar visible="true">
         <Item id="Modulator" title="脉冲调制器">

@@ -24,7 +24,8 @@ public:
         Branch,
         Differential,
         Tributary,
-        Distance
+        Distance,
+        DistanceNs   // 新增
     };
 
     explicit OscilloscopeWidget(QWidget *parent = nullptr);
@@ -32,6 +33,7 @@ public:
 
 public slots:
     void onRadarAnimationFinished(double pulseTimeUs);
+    void onDistanceWaveformRequested(double timeNs);
 
 
 private slots:
@@ -40,12 +42,14 @@ private slots:
 
 private:
     void setupPlot();
+    void drawDistanceNsWaveform();
 
     QCustomPlot *m_plot;
     QCPGraph    *m_graph;
     QTimer      *m_timer;
     WaveType     m_currentMode = None;
     double m_distancePulseTime = 0.0; // 存储脉冲时间
+    double m_distanceTimeNs    = 0.0;  // 新增
 };
 
 #endif

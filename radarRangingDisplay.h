@@ -18,10 +18,11 @@ class RadarRangingDisplay : public QWidget {
     Q_OBJECT
 public:
     explicit RadarRangingDisplay(QWidget *parent = nullptr);
+    void onResetClicked();
 
 private slots:
     void onStartClicked();
-    void onResetClicked();
+
     void updateAnimationTick();
     void onDistanceChanged(double distance);
 

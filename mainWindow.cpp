@@ -6,6 +6,7 @@
 #include "ExperimentManager.h"
 #include "experimentSidebar.h"
 #include "oscilloScopeWidget.h"
+#include <QSerialPort>
 
 MainWindow::MainWindow(int expId, QWidget *parent)
 {
@@ -62,6 +63,25 @@ void MainWindow::setupExperimentContext(int expId)
 
     // 3. 页面重置：默认跳转到欢迎页
     m_mainCenterStack->setCurrentIndex(0);
+
+    // ===== 新增 =====
+    m_isTestMode = ExperimentManager::instance().isTestMode(expId);
+    int txCount  = ExperimentManager::instance().getTxCount(expId);
+
+    // 更新Tx灯数量（原理演示也更新，只是全灰）
+    m_instrumentPanel->setTargetLightCount(txCount);
+    m_instrumentPanel->resetAllTargetLights();
+
+    // 重置步骤解锁状态
+    m_unlockedStepIndex = 0;
+    m_stepItems = m_sidebar->getStepItems(); // 新增
+
+    // 测试模式：初始化串口；原理演示：关闭串口
+    if (m_isTestMode) {
+        initSerial();
+    } else {
+        closeSerial();
+    }
 }
 void MainWindow::setupWindowBase()
 {
@@ -439,10 +459,16 @@ QWidget* MainWindow::setupStepDetailWidget()
     QVBoxLayout *actionImageLayout = new QVBoxLayout(actionImageFrame);
     m_stepActionImage = new QLabel();
     m_stepActionImage->setAlignment(Qt::AlignCenter);
+
     m_radarRangingDisply = new RadarRangingDisplay;
     m_radarRangingDisply->setVisible(false); // 初始状态隐藏
+
+    m_radarDistanceWidget = new RadarDistanceWidget;
+    m_radarDistanceWidget->setVisible(false);
+
     actionImageLayout->addWidget(m_stepActionImage);
     actionImageLayout->addWidget(m_radarRangingDisply);
+    actionImageLayout->addWidget(m_radarDistanceWidget);
     leftPanelLayout->addWidget(promptFrame, 5);      // 提示占小部分高度
     leftPanelLayout->addWidget(actionImageFrame, 5); // 图片占大部分高度
 
@@ -470,78 +496,152 @@ QWidget* MainWindow::setupStepDetailWidget()
     connect(m_radarRangingDisply, &RadarRangingDisplay::animationFinished,
             m_oscilloscope,  &OscilloscopeWidget::onRadarAnimationFinished);
 
+    // connect(m_radarDistanceWidget, &RadarDistanceWidget::waveformRequested,
+    //         this, [=](double timeNs) {
+    //             if (timeNs < 0) {
+    //                 m_oscilloscope->setData(""); // 重置时清空
+    //             } else {
+    //                 m_oscilloscope->onDistanceWaveformRequested(timeNs);
+    //             }
+    //         });
+
+    bool ok = connect(m_radarDistanceWidget, &RadarDistanceWidget::waveformRequested,
+                      this, [=](double timeNs) {
+                          qDebug() << "[connect] waveformRequested triggered, timeNs =" << timeNs;
+                          if (timeNs < 0) {
+                              m_oscilloscope->setData("");
+                          } else {
+                              m_oscilloscope->onDistanceWaveformRequested(timeNs);
+                          }
+                      });
+    qDebug() << "[connect] waveformRequested connect result =" << ok;
+
     return stepDetailWidget;
 }
+
 void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QString& bottomImgPath)
 {
-    // 如果是课程总目录，则触发返回主页
+    // 课程总目录：返回主页
     if (item.id == "home") {
         emit returnToHome();
-        return; // 直接返回，不再执行后续的右侧页面渲染逻辑
+        return;
     }
 
-    // 确保外层大 Stack 也切到了工作区
-    if (m_mainCenterStack->currentIndex() != 1) {
+    // 确保切到工作区
+    if (m_mainCenterStack->currentIndex() != 1)
         m_mainCenterStack->setCurrentIndex(1);
-    }
 
-    // 根据模块类型选择填充哪个页面
-    if (item.moduleType == "Step")
-    {
-        // --- 实验步骤模式 ---
+    // ===== Step 分支 =====
+    if (item.moduleType == "Step") {
+        m_currentStepId = item.id;
         m_centerStack->setCurrentWidget(m_stepDetailWidget);
 
-        // 填充左侧操作提示
+        // 填充操作提示和底部原理图（所有步骤都填）
         m_stepPromptLabel->setText(item.description);
+        QPixmap bottomPix(bottomImgPath);
+        if (!bottomPix.isNull())
+            m_stepBottomImage->setPixmap(
+                bottomPix.scaled(m_stepBottomImage->size(),
+                                 Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-        // 填充左侧操作图片 (例如滑轨图)
-        if(item.id == "s14")
-        {
-            // 展示雷达动画，隐藏图片框
-            m_stepActionImage->setVisible(false);
-            m_radarRangingDisply->setVisible(true);
-            // 可选：切换到该步时自动重置动画状态
-            //m_radarRangingDisply->onResetClicked();
-        } else{
-            // 展示图片，隐藏雷达动画
-            m_radarRangingDisply->setVisible(false);
+        // ===== s1：写死，不受灯控制 =====
+        if (item.id == "s1") {
             m_stepActionImage->setVisible(true);
-            QPixmap actionPix(item.imagePath);
-            if (!actionPix.isNull()) {
-                m_stepActionImage->setPixmap(actionPix.scaled(m_stepActionImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-            }
+            m_radarRangingDisply->setVisible(false);
+            m_radarDistanceWidget->setVisible(false);
+            QPixmap pix(item.imagePath);
+            if (!pix.isNull())
+                m_stepActionImage->setPixmap(
+                    pix.scaled(m_stepActionImage->size(),
+                               Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            m_oscilloscope->setData("");
+            return;
         }
 
-        // 填充底部原理图
-        QPixmap bottomPix(bottomImgPath);
-        m_stepBottomImage->setPixmap(bottomPix.scaled(m_stepBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        // ===== s14：默认显示雷达动画，示波器等串口数据 =====
+        if (item.id == "s14") {
+            m_stepActionImage->setVisible(false);
+            if (m_isTestMode) {
+                // 测试验证：显示距离测量控件
+                m_radarRangingDisply->setVisible(false);
+                m_radarDistanceWidget->setVisible(true);
+                m_oscilloscope->setData("");
+            } else {
+                // 原理演示：显示雷达动画
+                m_radarDistanceWidget->setVisible(false);
+                m_radarRangingDisply->setVisible(true);
+                m_oscilloscope->setData("s14");
+            }
+            return;
+        }
 
-        // 更新示波器数据
-        m_oscilloscope->setData(item.id);
+        // ===== s2~s13 =====
+        // 判断对应灯是否已亮
+        bool lightIsOn = false;
+        if (m_isTestMode && !item.txBit.isEmpty()) {
+            QStringList parts = item.txBit.split(':');
+            if (parts.size() == 2) {
+                quint16 mask = parts[1].toUShort();
+                quint16 sVal = 0;
+                if      (parts[0] == "s1") sVal = m_lastRadarData.s1;
+                else if (parts[0] == "s2") sVal = m_lastRadarData.s2;
+                else if (parts[0] == "s3") sVal = m_lastRadarData.s3;
+                lightIsOn = (sVal & mask) != 0;
+            }
+        } else if (!m_isTestMode) {
+            // 原理演示：直接显示真实内容
+            lightIsOn = true;
+        }
 
-    }   else{
-        // --- 普通组件模式 (雷达组件/测量原理) ---
+        m_stepActionImage->setVisible(true);
+        m_radarRangingDisply->setVisible(false);
+        m_radarDistanceWidget->setVisible(false);
+
+        if (lightIsOn) {
+            // 灯已亮：显示真实图片和波形
+            QPixmap pix(item.imagePath);
+            if (!pix.isNull())
+                m_stepActionImage->setPixmap(
+                    pix.scaled(m_stepActionImage->size(),
+                               Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            else
+                m_stepActionImage->setText("暂无图片");
+            m_oscilloscope->setData(item.id);
+        } else {
+            // 灯未亮：显示默认图片和空坐标
+            QPixmap defaultPix("resources/assets/MCFJLCL/26.png");
+            if (!defaultPix.isNull())
+                m_stepActionImage->setPixmap(
+                    defaultPix.scaled(m_stepActionImage->size(),
+                                      Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            else
+                m_stepActionImage->setText("等待信号接入...");
+            m_oscilloscope->setData("");
+        }
+    }
+    // ===== 普通组件/原理 分支 =====
+    else {
         m_centerStack->setCurrentWidget(m_componentDetailWidget);
 
-        // 填充文本数据
         m_detailTitleLabel->setText(item.title);
         m_detailDescLabel->setText(item.description);
 
-        // 填充右上角图片 (按比例缩放)
         QPixmap topPix(item.imagePath);
-        if (!topPix.isNull()) {
-            m_detailTopImage->setPixmap(topPix.scaled(m_detailBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        } else {
-            m_detailTopImage->setText("暂无图片");  // 容错处理
-        }
+        if (!topPix.isNull())
+            m_detailTopImage->setPixmap(
+                topPix.scaled(m_detailTopImage->size(),
+                              Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        else
+            m_detailTopImage->setText("暂无图片");
 
-        // 填充底部固定图片
         QPixmap bottomPix(bottomImgPath);
-        if (!bottomPix.isNull()) {
-            m_detailBottomImage->setPixmap(bottomPix.scaled(m_detailBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        }
+        if (!bottomPix.isNull())
+            m_detailBottomImage->setPixmap(
+                bottomPix.scaled(m_detailBottomImage->size(),
+                                 Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
+
 void MainWindow::onMenuExperimentSelected(int expId)
 {
     //  1. 增加拦截：防止重复加载相同实验
@@ -562,9 +662,123 @@ void MainWindow::onMenuExperimentSelected(int expId)
     m_leftSidebarContentLayout->addWidget(m_sidebar);
 
     // 4. 重新连接侧边栏发出的组合信号
-    connect(m_sidebar, &ExperimentSidebar::componentSelected,
-            this, &MainWindow::onComponentSelected);
+    connect(m_sidebar, &ExperimentSidebar::componentSelected, this, &MainWindow::onComponentSelected);
 
     // 5. 刷新数据
     this->setupExperimentContext(expId);
+}
+
+void MainWindow::initSerial()
+{
+    if (m_serial) return; // 防止重复初始化
+    m_serial = new QSerialPort(this);
+    m_parser = new RadarDataParser(this);
+
+    m_serial->setPortName("COM3");
+    m_serial->setBaudRate(QSerialPort::Baud9600);
+    m_serial->setDataBits(QSerialPort::Data8);
+    m_serial->setParity(QSerialPort::NoParity);
+    m_serial->setStopBits(QSerialPort::OneStop);
+
+    if (m_serial->open(QIODevice::ReadOnly)) {
+        connect(m_serial, &QSerialPort::readyRead, this, [=]() {
+            m_parser->feedData(m_serial->readAll());
+        });
+        connect(m_parser, &RadarDataParser::dataReady,
+                this, &MainWindow::onRadarDataReceived);
+    }
+}
+
+void MainWindow::closeSerial()
+{
+    if (m_serial && m_serial->isOpen()) {
+        m_serial->close();
+        qDebug() << "[串口] 已关闭";
+    }
+}
+
+void MainWindow::onRadarDataReceived(const RadarData &data)
+{
+    m_lastRadarData = data; // 缓存最新数据，供点击步骤时查询
+    m_radarDistanceWidget->feedDistance(data.distance); // 实时喂入距离
+
+    if (!m_isTestMode || m_stepItems.isEmpty()) return;
+
+    for (int i = 0; i < m_stepItems.size(); ++i) {
+        const QString& txBit = m_stepItems[i].txBit;
+        if (txBit.isEmpty()) continue;
+
+        QStringList parts = txBit.split(':');
+        if (parts.size() != 2) continue;
+
+        quint16 mask = parts[1].toUShort();
+        quint16 sVal = 0;
+        if      (parts[0] == "s1") sVal = data.s1;
+        else if (parts[0] == "s2") sVal = data.s2;
+        else if (parts[0] == "s3") sVal = data.s3;
+
+        bool isOn = (sVal & mask) != 0;
+
+        // T灯编号计算
+        int tIndex = 0;
+        quint16 tmp = mask;
+        while (tmp > 1) { tmp >>= 1; tIndex++; }
+        tIndex += 1;
+        QString tId = QString("T%1").arg(tIndex);
+
+        // T灯始终更新
+        m_instrumentPanel->setLightColor(tId, isOn ? "green" : "gray");
+
+        // ===== 核心判断：灯亮 + 在步骤页 + 当前步骤和灯对应 =====
+        if (isOn) {
+            bool isOnMainWorkPage = (m_mainCenterStack->currentIndex() == 1);
+            bool isOnStepPage     = (m_centerStack->currentWidget() == m_stepDetailWidget);
+            bool isCurrentStep    = (m_stepItems[i].id == m_currentStepId);
+
+            if (isOn && isOnMainWorkPage && isOnStepPage && isCurrentStep) {
+                autoRefreshStep(m_stepItems[i]);
+                // 灯亮说明该步骤完成，解锁到当前步骤
+                if (i > m_unlockedStepIndex)
+                    m_unlockedStepIndex = i;
+            }
+        }
+    }
+
+    // s14距离数据
+    if (data.distance != 9999) {
+        bool isOnMainWorkPage = (m_mainCenterStack->currentIndex() == 1);
+        bool isOnStepPage     = (m_centerStack->currentWidget() == m_stepDetailWidget);
+        bool isCurrentStep    = (m_currentStepId == "s14");
+
+        if (isOnMainWorkPage && isOnStepPage && isCurrentStep) {
+            double distKm    = data.distance * 0.0001;
+            double pulseTime = distKm * 2.0 / 0.3;
+            m_oscilloscope->onRadarAnimationFinished(pulseTime);
+        }
+    }
+}
+
+void MainWindow::autoRefreshStep(const ExperimentContentItem &item)
+{
+    m_stepPromptLabel->setText(item.description);
+
+    if (item.id == "s14") {
+        m_stepActionImage->setVisible(false);
+        m_radarRangingDisply->setVisible(false);
+        return; // 直接return，不调用setData
+    }
+
+    m_stepActionImage->setVisible(true);
+    m_radarRangingDisply->setVisible(false);
+    QPixmap pix(item.imagePath);
+    if (!pix.isNull()) {
+        m_stepActionImage->setPixmap(
+            pix.scaled(m_stepActionImage->size(),
+                       Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    } else {
+        m_stepActionImage->setText("暂无图片");
+        m_stepActionImage->setAlignment(Qt::AlignCenter);
+    }
+
+    m_oscilloscope->setData(item.id); // s14不会走到这里
 }

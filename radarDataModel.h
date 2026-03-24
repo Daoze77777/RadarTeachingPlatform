@@ -27,6 +27,7 @@ struct ExperimentContentItem {
     QString imagePath;    // 右侧要显示的图片路径
     QString description;  // 右侧要显示的文字内容
     QString moduleType; //  模块类型："Component" (组件/原理), "Step" (实验步骤), "Course" (相关课程)
+    QString txBit;  // 格式"s1:1"/"s2:16"，空字符串表示无对应灯
 };
 
 // 单个折叠组的数据包
@@ -40,6 +41,8 @@ struct ExperimentConfig {
     int id;
     QString name;
     QString fixedBottomImage; // 用于存储从 XML 读到的底部图路径
+    QString expType;   // "demo" 或 "test"
+    int txCount;       // Tx灯数量
 
     // 四个组的数据
     GroupData radarGroup;     // 雷达组件
