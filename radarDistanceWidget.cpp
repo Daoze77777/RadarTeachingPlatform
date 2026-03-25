@@ -6,9 +6,7 @@ RadarDistanceWidget::RadarDistanceWidget(QWidget *parent)
     : QWidget(parent)
 {
     setupUI();
-    //setupPlot();
 }
-
 void RadarDistanceWidget::setupUI()
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
@@ -19,7 +17,6 @@ void RadarDistanceWidget::setupUI()
     lblDistTitle->setStyleSheet("font-size: 14px; font-weight: bold; color: #333;");
 
     m_lblDistanceValue = new QLabel("-- mm", this);
-    //m_lblDistanceValue->setMinimumWidth(100);
     m_lblDistanceValue->setFixedSize(100,50);
     m_lblDistanceValue->setAlignment(Qt::AlignCenter);
     m_lblDistanceValue->setStyleSheet(
@@ -30,7 +27,6 @@ void RadarDistanceWidget::setupUI()
     lblTimeTitle->setStyleSheet("font-size: 14px; font-weight: bold; color: #333;");
 
     m_lblTimeValue = new QLabel("-- ns", this);
-    //m_lblTimeValue->setMinimumWidth(100);
     m_lblTimeValue->setFixedSize(100,50);
     m_lblTimeValue->setAlignment(Qt::AlignCenter);
     m_lblTimeValue->setStyleSheet(
@@ -61,13 +57,10 @@ void RadarDistanceWidget::setupUI()
     connect(m_btnStart,   &QPushButton::clicked, this, &RadarDistanceWidget::onStartClicked);
     connect(m_btnReset,   &QPushButton::clicked, this, &RadarDistanceWidget::onResetClicked);
 }
-
-
 void RadarDistanceWidget::feedDistance(int rawDistance)
 {
     m_rawDistance = rawDistance;
 }
-
 void RadarDistanceWidget::onCaptureClicked()
 {
     qDebug() << "[取得距离] m_rawDistance =" << m_rawDistance;
@@ -93,12 +86,10 @@ void RadarDistanceWidget::onStartClicked()
     if (!m_hasCaptured) return;
     emit waveformRequested(m_capturedTimeNs); // 通知示波器画波形
 }
-
 void RadarDistanceWidget::onResetClicked()
 {
     reset();
 }
-
 void RadarDistanceWidget::reset()
 {
     m_rawDistance    = 0;

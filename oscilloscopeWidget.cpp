@@ -8,9 +8,7 @@ OscilloscopeWidget::OscilloscopeWidget(QWidget *parent)
     m_plot = new QCustomPlot(this);
     layout->addWidget(m_plot);
     layout->setContentsMargins(0,0,0,0);
-
     setupPlot();
-
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, this, &OscilloscopeWidget::onRefreshTick);
     m_timer->start(30); // 30ms 刷新实现平滑抖动
@@ -41,7 +39,7 @@ void OscilloscopeWidget::setupPlot() {
 }
 
 void OscilloscopeWidget::setData(const QString& stepId) {
-    qDebug() << "[setData] called with stepId =" << stepId << "caller stack";
+    if (m_currentMode == DistanceNs && !stepId.isEmpty()) return;
     if (stepId == "s2") m_currentMode = TriggerPulse;
     else if (stepId == "s3") m_currentMode = PulseModulation;
     else if (stepId == "s4") m_currentMode = IntermediateFrequency;
@@ -60,9 +58,7 @@ void OscilloscopeWidget::setData(const QString& stepId) {
 
 void OscilloscopeWidget::onRefreshTick()
 {
-    qDebug() << "[onRefreshTick] m_currentMode =" << m_currentMode;
     if (m_currentMode == DistanceNs) {
-        qDebug() << "[onRefreshTick] DistanceNs, return";
         return;
     }
 
@@ -584,18 +580,17 @@ void OscilloscopeWidget::onRefreshTick()
         m_plot->replot();
         return;
     }
-    case DistanceNs:
-        return;
+    case DistanceNs: return;
     default:
         return;
     }
-
     m_graph->setData(x, y);
     m_plot->replot();
 }
 
 void OscilloscopeWidget::onRadarAnimationFinished(double pulseTimeUs)
 {
+    if (m_currentMode == DistanceNs) return; // 新增保护
     m_distancePulseTime = pulseTimeUs;
     m_currentMode = Distance;
     onRefreshTick(); // 立即触发一次绘制
@@ -603,10 +598,8 @@ void OscilloscopeWidget::onRadarAnimationFinished(double pulseTimeUs)
 
 void OscilloscopeWidget::onDistanceWaveformRequested(double timeNs)
 {
-    qDebug() << "[onDistanceWaveformRequested] timeNs =" << timeNs;
     m_distanceTimeNs = timeNs;
     m_currentMode    = DistanceNs;
-    qDebug() << "[onDistanceWaveformRequested] m_currentMode =" << m_currentMode;
     drawDistanceNsWaveform();
 }
 

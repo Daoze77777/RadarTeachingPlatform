@@ -493,32 +493,17 @@ QWidget* MainWindow::setupStepDetailWidget()
     mainVLayout->addWidget(topArea, 5);     // 上部高度占比
     mainVLayout->addWidget(bottomFrame, 5); // 下部高度占比
 
-    connect(m_radarRangingDisply, &RadarRangingDisplay::animationFinished,
-            m_oscilloscope,  &OscilloscopeWidget::onRadarAnimationFinished);
-
-    // connect(m_radarDistanceWidget, &RadarDistanceWidget::waveformRequested,
-    //         this, [=](double timeNs) {
-    //             if (timeNs < 0) {
-    //                 m_oscilloscope->setData(""); // 重置时清空
-    //             } else {
-    //                 m_oscilloscope->onDistanceWaveformRequested(timeNs);
-    //             }
-    //         });
-
-    bool ok = connect(m_radarDistanceWidget, &RadarDistanceWidget::waveformRequested,
-                      this, [=](double timeNs) {
-                          qDebug() << "[connect] waveformRequested triggered, timeNs =" << timeNs;
-                          if (timeNs < 0) {
-                              m_oscilloscope->setData("");
-                          } else {
-                              m_oscilloscope->onDistanceWaveformRequested(timeNs);
-                          }
-                      });
-    qDebug() << "[connect] waveformRequested connect result =" << ok;
+    connect(m_radarRangingDisply, &RadarRangingDisplay::animationFinished, m_oscilloscope,  &OscilloscopeWidget::onRadarAnimationFinished);
+    connect(m_radarDistanceWidget, &RadarDistanceWidget::waveformRequested, this, [=](double timeNs) {
+                if (timeNs < 0) {
+                    m_oscilloscope->setData(""); // 重置时清空
+                } else {
+                    m_oscilloscope->onDistanceWaveformRequested(timeNs);
+                }
+            });
 
     return stepDetailWidget;
 }
-
 void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QString& bottomImgPath)
 {
     // 课程总目录：返回主页
@@ -612,8 +597,7 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
             QPixmap defaultPix("resources/assets/MCFJLCL/26.png");
             if (!defaultPix.isNull())
                 m_stepActionImage->setPixmap(
-                    defaultPix.scaled(m_stepActionImage->size(),
-                                      Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                    defaultPix.scaled(m_stepActionImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
             else
                 m_stepActionImage->setText("等待信号接入...");
             m_oscilloscope->setData("");
@@ -641,7 +625,6 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
                                  Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
-
 void MainWindow::onMenuExperimentSelected(int expId)
 {
     //  1. 增加拦截：防止重复加载相同实验
@@ -741,19 +724,6 @@ void MainWindow::onRadarDataReceived(const RadarData &data)
                 if (i > m_unlockedStepIndex)
                     m_unlockedStepIndex = i;
             }
-        }
-    }
-
-    // s14距离数据
-    if (data.distance != 9999) {
-        bool isOnMainWorkPage = (m_mainCenterStack->currentIndex() == 1);
-        bool isOnStepPage     = (m_centerStack->currentWidget() == m_stepDetailWidget);
-        bool isCurrentStep    = (m_currentStepId == "s14");
-
-        if (isOnMainWorkPage && isOnStepPage && isCurrentStep) {
-            double distKm    = data.distance * 0.0001;
-            double pulseTime = distKm * 2.0 / 0.3;
-            m_oscilloscope->onRadarAnimationFinished(pulseTime);
         }
     }
 }

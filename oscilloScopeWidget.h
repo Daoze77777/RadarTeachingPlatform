@@ -25,7 +25,7 @@ public:
         Differential,
         Tributary,
         Distance,
-        DistanceNs   // 新增
+        DistanceNs,   // 新增
     };
 
     explicit OscilloscopeWidget(QWidget *parent = nullptr);
