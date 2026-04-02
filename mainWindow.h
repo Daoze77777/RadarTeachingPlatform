@@ -84,8 +84,13 @@ private:
     int  m_unlockedStepIndex = -1; // 已解锁到哪一步（-1=全锁，0=第一步已解锁）
     QList<ExperimentContentItem> m_stepItems; // 当前步骤列表
     QString m_currentStepId; // 记录当前用户选中的步骤id
-
     RadarData m_lastRadarData;    // 缓存最新一帧串口数据
+
+    //跳步检测相关
+    int m_currentStepIndex = 0;  // 当前所在步骤索引（从0开始）
+    int m_totalSteps       = 0;  // 当前实验总步骤数
+    bool m_isFinished      = false; // 是否已完成最后一步
+    QSet<int> m_completedSteps; // 已完成的步骤索引集合
 
 
 private slots:

@@ -76,6 +76,12 @@ void MainWindow::setupExperimentContext(int expId)
     m_unlockedStepIndex = 0;
     m_stepItems = m_sidebar->getStepItems(); // 新增
 
+    m_totalSteps       = m_stepItems.size();
+    m_completedSteps.clear();
+    m_completedSteps.insert(0); // s1默认已完成，不需要灯
+    m_currentStepIndex = 0;
+    m_isFinished       = false;
+
     // 测试模式：初始化串口；原理演示：关闭串口
     if (m_isTestMode) {
         initSerial();
@@ -501,8 +507,47 @@ QWidget* MainWindow::setupStepDetailWidget()
                     m_oscilloscope->onDistanceWaveformRequested(timeNs);
                 }
             });
+    connect(m_radarDistanceWidget, &RadarDistanceWidget::waveformRequested,
+            this, [this](double timeNs) {
+                if (timeNs < 0) return; // 重置操作，忽略
+
+                // 标记最后一步完成
+                int lastIndex = m_totalSteps - 1;
+                m_completedSteps.insert(lastIndex);
+                m_currentStepIndex = lastIndex;
+
+                if (!m_isFinished) {
+                    m_isFinished = true;
+                    QMessageBox::information(this, "恭喜", "实验已完成！\n点击第一步可重新开始实验。");
+                }
+            });
 
     return stepDetailWidget;
+}
+void MainWindow::onMenuExperimentSelected(int expId)
+{
+    //  1. 增加拦截：防止重复加载相同实验
+    if (this->m_currentExpId == expId) {
+        qDebug() << "检测到重复点击相同实验，已拦截渲染请求。";
+        return;
+    }
+    this->m_currentExpId = expId; // 更新当前 ID
+
+    // 2. 彻底销毁旧的侧边栏
+    if (m_sidebar) {
+        m_leftSidebarContentLayout->removeWidget(m_sidebar);
+        m_sidebar->deleteLater();
+        m_sidebar = nullptr;
+    }
+    // 3. 重新创建侧边栏实例 (冷启动)
+    m_sidebar = new ExperimentSidebar(this);
+    m_leftSidebarContentLayout->addWidget(m_sidebar);
+
+    // 4. 重新连接侧边栏发出的组合信号
+    connect(m_sidebar, &ExperimentSidebar::componentSelected, this, &MainWindow::onComponentSelected);
+
+    // 5. 刷新数据
+    this->setupExperimentContext(expId);
 }
 void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QString& bottomImgPath)
 {
@@ -513,13 +558,84 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
     }
 
     // 确保切到工作区
-    if (m_mainCenterStack->currentIndex() != 1)
+    if (m_mainCenterStack->currentIndex() != 1){
         m_mainCenterStack->setCurrentIndex(1);
+    }
 
     // ===== Step 分支 =====
     if (item.moduleType == "Step") {
+        //m_currentStepId = item.id;
+        //m_centerStack->setCurrentWidget(m_stepDetailWidget);
+
+        // ===== 测试模式跳步检测 =====
+        if (m_isTestMode) {
+            int clickedIndex = -1;
+            for (int i = 0; i < m_stepItems.size(); ++i) {
+                if (m_stepItems[i].id == item.id) {
+                    clickedIndex = i;
+                    break;
+                }
+            }
+            if (clickedIndex == -1) return;
+
+            // 已完成最后一步：允许点击第一步重新开始
+            if (m_isFinished && clickedIndex == 0) {
+                qDebug() << "[重置] 触发重置，清空completedSteps";
+                m_currentStepIndex = 0;
+                m_isFinished = false;
+                m_completedSteps.clear();
+                m_completedSteps.insert(0);
+                m_instrumentPanel->resetAllTargetLights();
+                // 继续正常渲染s1
+            }
+            // 已完成但点的不是第一步
+            else if (m_isFinished && clickedIndex != 0) {
+                QMessageBox::information(this, "提示",
+                                         "实验已完成！\n点击第一步可重新开始实验。");
+                return; // 注意：这里return，m_currentStepId还没更新，停留原步骤
+            }
+            // 未完成：检测是否允许点击
+            else if (!m_isFinished) {
+                // s1(index=0)不检测，直接放行
+                if (clickedIndex == 0) {
+                    // 允许
+                    m_currentStepIndex = 0;          // ← 新增
+                    m_completedSteps.insert(0);      // ← 新增，确保s1始终标记为已完成
+                }
+                // 点击当前步骤：允许
+                else if (clickedIndex == m_currentStepIndex) {
+                    // 允许
+                }
+                // 点击下一步：需要当前步骤已完成
+                else if (clickedIndex == m_currentStepIndex + 1
+                         && m_completedSteps.contains(m_currentStepIndex)) {
+                     m_currentStepIndex = clickedIndex; // 新增：更新当前步骤索引
+                    // 允许
+                }
+                // 其他情况：拦截，不更新m_currentStepId
+                else {
+                    QString msg;
+                    if (!m_completedSteps.contains(m_currentStepIndex)) {
+                        msg = QString("请先完成当前步骤「%1」！")
+                                  .arg(m_stepItems[m_currentStepIndex].title);
+                    } else {
+                        msg = QString("请按顺序进行实验！\n请先完成「%1」。")
+                                  .arg(m_stepItems[m_currentStepIndex].title);
+                    }
+                    QMessageBox::warning(this, "提示", msg);
+                    return; // return前m_currentStepId还没更新，停留原步骤
+                }
+            }
+        }
         m_currentStepId = item.id;
         m_centerStack->setCurrentWidget(m_stepDetailWidget);
+            // 已完成但点的不是第一步：提示可以重新开始
+            // else if (m_isFinished && clickedIndex != 0) {
+            //     QMessageBox::information(this, "提示",
+            //                              "实验已完成！\n点击第一步可重新开始实验。");
+            //     return;
+            // }
+        //}
 
         // 填充操作提示和底部原理图（所有步骤都填）
         m_stepPromptLabel->setText(item.description);
@@ -625,31 +741,6 @@ void MainWindow::onComponentSelected(const ExperimentContentItem& item, const QS
                                  Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
-void MainWindow::onMenuExperimentSelected(int expId)
-{
-    //  1. 增加拦截：防止重复加载相同实验
-    if (this->m_currentExpId == expId) {
-        qDebug() << "检测到重复点击相同实验，已拦截渲染请求。";
-        return;
-    }
-    this->m_currentExpId = expId; // 更新当前 ID
-
-    // 2. 彻底销毁旧的侧边栏
-    if (m_sidebar) {
-        m_leftSidebarContentLayout->removeWidget(m_sidebar);
-        m_sidebar->deleteLater();
-        m_sidebar = nullptr;
-    }
-    // 3. 重新创建侧边栏实例 (冷启动)
-    m_sidebar = new ExperimentSidebar(this);
-    m_leftSidebarContentLayout->addWidget(m_sidebar);
-
-    // 4. 重新连接侧边栏发出的组合信号
-    connect(m_sidebar, &ExperimentSidebar::componentSelected, this, &MainWindow::onComponentSelected);
-
-    // 5. 刷新数据
-    this->setupExperimentContext(expId);
-}
 
 void MainWindow::initSerial()
 {
@@ -657,7 +748,7 @@ void MainWindow::initSerial()
     m_serial = new QSerialPort(this);
     m_parser = new RadarDataParser(this);
 
-    m_serial->setPortName("COM3");
+    m_serial->setPortName("COM7");
     m_serial->setBaudRate(QSerialPort::Baud9600);
     m_serial->setDataBits(QSerialPort::Data8);
     m_serial->setParity(QSerialPort::NoParity);
@@ -720,9 +811,15 @@ void MainWindow::onRadarDataReceived(const RadarData &data)
 
             if (isOn && isOnMainWorkPage && isOnStepPage && isCurrentStep) {
                 autoRefreshStep(m_stepItems[i]);
-                // 灯亮说明该步骤完成，解锁到当前步骤
-                if (i > m_unlockedStepIndex)
-                    m_unlockedStepIndex = i;
+
+                // 更新当前步骤索引
+                m_currentStepIndex = i;
+                m_completedSteps.insert(i); // 标记该步骤已完成
+                // 如果是最后一步，标记完成
+                if (i == m_totalSteps - 1 && !m_isFinished  && m_stepItems[i].id != "s14") {
+                    m_isFinished = true;
+                    QMessageBox::information(this, "恭喜","实验已完成！\n点击第一步可重新开始实验。");
+                }
             }
         }
     }
