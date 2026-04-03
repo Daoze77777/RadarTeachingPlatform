@@ -55,8 +55,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         radarRangingDisplay.h radarRangingDisplay.cpp
         radarDataParser.h radarDataParser.cpp
         serialTestHelper.h serialTestHelper.cpp
-        radarDistanceWidget.h
-        radarDistanceWidget.cpp
+        radarDistanceWidget.h radarDistanceWidget.cpp
+        stepController.h stepController.cpp
 
     )
 

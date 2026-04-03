@@ -26,7 +26,7 @@ void RadarDistanceWidget::setupUI()
     QLabel *lblTimeTitle = new QLabel("往返时间:", this);
     lblTimeTitle->setStyleSheet("font-size: 14px; font-weight: bold; color: #333;");
 
-    m_lblTimeValue = new QLabel("-- ns", this);
+    m_lblTimeValue = new QLabel("-- µs", this);
     m_lblTimeValue->setFixedSize(100,50);
     m_lblTimeValue->setAlignment(Qt::AlignCenter);
     m_lblTimeValue->setStyleSheet(
@@ -61,30 +61,55 @@ void RadarDistanceWidget::feedDistance(int rawDistance)
 {
     m_rawDistance = rawDistance;
 }
+// void RadarDistanceWidget::onCaptureClicked()
+// {
+//     qDebug() << "[取得距离] m_rawDistance =" << m_rawDistance;
+
+//     if (m_rawDistance <= 0 || m_rawDistance == 9999) {
+//         m_lblDistanceValue->setText("无效数据");
+//         m_lblTimeValue->setText("-- ns");
+//         m_btnStart->setEnabled(false);
+//         return;
+//     }
+
+//     m_capturedMm     = m_rawDistance * 0.1;
+//     m_capturedTimeNs = m_capturedMm * 2.0 / 300.0;
+
+//     m_lblDistanceValue->setText(QString("%1 mm").arg(m_capturedMm, 0, 'f', 1));
+//     m_lblTimeValue->setText(QString("%1 ns").arg(m_capturedTimeNs, 0, 'f', 3));
+
+//     m_hasCaptured = true;
+//     m_btnStart->setEnabled(true);
+// }
+
 void RadarDistanceWidget::onCaptureClicked()
 {
-    qDebug() << "[取得距离] m_rawDistance =" << m_rawDistance;
-
     if (m_rawDistance <= 0 || m_rawDistance == 9999) {
         m_lblDistanceValue->setText("无效数据");
-        m_lblTimeValue->setText("-- ns");
+        m_lblTimeValue->setText("-- µs");
         m_btnStart->setEnabled(false);
         return;
     }
 
-    m_capturedMm     = m_rawDistance * 0.1;
-    m_capturedTimeNs = m_capturedMm * 2.0 / 300.0;
+    const double SCALE_KM_PER_MM = 200.0 / 2000.0; // 按需修改量程
+    double realMm    = m_rawDistance * 0.1;
+    double simKm     = realMm * SCALE_KM_PER_MM;
+    double simTimeUs = (simKm * 2.0) / 0.3;
 
-    m_lblDistanceValue->setText(QString("%1 mm").arg(m_capturedMm, 0, 'f', 1));
-    m_lblTimeValue->setText(QString("%1 ns").arg(m_capturedTimeNs, 0, 'f', 3));
+    m_capturedKm     = simKm;
+    m_capturedTimeUs = simTimeUs;
+
+    m_lblDistanceValue->setText(QString("%1 km").arg(simKm, 0, 'f', 2));
+    m_lblTimeValue->setText(QString("%1 µs").arg(simTimeUs, 0, 'f', 3));
 
     m_hasCaptured = true;
     m_btnStart->setEnabled(true);
 }
+
 void RadarDistanceWidget::onStartClicked()
 {
     if (!m_hasCaptured) return;
-    emit waveformRequested(m_capturedTimeNs); // 通知示波器画波形
+    emit waveformRequested(m_capturedTimeUs); // 通知示波器画波形
 }
 void RadarDistanceWidget::onResetClicked()
 {
@@ -93,8 +118,8 @@ void RadarDistanceWidget::onResetClicked()
 void RadarDistanceWidget::reset()
 {
     m_rawDistance    = 0;
-    m_capturedMm     = 0.0;
-    m_capturedTimeNs = 0.0;
+    m_capturedKm     = 0.0;
+    m_capturedTimeUs = 0.0;
     m_hasCaptured    = false;
     m_lblDistanceValue->setText("-- mm");
     m_lblTimeValue->setText("-- ns");

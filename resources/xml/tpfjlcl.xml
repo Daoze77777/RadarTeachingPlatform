@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="2" name="调频法测距实验" type="demo" txCount="4" bottomImagePath="resources/assets/TPFJLCL/TPFJLCL.png" >
+
+    <GroupRadar visible="true">
+
+        <Item id="FM Transmitter" title="调频发射机">
+            <Image>resources/assets/TPFJLCL/1.png</Image>
+            <Description>核心组件，产生频率按特定规律(如锯齿波、三角波等)变化的连续波信号。发射机通常包括频率合成器、调制器和功率放大器等模块，其频率稳定性和线性度直接影响测距精度。</Description>
+        </Item>
+
+        <Item id="Antenna" title="天线">
+            <Image>resources/assets/TPFJLCL/2.png</Image>
+            <Description>收发天线：负责发射调频连续波信号和接收目标反射回波。发射功能：将调频信号转换为电磁波辐射到空间，具有一定的方向性。接收功能：捕获目标反射的微弱回波信号。隔离特性：需要良好的收发隔离度，防止发射信号泄漏到接收通道。</Description>
+        </Item>
+       
+        <Item id="Mixer" title="混频器">
+            <Image>resources/assets/TPFJLCL/3.png</Image>
+            <Description>频率变换：将发射信号与接收信号进行混频，产生差频信号。差频信号：混频输出的差频信号频率 fb​=S⋅τ，其中S为调频斜率，τ 为时间延迟。线性特性：混频器的线性度影响测距精度和动态范围。</Description>
+        </Item>
+
+        <Item id="Amplifier" title="放大器">
+            <Image>resources/assets/TPFJLCL/4.png</Image>
+            <Description>信号放大：将混频器输出的微弱差频信号放大到合适的电平。多级放大：通常包括前置放大器和主放大器，逐级提升信号强度。滤波功能：滤除高频分量和噪声，提高信号质量和信噪比。</Description>
+        </Item>
+
+         <Item id="Limiter" title="限幅器">
+            <Image>resources/assets/TPFJLCL/5.png</Image>
+            <Description>幅度限制：去除信号的幅度变化，将信号限制在固定幅度范围内。保留频率：限幅后的信号保留了频率信息，便于频率计进行精确测量。波形整形：将不规则波形整形为规则的方波或限幅正弦波。</Description>
+        </Item>
+
+         <Item id="Frequency Meter" title="频率计">
+            <Image>resources/assets/TPFJLCL/6.png</Image>
+            <Description>频率测量：精确测量差频信号的平均频率 fbav​。测量精度：频率计的测量精度直接影响最终的测距精度。距离计算：根据 R=c⋅fbav​/(8⋅Δf⋅Fm​) 计算目标距离，其中 Δf 为调频偏移，Fm​ 为调制频率。</Description>
+        </Item>
+      
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="调频法测距原理">
+            <Image>resources/assets/TPFJLCL/12.png</Image>
+            <Description><![CDATA[<p style='font-size: 12px; line-height: 1.1; margin: 0;'><b>调频法测距雷达原理</b>是基于调频连续波(FMCW)的差频测量原理。</p><p style='font-size: 15px; line-height: 1.2; margin: 2px 0 0 0;'><b>基本原理：</b><br>1. 雷达发射频率按三角波规律变化的连续波<br>2. 发射信号与回波信号存在时间延迟τ=2R/c<br>3. 两信号混频产生差频信号fbav<br>4. 通过测量差频计算目标距离</p><p style='font-size: 15px; line-height: 1.2; margin: 2px 0 0 0;'><b>距离计算公式：</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R = c·fbav / (8·Δf·Fm)<br>其中：<br>• R：目标距离（km）<br>• c：光速（≈3×10⁵ km/s）<br>• fbav：差频信号频率（kHz）<br>• Δf：频率偏移量（1000 MHz）<br>• Fm：调制频率（500 Hz）</p>]]></Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标位置">
+            <Image>resources/assets/TPFJLCL/huagui.png</Image>
+            <Description>设置目标物体的位置参数，请手动设置滑轨上的目标位置。</Description>
+        </Item>
+        <Item id="s2" title="调频发射信号">
+            <Image>resources/assets/TPFJLCL/7.png</Image>
+            <Description>系统产生频率随时间线性变化的连续波（FMCW 信号），并由发射端发射出去。该信号作为整个测距实验的基准信号，用于后续回波的时间延迟和频率差分析。</Description>
+        </Item>
+        <Item id="s3" title="调频接收信号">
+            <Image>resources/assets/TPFJLCL/8.png</Image>
+            <Description>接收端获取目标反射回来的调频连续波回波信号。回波信号相对发射信号会产生时间延迟和频率偏移，包含目标距离与相对运动信息。</Description>
+        </Item>
+        <Item id="s4" title="混频输出差频信号">
+            <Image>resources/assets/TPFJLCL/9.png</Image>
+            <Description>混频器将发射机直耦来的参考调频信号与接收回波信号相乘，产生和频与差频等分量。经滤波后保留的差频信号，其频率近似与目标往返时间成正比，为后续放大和测距计算提供基础。</Description>
+        </Item>
+        <Item id="s5" title="频率计输出信号">
+            <Image>resources/assets/TPFJLCL/10.png</Image>
+            <Description>频率计测量差频信号得到的平均频率值用于距离计算，下方的 fbav​ 用于下一步的距离计算 R。</Description>
+        </Item>
+        <Item id="s6" title="计算目标距离">
+            <Image>resources/assets/TPFJLCL/11.png</Image>
+            <Description>根据公式 R=c⋅fbav​/(8⋅Δf⋅Fm​) 计算目标距离，其中 Δf=1000 MHz，Fm​=500 Hz。</Description>
+        </Item>
+
+
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image>:/images/course_book.png</Image>
+            <Description>请参考教材第 45 页。</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

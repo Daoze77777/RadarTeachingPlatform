@@ -35,9 +35,13 @@ private:
     QPushButton *m_btnReset;
 
     int    m_rawDistance    = 0;
-    double m_capturedMm     = 0.0;
-    double m_capturedTimeNs = 0.0;
+    //double m_capturedMm     = 0.0;
+    //double m_capturedTimeNs = 0.0;
     bool   m_hasCaptured    = false;
+
+    // 换成
+    double m_capturedKm     = 0.0;   // 模拟距离（km）
+    double m_capturedTimeUs = 0.0;   // 往返时间（ns），传给示波器用
 };
 
 #endif // RADARDISTANCEWIDGET_H

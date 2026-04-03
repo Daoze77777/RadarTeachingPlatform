@@ -25,7 +25,7 @@ public:
         Differential,
         Tributary,
         Distance,
-        DistanceNs,   // 新增
+        DistanceUs,   // 新增
     };
 
     explicit OscilloscopeWidget(QWidget *parent = nullptr);
@@ -42,14 +42,14 @@ private slots:
 
 private:
     void setupPlot();
-    void drawDistanceNsWaveform();
+    void drawDistanceUsWaveform();
 
     QCustomPlot *m_plot;
     QCPGraph    *m_graph;
     QTimer      *m_timer;
     WaveType     m_currentMode = None;
     double m_distancePulseTime = 0.0; // 存储脉冲时间
-    double m_distanceTimeNs    = 0.0;  // 新增
+    double m_distanceTimeUs    = 0.0;  // 新增
 };
 
 #endif

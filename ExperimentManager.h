@@ -116,7 +116,7 @@ signals:
 private:
     ExperimentManager()
     {
-        m_baseXmlPath = ":/xml/resources/xml/";
+        m_baseXmlPath = "resources/xml/";
         m_currentSystemId = 1; // 默认加载：1=距离测量平台
         initMockData();        // 初始化数据
     }
@@ -131,8 +131,8 @@ private:
         distSystem.experiments = {
             {101, "实验科目1. 脉冲法距离测量-原理演示实验", "mcfjlcl.xml",      12, false},
             {102, "实验科目2. 脉冲法距离测量-测试验证实验", "mcfjlcl_test.xml", 12, true},
-            {103, "实验科目3. 调频法距离测量-原理演示实验", "dist_02.xml",       4, false},
-            {104, "实验科目4. 调频法距离测量-测试验证实验", "dist_02.xml",       4, true},
+            {103, "实验科目3. 调频法距离测量-原理演示实验", "tpfjlcl.xml",       4, false},
+            {104, "实验科目4. 调频法距离测量-测试验证实验", "tpfjlcl_test.xml",       4, true},
             {105, "实验科目5. 相位法距离测量-原理演示实验", "dist_02.xml",       7, false},
             {106, "实验科目6. 相位法距离测量-测试验证实验", "dist_02.xml",       7, true},
             {107, "实验科目7. 距离退模糊-原理演示实验",     "dist_02.xml",       6, false},

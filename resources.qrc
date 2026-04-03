@@ -68,6 +68,8 @@
     <qresource prefix="/xml">
         <file>resources/xml/mcfjlcl.xml</file>
         <file>resources/xml/mcfjlcl_test.xml</file>
+        <file>resources/xml/tpfjlcl.xml</file>
+        <file>resources/xml/tpfjlcl_test.xml</file>
     </qresource>
     <qresource prefix="/assets">
         <file>resources/assets/MCFJLCL/MCFCJYLT.png</file>

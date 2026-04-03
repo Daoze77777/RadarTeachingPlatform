@@ -39,7 +39,7 @@ void OscilloscopeWidget::setupPlot() {
 }
 
 void OscilloscopeWidget::setData(const QString& stepId) {
-    if (m_currentMode == DistanceNs && !stepId.isEmpty()) return;
+    if (m_currentMode == DistanceUs && !stepId.isEmpty()) return;
     if (stepId == "s2") m_currentMode = TriggerPulse;
     else if (stepId == "s3") m_currentMode = PulseModulation;
     else if (stepId == "s4") m_currentMode = IntermediateFrequency;
@@ -58,7 +58,7 @@ void OscilloscopeWidget::setData(const QString& stepId) {
 
 void OscilloscopeWidget::onRefreshTick()
 {
-    if (m_currentMode == DistanceNs) {
+    if (m_currentMode == DistanceUs ) {
         return;
     }
 
@@ -580,7 +580,7 @@ void OscilloscopeWidget::onRefreshTick()
         m_plot->replot();
         return;
     }
-    case DistanceNs: return;
+    case DistanceUs: return;
     default:
         return;
     }
@@ -590,7 +590,7 @@ void OscilloscopeWidget::onRefreshTick()
 
 void OscilloscopeWidget::onRadarAnimationFinished(double pulseTimeUs)
 {
-    if (m_currentMode == DistanceNs) return; // 新增保护
+    if (m_currentMode == DistanceUs) return; // 新增保护
     m_distancePulseTime = pulseTimeUs;
     m_currentMode = Distance;
     onRefreshTick(); // 立即触发一次绘制
@@ -598,12 +598,12 @@ void OscilloscopeWidget::onRadarAnimationFinished(double pulseTimeUs)
 
 void OscilloscopeWidget::onDistanceWaveformRequested(double timeNs)
 {
-    m_distanceTimeNs = timeNs;
-    m_currentMode    = DistanceNs;
-    drawDistanceNsWaveform();
+    m_distanceTimeUs = timeNs;
+    m_currentMode    = DistanceUs;
+    drawDistanceUsWaveform();
 }
 
-void OscilloscopeWidget::drawDistanceNsWaveform()
+void OscilloscopeWidget::drawDistanceUsWaveform()
 {
     // 清除多余graph
     while (m_plot->graphCount() > 1)
@@ -611,11 +611,11 @@ void OscilloscopeWidget::drawDistanceNsWaveform()
 
     m_graph->setBrush(Qt::NoBrush);
 
-    double peakTime = m_distanceTimeNs;
+    double peakTime = m_distanceTimeUs;
     double xMax     = qMax(peakTime * 1.5, 4.0);
 
     // ===== 坐标轴设置 =====
-    m_plot->xAxis->setLabel("时间 (ns)");
+    m_plot->xAxis->setLabel("时间 (us)");
     m_plot->yAxis->setLabel("电压 (V)");
     m_plot->xAxis->setRange(0, xMax);
     m_plot->yAxis->setRange(0, 1.0);
@@ -630,12 +630,12 @@ void OscilloscopeWidget::drawDistanceNsWaveform()
 
     // X轴动态步长
     double xStep;
-    if      (xMax <= 1.0)  xStep = 0.1;
-    else if (xMax <= 5.0)  xStep = 0.5;
-    else if (xMax <= 10.0) xStep = 1.0;
-    else if (xMax <= 20.0) xStep = 2.0;
-    else if (xMax <= 50.0) xStep = 5.0;
-    else                   xStep = 10.0;
+    if      (xMax <= 10.0)   xStep = 1.0;
+    else if (xMax <= 50.0)   xStep = 5.0;
+    else if (xMax <= 100.0)  xStep = 10.0;
+    else if (xMax <= 500.0)  xStep = 50.0;
+    else if (xMax <= 1000.0) xStep = 100.0;
+    else                     xStep = 200.0;
 
     QSharedPointer<QCPAxisTickerFixed> xTicker(new QCPAxisTickerFixed);
     xTicker->setTickStep(xStep);
