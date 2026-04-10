@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="3" name="相位法测距实验" type="test" txCount="7" bottomImagePath="resources/assets/XWFJLCL/XWFJLCL.png">
+
+    <GroupRadar visible="true">
+        <Item id="Transmitter" title="发射机">
+            <Image>resources/assets/XWFJLCL/1.png</Image>
+            <Description>双频发射机：同时产生两个不同频率的高频正弦信号 f₁和 f₂。信号 1：u_t1=U₁・sin (2πf₁t−φ₀₁)，作为基准频率源。信号 2：u_t2=U₂・sin (2πf₂t−φ₀₂)，与信号 1 形成双频测距。频率差值：Δf=f₂−f₁决定了测距的无模糊范围和精度。</Description>
+        </Item>
+        <Item id="Receiver" title="接收机">
+            <Image>resources/assets/XWFJLCL/2.png</Image>
+            <Description>接收机负责接收目标反射回来的回波信号，包括两个通道分别对应 f1 和 f2 频率。接收信号携带了目标距离信息，表现为相位延迟。接收机将射频信号下变频到中频，为后续的相位比较处理提供信号源。</Description>
+        </Item>
+        <Item id="Mixer" title="混频器">
+            <Image>resources/assets/XWFJLCL/3.png</Image>
+            <Description>混频器用于将接收到的两路回波信号进行混频处理，提取相位差信息。通过混频操作，可以得到与目标距离相关的差频信号和相位信息，为后续的距离解算提供基础数据。</Description>
+        </Item>
+        <Item id="Oscillator" title="基准振荡器">
+            <Image>resources/assets/XWFJLCL/4.png</Image>
+            <Description>基准振荡器产生稳定的参考信号，由两路发射信号混频生成差拍基准振荡信号。该信号作为相位比较的基准，其频率为两个发射频率之差 Δf=f₂−f₁。基准信号的稳定性直接影响测距精度。</Description>
+        </Item>
+        <Item id="Phasemeter" title="相位计">
+            <Image>resources/assets/XWFJLCL/5.png</Image>
+            <Description>相位计用于测量接收信号与基准信号之间的相位差 Φ。根据公式 Φ=4π ΔfR/c，通过测量相位差可以反算出目标距离 R。相位计是相位法测距系统的核心部件，其测量精度决定了系统的测距精度。</Description>
+        </Item>
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="相位法测距原理">
+            <Image>resources/assets/XWFJLCL/14.png</Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>相位法测距雷达原理</b>是基于双频连续波的相位差测量原理。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>基本原理：</b><br>1. 雷达同时发射频率为f₁和f₂的连续波信号<br>2. 目标反射回波相对于发射信号存在相位延迟<br>3. 通过测量两路信号的相位差Φ<br>4. 根据公式计算目标距离R</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>距离计算公式：</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R = (Φ·c) / (4π·Δf)<br>其中：<br>• R：目标距离（m）<br>• Φ：相位差（弧度）<br>• Δf：频率差（f₂-f₁，Hz）<br>• c：光速（≈3×10⁸ m/s）</p>]]></Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <!-- s1：不需要灯，直接显示 -->
+        <Item id="s1" title="设置目标位置" txBit="" special="noLight" waveform="PhaseEmpty">
+            <Image>resources/assets/XWFJLCL/huagui.png</Image>
+            <Description>设置目标物体的位置参数，请手动设置滑轨上的目标位置。</Description>
+        </Item>
+        <!-- s2：发射1，S2 bit1，掩码1 -->
+        <Item id="s2" title="发射信号1" txBit="s2:1" waveform="TransmitSignal1">
+            <Image>resources/assets/XWFJLCL/6.png</Image>
+            <Description>产生第一路发射信号，用作相位测距的参考信号之一。该信号与发射信号 2 形成频率差Δf。</Description>
+        </Item>
+        <!-- s3：发射2，S2 bit2，掩码2 -->
+        <Item id="s3" title="发射信号2" txBit="s2:2" waveform="TransmitSignal2">
+            <Image>resources/assets/XWFJLCL/7.png</Image>
+            <Description>产生第二路发射信号，与发射信号 1 之间存在固定频率差。两信号频率差 Δf 是相位测距的基础参数。</Description>
+        </Item>
+        <!-- s4：接收1，S2 bit3，掩码4 -->
+        <Item id="s4" title="接收信号1" txBit="s2:4" waveform="ReceiveSignal1">
+            <Image>resources/assets/XWFJLCL/8.png</Image>
+            <Description>模拟目标反射回来的第一路接收信号。回波的相位随目标距离产生延迟，相位差用于测距。</Description>
+        </Item>
+        <!-- s5：接收2，S2 bit4，掩码8 -->
+        <Item id="s5" title="接收信号2" txBit="s2:8" waveform="ReceiveSignal2">
+            <Image>resources/assets/XWFJLCL/9.png</Image>
+            <Description>模拟生成第二路接收信号，其传播距离与接收信号 1 一致，但发射频率不同导致相位变化不同，通过计算两路接收信号的相位差即可求解目标距离。</Description>
+        </Item>
+        <!-- s6：基准振荡，S2 bit5，掩码16 -->
+        <Item id="s6" title="基准震荡信号" txBit="s2:16" waveform="Oscillation">
+            <Image>resources/assets/XWFJLCL/10.png</Image>
+            <Description>由两路发射信号混频生成的差拍基准振荡信号，作为相位比较的基准参考，其频率为 Δf=f₂−f₁。</Description>
+        </Item>
+        <!-- s7：混频输出，S2 bit6，掩码32 -->
+        <Item id="s7" title="接收机混频输出信号" txBit="s2:32" waveform="ReceiverMixer">
+            <Image>resources/assets/XWFJLCL/11.png</Image>
+            <Description>接收信号与基准振荡信号混频，得到差频/中频信号。该信号的相位包含目标距离信息，是后续相位器处理的输入。</Description>
+        </Item>
+        <!-- s8：相位调零，S2 bit7，掩码64 -->
+        <Item id="s8" title="相位器调零输出信号" txBit="s2:64" waveform="PhaseShifterZero">
+            <Image>resources/assets/XWFJLCL/12.png</Image>
+            <Description>相位器对两路中频信号进行相位比较并"调零"，输出与相位差 Φ 成比例的直流电压。直流电平代表当前相位差，可用于读出目标距离。</Description>
+        </Item>
+        <!-- s9：计算距离，无灯 -->
+        <Item id="s9" title="计算目标距离" txBit="" special="distanceMeasure" waveform="">
+            <Image>resources/assets/XWFJLCL/13.png</Image>
+            <Description>利用相位差公式 Φ=4πΔfR/c(Δf=1.5kHz) 计算目标实际距离，完成相位测距过程。</Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image>:/images/course_book.png</Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

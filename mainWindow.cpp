@@ -10,7 +10,6 @@
 
 MainWindow::MainWindow(int expId, QWidget *parent)
 {
-    // 初始化 StepController
     m_stepCtrl = new StepController(this);
     connect(m_stepCtrl, &StepController::experimentFinished, this, [this]() {
         QMessageBox::information(this, "恭喜", "实验已完成！\n点击第一步可重新开始实验。");
@@ -68,7 +67,6 @@ void MainWindow::setupExperimentContext(int expId)
     m_unlockedStepIndex = 0;
     m_stepItems = m_sidebar->getStepItems();
 
-    // 用 StepController 统一重置
     m_stepCtrl->reset(m_stepItems.size());
     m_currentStepId = "";
 
@@ -166,11 +164,11 @@ void MainWindow::setupCenterArea()
     m_mainCenterStack = new QStackedWidget(centerContainer);
     m_mainCenterStack->setObjectName("mainCenterStack");
 
-    QWidget *welcomePage   = createWelcomePage();
-    m_experimentPage       = createExperimentWorkPage();
+    QWidget *welcomePage = createWelcomePage();
+    m_experimentPage     = createExperimentWorkPage();
 
-    m_mainCenterStack->addWidget(welcomePage);       // index 0
-    m_mainCenterStack->addWidget(m_experimentPage);  // index 1
+    m_mainCenterStack->addWidget(welcomePage);      // index 0
+    m_mainCenterStack->addWidget(m_experimentPage); // index 1
     m_mainCenterStack->setCurrentIndex(0);
 
     mainVLayout->addWidget(m_mainCenterStack);
@@ -242,9 +240,10 @@ QWidget* MainWindow::createWelcomePage()
     tipsHeader->setPixmap(QPixmap(":/mainicons/resources/mainIcons/hint.png").scaled(523, 93, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     tipsLayout->addWidget(tipsHeader);
 
-    QStringList tipTexts = {"按照左侧步骤顺序进行操作", "每个步骤都有相应的操作界面", "按照左侧步骤顺序进行操作", "每个步骤都有相应的操作界面"};
-    for (int i = 0; i < tipTexts.size(); ++i) {
-        QLabel *stepLabel = new QLabel(tipTexts[i]);
+    QStringList tipTexts = {"按照左侧步骤顺序进行操作", "每个步骤都有相应的操作界面",
+                            "按照左侧步骤顺序进行操作", "每个步骤都有相应的操作界面"};
+    for (const QString &t : tipTexts) {
+        QLabel *stepLabel = new QLabel(t);
         stepLabel->setFixedHeight(51);
         stepLabel->setAlignment(Qt::AlignCenter);
         stepLabel->setStyleSheet(R"(
@@ -437,25 +436,20 @@ QWidget* MainWindow::setupStepDetailWidget()
     mainVLayout->addWidget(topArea, 5);
     mainVLayout->addWidget(bottomFrame, 5);
 
-    // 原理演示动画完成 → 示波器显示波形
     connect(m_radarRangingDisply, &RadarRangingDisplay::animationFinished,
             m_oscilloscope, &OscilloscopeWidget::onRadarAnimationFinished);
 
-    // s14 测试验证：用户点"开始"后更新示波器
     connect(m_radarDistanceWidget, &RadarDistanceWidget::waveformRequested,
-            this, [=](double timeNs) {
-        if (timeNs < 0) {
-            m_oscilloscope->setData(""); // 重置时清空
-        } else {
-            m_oscilloscope->onDistanceWaveformRequested(timeNs);
-        }
+            this, [=](double timeUs) {
+        if (timeUs < 0)
+            m_oscilloscope->setData("");
+        else
+            m_oscilloscope->onDistanceWaveformRequested(timeUs);
     });
 
-    // s14 测试验证：用户点"开始"后标记最后一步完成
     connect(m_radarDistanceWidget, &RadarDistanceWidget::waveformRequested,
-            this, [this](double timeNs) {
-        if (timeNs < 0) return;
-        // completeStep 内部会判断是否是最后一步并 emit experimentFinished
+            this, [this](double timeUs) {
+        if (timeUs < 0) return;
         m_stepCtrl->completeStep(m_stepCtrl->totalSteps() - 1);
     });
 
@@ -495,46 +489,38 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
 
     // ===== Step 分支 =====
     if (item.moduleType == "Step") {
-
+        //qDebug() << "[Step] id=" << item.id << "special=" << item.special << "waveform=" << item.waveform;
         if (m_isTestMode) {
-            // 找到点击的步骤索引
             int clickedIndex = -1;
+
             for (int i = 0; i < m_stepItems.size(); ++i) {
                 if (m_stepItems[i].id == item.id) {
                     clickedIndex = i;
                     break;
                 }
             }
+
             if (clickedIndex == -1) return;
 
-            // 如果已完成且点的是第一步：重置重来
             if (m_stepCtrl->isFinished() && clickedIndex == 0) {
                 m_stepCtrl->reset(m_stepItems.size());
                 m_instrumentPanel->resetAllTargetLights();
-                // 继续正常渲染 s1
-            }
-            // 其他情况交给 StepController 判断
-            else {
+            } else {
                 QString errMsg;
                 if (!m_stepCtrl->canGoTo(clickedIndex, errMsg)) {
                     QMessageBox::warning(this, "提示", errMsg);
                     return;
                 }
-                // 放行：更新当前步骤索引
-                // （点 s1 或点下一步时 canGoTo 返回 true）
-                if (clickedIndex == 0) {
+                if (clickedIndex == 0)
                     m_stepCtrl->setCurrentStepIndex(0);
-                } else if (clickedIndex == m_stepCtrl->currentStepIndex() + 1) {
+                else if (clickedIndex == m_stepCtrl->currentStepIndex() + 1)
                     m_stepCtrl->setCurrentStepIndex(clickedIndex);
-                }
-                // 点当前步骤重复点击：不改索引
             }
         }
 
         m_currentStepId = item.id;
         m_centerStack->setCurrentWidget(m_stepDetailWidget);
 
-        // 填充操作提示和底部原理图
         m_stepPromptLabel->setText(item.description);
         QPixmap bottomPix(bottomImgPath);
         if (!bottomPix.isNull())
@@ -542,8 +528,8 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
                 bottomPix.scaled(m_stepBottomImage->size(),
                                  Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-        // ===== s1：写死，不受灯控制 =====
-        if (item.id == "s1") {
+        // ===== special == "noLight"：不受灯控制，直接显示 =====
+        if (item.special == "noLight") {
             m_stepActionImage->setVisible(true);
             m_radarRangingDisply->setVisible(false);
             m_radarDistanceWidget->setVisible(false);
@@ -552,12 +538,14 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
                 m_stepActionImage->setPixmap(
                     pix.scaled(m_stepActionImage->size(),
                                Qt::KeepAspectRatio, Qt::SmoothTransformation));
-            m_oscilloscope->setData("");
+            //m_oscilloscope->setData("");
+            m_oscilloscope->setData(item.waveform);
             return;
         }
 
-        // ===== s14 =====
-        if (item.id == "s14") {
+        // ===== special == "distanceMeasure"：显示测距控件 =====
+        if (item.special == "distanceMeasure") {
+            //qDebug() << "[s14] special=distanceMeasure 分支触发, isTestMode=" << m_isTestMode;
             m_stepActionImage->setVisible(false);
             if (m_isTestMode) {
                 m_radarRangingDisply->setVisible(false);
@@ -566,12 +554,12 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
             } else {
                 m_radarDistanceWidget->setVisible(false);
                 m_radarRangingDisply->setVisible(true);
-                m_oscilloscope->setData("s14");
+                m_oscilloscope->setData(item.waveform);
             }
             return;
         }
 
-        // ===== s2~s13：根据灯状态显示 =====
+        // ===== 普通步骤：根据灯状态显示 =====
         bool lightIsOn = false;
         if (m_isTestMode && !item.txBit.isEmpty()) {
             QStringList parts = item.txBit.split(':');
@@ -599,7 +587,7 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
                                Qt::KeepAspectRatio, Qt::SmoothTransformation));
             else
                 m_stepActionImage->setText("暂无图片");
-            m_oscilloscope->setData(item.id);
+            m_oscilloscope->setData(item.waveform); // ← waveform 字段
         } else {
             resetStepDisplay();
         }
@@ -614,20 +602,17 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
         QPixmap topPix(item.imagePath);
         if (!topPix.isNull())
             m_detailTopImage->setPixmap(
-                topPix.scaled(m_detailTopImage->size(),
-                              Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                topPix.scaled(m_detailTopImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         else
             m_detailTopImage->setText("暂无图片");
 
         QPixmap bottomPix(bottomImgPath);
         if (!bottomPix.isNull())
             m_detailBottomImage->setPixmap(
-                bottomPix.scaled(m_detailBottomImage->size(),
-                                 Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                bottomPix.scaled(m_detailBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
 
-// 灯灭时还原默认图片和空波形
 void MainWindow::resetStepDisplay()
 {
     QPixmap defaultPix("resources/assets/MCFJLCL/26.png");
@@ -637,7 +622,11 @@ void MainWindow::resetStepDisplay()
                               Qt::KeepAspectRatio, Qt::SmoothTransformation));
     else
         m_stepActionImage->setText("等待信号接入...");
-    m_oscilloscope->setData("");
+
+    // 用第一个步骤的 waveform 作为空坐标基准
+    // （s1 的 waveform 就是该实验对应的空坐标类型）
+    QString emptyWaveform = m_stepItems.isEmpty() ? "" : m_stepItems[0].waveform;
+    m_oscilloscope->setData(emptyWaveform);
 }
 
 void MainWindow::initSerial()
@@ -691,14 +680,19 @@ void MainWindow::onRadarDataReceived(const RadarData &data)
 
         bool isOn = (sVal & mask) != 0;
 
-        // T 灯编号计算
+        // int tIndex = 0;
+        // quint16 tmp = mask;
+        // while (tmp > 1) { tmp >>= 1; tIndex++; }
+        // tIndex += 1;
+
+        // 改为：按步骤顺序，跳过 txBit 为空的步骤
         int tIndex = 0;
-        quint16 tmp = mask;
-        while (tmp > 1) { tmp >>= 1; tIndex++; }
-        tIndex += 1;
+        for (int j = 0; j <= i; ++j) {
+            if (!m_stepItems[j].txBit.isEmpty())
+                tIndex++;
+        }
         m_instrumentPanel->setLightColor(QString("T%1").arg(tIndex), isOn ? "green" : "gray");
 
-        // 只处理当前正在显示的步骤
         bool isOnMainWorkPage = (m_mainCenterStack->currentIndex() == 1);
         bool isOnStepPage     = (m_centerStack->currentWidget() == m_stepDetailWidget);
         bool isCurrentStep    = (m_stepItems[i].id == m_currentStepId);
@@ -706,14 +700,12 @@ void MainWindow::onRadarDataReceived(const RadarData &data)
         if (!isOnMainWorkPage || !isOnStepPage || !isCurrentStep) continue;
 
         if (isOn) {
-            // 灯亮：刷新图片和波形，并标记该步骤完成
             autoRefreshStep(m_stepItems[i]);
-            // s14 不靠灯完成，跳过（由 waveformRequested 信号处理）
-            if (m_stepItems[i].id != "s14") {
+            // distanceMeasure 步骤不靠灯完成，由 waveformRequested 信号处理
+            if (m_stepItems[i].special != "distanceMeasure") {
                 m_stepCtrl->completeStep(i);
             }
         } else {
-            // 灯灭：还原默认显示
             resetStepDisplay();
         }
     }
@@ -723,7 +715,8 @@ void MainWindow::autoRefreshStep(const ExperimentContentItem &item)
 {
     m_stepPromptLabel->setText(item.description);
 
-    if (item.id == "s14") {
+    // distanceMeasure 步骤不走图片/波形刷新
+    if (item.special == "distanceMeasure") {
         m_stepActionImage->setVisible(false);
         m_radarRangingDisply->setVisible(false);
         return;
@@ -741,5 +734,5 @@ void MainWindow::autoRefreshStep(const ExperimentContentItem &item)
         m_stepActionImage->setText("暂无图片");
         m_stepActionImage->setAlignment(Qt::AlignCenter);
     }
-    m_oscilloscope->setData(item.id);
+    m_oscilloscope->setData(item.waveform); // ← waveform 字段
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="4" name="距离退模糊实验" type="test" txCount="6" bottomImagePath="resources/assets/JLTMH/8.png">
+
+    <GroupRadar visible="false">
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="距离模糊">
+            <Image>resources/assets/JLTMH/8.png</Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.6; margin: 0;'><b>距离模糊</b>是指在脉冲雷达中，由于脉冲重复周期（PRT, Tr）有限，雷达对回波信号的时间延迟测量可能对应多个不同的目标距离，导致无法唯一确定目标的真实距离。</p><p style='font-size: 19px; line-height: 1.6; margin: 10px 0 0 0;'>换句话说，雷达收到的某个回波可能既可能是近距离目标的"第一次回波"，也可能是远距离目标的"上一发脉冲的回波"。</p><p style='font-size: 19px; line-height: 1.6; margin: 10px 0 0 0;'>因此，雷达测得的目标距离会出现"折叠"或"混叠"现象，这种现象就叫<b>距离模糊</b>。</p>]]></Description>
+        </Item>
+
+          <Item id="p2" title="双高重复频率退模糊">
+            <Image>resources/assets/JLTMH/9.png</Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.6; margin: 0;'><b>当目标的真实距离大于雷达的最大单值测距范围时，就会出现距离模糊。</b></p><p style='font-size: 19px; line-height: 1.6; margin: 10px 0 5px 0;'><b>最大单值测距范围</b>由脉冲重复周期 Tr 决定：</p><p style='font-size: 15px; line-height: 1.5; margin: 0 0 0 20px;'>R<sub>max</sub> = c·Tr / 2</p><p style='font-size: 19px; line-height: 1.6; margin: 5px 0 0 0;'>其中 c 是光速。</p><p style='font-size: 19px; line-height: 1.6; margin: 10px 0 0 0;'>如果目标的真实距离 R<sub>true</sub> &gt; R<sub>max</sub>，那么它的回波会在下一次发射脉冲之后才返回。雷达只知道它在延迟 tr 时间后收到回波，却无法分辨这是"近距离目标"还是"远距离目标折叠"造成的，从而导致模糊。</p><p style='font-size: 19px; line-height: 1.6; margin: 10px 0 5px 0;'><b>总结：</b></p><p style='font-size: 19px; line-height: 1.6; margin: 0 0 0 10px;'>• <b>距离模糊的定义：</b>同一个回波对应多个可能的目标距离，测不准真实距离。</p><p style='font-size: 19px; line-height: 1.6; margin: 5px 0 0 10px;'>• <b>出现条件：</b>目标真实距离超过了由脉冲重复周期决定的最大单值测距范围 R<sub>max</sub>。</p>]]></Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标位置" special="noLight" waveform="DeblurEmpty">
+            <Image>resources/assets/JLTMH/huagui.png</Image>
+            <Description>设置目标物体的位置参数，请手动设置滑轨上的目标位置。</Description>
+        </Item>
+        <Item id="s2" title="发射信号1" txBit="s2:128" waveform="DeblurTS1">
+            <Image>resources/assets/JLTMH/1.png</Image>
+            <Description>显示Fr₁条件下的发射信号波形。观察Fr₁的发射脉冲，了解第一个重复频率的发射特征。</Description>
+        </Item>
+        <Item id="s3" title="接收信号1" txBit="s2:256" waveform="DeblurRS1">
+            <Image>resources/assets/JLTMH/2.png</Image>
+            <Description>当前发射Fr1=5000Hz，t1=33.3us计算距离为5km，该5km并非目标真实距离，而是由于脉冲重复频率有限导致的距离模糊值。</Description>
+        </Item>
+        <Item id="s4" title="发射信号2" txBit="s2:512" waveform="DeblurTS2">
+            <Image>resources/assets/JLTMH/3.png</Image>
+            <Description>显示Fr₂条件下的发射信号波形。观察Fr₂的发射脉冲，了解第二个重复频率的发射特征。</Description>
+        </Item>
+        <Item id="s5" title="接收信号2" txBit="s2:1024" waveform="DeblurRS2">
+            <Image>resources/assets/JLTMH/4.png</Image>
+            <Description>当前发射Fr2=4000Hz，t2=133.3us计算距离为20km，该20km并非目标真实距离，而是由于脉冲重复频率有限导致的距离模糊值。</Description>
+        </Item>
+        <Item id="s6" title="重合发射脉冲串信号" txBit="s2:2048" waveform="CoincidentTransmitted">
+            <Image>resources/assets/JLTMH/5.png</Image>
+            <Description>展示两个 PRF 的发射脉冲串重合波形。观察两个 PRF 发射脉冲的重合特征，理解双高重频的工作原理。</Description>
+        </Item>
+        <Item id="s7" title="重合接收脉冲串信号" txBit="s2:4096" waveform="CoincidentReceived">
+            <Image>resources/assets/JLTMH/6.png</Image>
+            <Description>展示两个 PRF 的接收脉冲串重合波形。根据公式 tr​=(t1​Fr1​−t2​Fr2​+1)/(Fr1​−Fr2​) 计算真实时延。</Description>
+        </Item>
+        <Item id="s8" title="计算目标距离" special="distanceMeasure" waveform="">
+            <Image>resources/assets/JLTMH/13.png</Image>
+            <Description>利用相位差公式 Φ=4πΔfR/c(Δf=1.5kHz) 计算目标实际距离，完成相位测距过程。</Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image>:/images/course_book.png</Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

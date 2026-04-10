@@ -57,12 +57,23 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         serialTestHelper.h serialTestHelper.cpp
         radarDistanceWidget.h radarDistanceWidget.cpp
         stepController.h stepController.cpp
+        waveformBase.h
+        pulseWaveforms.h pulseWaveforms.cpp
+        FMWaveforms.h
+        FMWaveforms.cpp
+        PhaseWaveforms.h
+        PhaseWaveforms.cpp
+        DeblurWaveforms.h
+        DeblurWaveforms.cpp
 
     )
 
-file(COPY ${CMAKE_SOURCE_DIR}/resources
-     DESTINATION ${CMAKE_BINARY_DIR})
-
+add_custom_command(TARGET RadarTeachingPlatform POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/resources"
+        "${CMAKE_BINARY_DIR}/resources"
+    COMMENT "同步 resources 目录到运行目录"
+)
 
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET RadarTeachingPlatform APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

@@ -33,9 +33,9 @@ InstrumentPanel::InstrumentPanel(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(title2);
     mainLayout->addSpacing(10);
 
-    QLabel* posLabel = new QLabel("位置:", this);
-    posLabel->setStyleSheet("color: #345196; font-weight: bold; padding-left: 15px;");
-    mainLayout->addWidget(posLabel);
+    //QLabel* posLabel = new QLabel("位置:", this);
+    //posLabel->setStyleSheet("color: #345196; font-weight: bold; padding-left: 15px;");
+    //mainLayout->addWidget(posLabel);
 
     // T灯区域：单独容器，方便动态增删
     QWidget* targetContainer = new QWidget(this);

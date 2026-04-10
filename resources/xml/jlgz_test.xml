@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="5" name="距离跟踪实验" type="test" txCount="9" bottomImagePath="resources/assets/JLGZ/JLGZJLCL.png">
+
+    <GroupRadar visible="true">
+        <Item id="Sawtooth" title="锯齿电压产生器">
+            <Image>resources/assets/JLGZ/1.png</Image>
+            <Description>锯齿电压产生器，又称锯齿波发生器、扫描电路或时基发生器，是一种能周期性产生锯齿波形电压信号的电子电路。其核心特征是电压随时间线性缓慢上升，然后瞬间快速下降，形成类似锯齿的波形。</Description>
+        </Item>
+        <Item id="Comparator" title="比较电路">
+            <Image>resources/assets/JLGZ/2.png</Image>
+            <Description>比较电路，也叫电压比较器，是一种将模拟输入电压与参考电压进行大小比较，并输出高 / 低两种数字电平的模拟集成电路。</Description>
+        </Item>
+        <Item id="PulseGenerator" title="脉冲产生器">
+            <Image>resources/assets/JLGZ/3.png</Image>
+            <Description>脉冲产生器是一种能够产生周期性脉冲信号的电子电路，广泛应用于雷达、通信和测量等领域。它能够生成特定宽度、幅度和重复频率的脉冲信号，为雷达系统提供必要的发射信号。</Description>
+        </Item>
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="人工距离跟踪原理">
+            <Image>resources/assets/JLGZ/15.png</Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>人工距离跟踪</b>是依靠操作员手动调整跟踪门位置来跟踪目标的方法。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>观察波形：</b>操作员在示波器上观察回波信号和跟踪门的位置关系<br>2. <b>手动调整：</b>通过旋转手动跟踪旋钮调整线性电位器的输出电压<br>3. <b>锯齿波比较：</b>电位器电压与锯齿波电压进行比较，产生跟踪门脉冲<br>4. <b>对准目标：</b>调整电位器使跟踪门脉冲与回波信号对准</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>特点：</b><br>• 简单直观，适合训练和学习<br>• 需要操作员持续关注和调整<br>• 跟踪精度依赖操作员经验</p>]]></Description>
+        </Item>
+        <Item id="p2" title="自动距离跟踪原理">
+            <Image>resources/assets/JLGZ/14.png</Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>自动距离跟踪（AGC）</b>是通过闭环反馈系统自动调整跟踪门位置来跟踪目标的方法。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>分裂门：</b>系统产生前波门和后波门，分别位于回波信号的两侧<br>2. <b>误差检测：</b>时间鉴别器比较前后波门的输出，产生误差信号<br>3. <b>误差积分：</b>误差信号经过积分器进行平滑处理<br>4. <b>自动调整：</b>积分后的信号控制压控振荡器，自动调整跟踪门位置<br>5. <b>闭环跟踪：</b>系统形成闭环，跟踪门自动锁定在回波中心</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>特点：</b><br>• 无需人工干预，自动连续跟踪<br>• 跟踪精度高，响应速度快<br>• 适用于实际雷达作战应用</p>]]></Description>
+        </Item>
+        <Item id="p3" title="时间鉴别器工作原理">
+            <Image>resources/assets/JLGZ/16.png</Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>时间鉴别器</b>是自动距离跟踪系统的核心部件，用于产生误差信号来控制跟踪门位置。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>前后波门：</b>产生前波门（早门）和后波门（迟门），分别位于预期回波的前后<br>2. <b>门控回波：</b>前后波门分别与回波信号进行门控，提取对应时段的回波能量<br>3. <b>能量比较：</b>比较前后波门输出的能量差值<br>4. <b>误差输出：</b><br>   • 若前门能量 > 后门能量 → 输出正误差（门位置需后移）<br>   • 若前门能量 &lt; 后门能量 → 输出负误差（门位置需前移）<br>   • 若前门能量 = 后门能量 → 零误差（门位置准确锁定）</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>特点：</b><br>• 误差信号极性指示调整方向<br>• 误差信号幅度指示偏差大小<br>• 实现对目标距离的自动连续跟踪</p>]]></Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <!-- s1/s8：不需要灯 -->
+        <Item id="s1" title="设置目标位置(手动)" txBit="" special="noLight" waveform="TrackingEmpty">
+            <Image>resources/assets/JLGZ/huagui.png</Image>
+            <Description>设置目标物体的位置参数，请手动设置滑轨上的目标位置。</Description>
+        </Item>
+        <!-- s2：触发脉冲，S2 bit14，掩码8192 -->
+        <Item id="s2" title="触发脉冲信号" txBit="s2:8192" waveform="TrackingTrigger">
+            <Image>resources/assets/JLGZ/4.png</Image>
+            <Description>观察雷达发射的触发脉冲信号波形，注意其周期性和占空比特性。</Description>
+        </Item>
+        <!-- s3：回波，S2 bit15，掩码16384 -->
+        <Item id="s3" title="回波信号" txBit="s2:16384" waveform="Echo">
+            <Image>resources/assets/JLGZ/5.png</Image>
+            <Description>观察目标反射的回波信号波形（包络检波后的视频信号），注意回波信号的包络特性和相对于触发脉冲的时间延迟。</Description>
+        </Item>
+        <!-- s4：锯齿电压，S2 bit16，掩码32768 -->
+        <Item id="s4" title="锯齿电压信号" txBit="s2:32768" waveform="TrackingSawtooth">
+            <Image>resources/assets/JLGZ/6.png</Image>
+            <Description>观察锯齿电压波发生器产生的锯齿波信号，注意锯齿波的线性上升特性和周期。</Description>
+        </Item>
+        <!-- s5：线性电位器，S3 bit1，掩码1 -->
+        <Item id="s5" title="线性电位器输出电压" txBit="s3:1" waveform="Potentiometer">
+            <Image>resources/assets/JLGZ/7.png</Image>
+            <Description>观察线性电位器输出基准电压信号，注意其恒定电压值。</Description>
+        </Item>
+        <!-- s6：手动跟踪，S3 bit2，掩码2 -->
+        <Item id="s6" title="手动跟踪信号" txBit="s3:2" waveform="ManuallyTrack">
+            <Image>resources/assets/JLGZ/8.png</Image>
+            <Description>观察脉冲产生器输出的跟踪门脉冲信号，注意跟踪门脉冲信号与回波信号的位置关系。</Description>
+        </Item>
+        <Item id="s7" title="手动跟踪捕获目标" txBit="" waveform="">
+            <Image>resources/assets/JLGZ/6.png</Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>手动距离跟踪</b>是依靠操作员手动调整跟踪门位置来跟踪目标的方法。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>观察波形：</b>操作员在示波器上观察回波信号和跟踪门的位置关系<br>2. <b>手动调整：</b>通过旋转手动跟踪旋钮调整线性电位器的输出电压<br>3. <b>锯齿波比较：</b>电位器电压与锯齿波电压进行比较，产生跟踪门脉冲<br>4. <b>对准目标：</b>调整电位器使跟踪门脉冲与回波信号对准</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>操作步骤：</b><br>• 旋转手动跟踪旋钮，观察跟踪门位置变化<br>• 调整直至跟踪门中心与回波峰值对齐<br>• 实现对目标的手动捕获和跟踪</p>]]></Description>
+        </Item>
+        <Item id="s8" title="设置目标位置(自动)" txBit="" special="noLight" waveform="TrackingEmpty">
+            <Image>resources/assets/JLGZ/huagui.png</Image>
+            <Description>在演示前设定目标距离，以便观察自动跟踪过程。请在面板中设置目标距离。</Description>
+        </Item>
+        <!-- s9：跟踪脉冲，S3 bit3，掩码4 -->
+        <Item id="s9" title="跟踪脉冲" txBit="s3:4" waveform="TrackingPulse">
+            <Image>resources/assets/JLGZ/9.png</Image>
+            <Description>显示自动跟踪环中的跟踪脉冲参考，观察跟踪脉冲的时序与门的关系。</Description>
+        </Item>
+        <!-- s10：回波，S3 bit4，掩码8 -->
+        <Item id="s10" title="回波信号" txBit="s3:8" waveform="Echo">
+            <Image>resources/assets/JLGZ/10.png</Image>
+            <Description>显示目标回波以便比较门位置，观察回波峰与门的相对位置。</Description>
+        </Item>
+        <!-- s11：前波门，S3 bit5，掩码16 -->
+        <Item id="s11" title="前波门信号" txBit="s3:16" waveform="FrontGate">
+            <Image>resources/assets/JLGZ/11.png</Image>
+            <Description>显示前波门输出，观察门位置在回波左侧时的门输出。</Description>
+        </Item>
+        <!-- s12：后波门，S3 bit6，掩码32 -->
+        <Item id="s12" title="后波门信号" txBit="s3:32" waveform="RearGate">
+            <Image>resources/assets/JLGZ/12.png</Image>
+            <Description>显示后波门输出，观察门位置在回波右侧时的门输出。</Description>
+        </Item>
+        <Item id="s13" title="演示自动距离跟踪目标" txBit="" special="distanceMeasure" waveform="">
+            <Image>resources/assets/JLGZ/13.png</Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>自动距离跟踪（AGC）</b>是通过闭环反馈系统自动调整跟踪门位置来跟踪目标的方法。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>分裂门：</b>系统产生前波门和后波门，分别位于回波信号的两侧<br>2. <b>误差检测：</b>时间鉴别器比较前后波门的输出，产生误差信号<br>3. <b>误差积分：</b>误差信号经过积分器进行平滑处理<br>4. <b>自动调整：</b>积分后的信号控制压控振荡器，自动调整跟踪门位置<br>5. <b>闭环跟踪：</b>系统形成闭环，跟踪门自动锁定在回波中心</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>验证要点：</b><br>• 门位置从初始位置逐渐向回波中心收敛<br>• 前后波门输出趋于平衡<br>• 最终实现稳定的自动跟踪状态</p>]]></Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image>:/images/course_book.png</Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

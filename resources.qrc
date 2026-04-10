@@ -70,6 +70,12 @@
         <file>resources/xml/mcfjlcl_test.xml</file>
         <file>resources/xml/tpfjlcl.xml</file>
         <file>resources/xml/tpfjlcl_test.xml</file>
+        <file>resources/xml/xwfjlcl.xml</file>
+        <file>resources/xml/xwfjlcl_test.xml</file>
+        <file>resources/xml/jltmh.xml</file>
+        <file>resources/xml/jltmh_test.xml</file>
+        <file>resources/xml/jlgz.xml</file>
+        <file>resources/xml/jlgz_test.xml</file>
     </qresource>
     <qresource prefix="/assets">
         <file>resources/assets/MCFJLCL/MCFCJYLT.png</file>

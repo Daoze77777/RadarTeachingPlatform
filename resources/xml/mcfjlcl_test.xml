@@ -2,111 +2,111 @@
 <Experiment id="1" name="脉冲法测距实验" type="test" txCount="12" bottomImagePath=":/assets/resources/assets/MCFJLCL/MCFCJYLT.png">
 
     <GroupRadar visible="true">
-    <Item id="Modulator" title="脉冲调制器">
-        <Image>resources/assets/MCFJLCL/1.png</Image>
-        <Description>脉冲调制器是雷达发射机的核心部件之一，负责将触发脉冲信号转换为特定宽度和幅度的调制脉冲信号。它控制着发射信号的时序和波形特性，直接影响雷达的距离分辨率和探测性能。调制器通过精确控制脉冲宽度τ，在满足探测距离要求的同时，实现对目标的精确定位。</Description>
-    </Item>
-    <Item id="Trigger" title="触发脉冲">
-        <Image>resources/assets/MCFJLCL/2.png</Image>
-        <Description>触发脉冲模块产生周期性的定时信号，作为整个重达系统的时问基准。它以固定的脉冲重复频率（PRF）工作，同步控制发射机的脉冲发射和接收机的时间门控，确保系统各部分协调一致地工作。触发脉冲的稳定性直接关系到测距精度和系统的可靠性。</Description>
-    </Item>
-    <Item id="DIF" title="数字中频">
-        <Image>resources/assets/MCFJLCL/3.png</Image>
-        <Description>数字中频模块负责生成雷达发射所需的中频信号。通过数字信号处理技术，可以灵活地生成各种复杂波形，如线性调频、相位编码等。中频信号在上变频后成为射频发射信号。采用数字化方式生成中频信号，具有频率稳定度高、波形可编程、相位噪声低等优点。</Description>
-    </Item>
-    <Item id="Antenna" title="天线">
-        <Image>resources/assets/MCFJLCL/4.png</Image>
-        <Description>天线是雷达系统与空间的接口，承担着发射电磁波和接收回波信号的双重任务。发射时，天线将射频信号转换为定向辐射的电磁波；接收时，将空间中的电磁波转换为电信号。天线的增益、方间性和极化特性决定了雷达的作用距离、角度分辨率和抗干扰能力。</Description>
-    </Item>
-    <Item id="Oscillator" title="本振">
-        <Image>resources/assets/MCFJLCL/5.png</Image>
-        <Description>本振（本地振荡器）为混频器提供稳定的参考频率信号，是接收机频率变换的关键部件。本振信号与接收到的射频信号在混频器中进行混频，实现射频到中频的下变频过程。本振的频率稳定性、相位噪声和频谱纯度直接影响接收机的灵敏度和测距精度。</Description>
-    </Item>
-    <Item id="Mixer" title="混频器">
-        <Image>resources/assets/MCFJLCL/6.png</Image>
-        <Description>混频器实现射频信号到中频信号的频率变换。接收到的微弱射频回波信号与本振信号在混频器中相乘，产生包含两者频率之和与频率之差的信号，通过滤波器选取差频分量，得到中频信号。这个过程不仅实现了频率变换，还为后续信号处理提供了更合适的工作频率。</Description>
-    </Item>
-    <Item id="IFA" title="中频放大器">
-        <Image>resources/assets/MCFJLCL/7.png</Image>
-        <Description>中频放大器对混频后的中频信号进行放大，提高信号强度以满足后续处理的需要。中放不仅提供足够的增益，还通过滤波作用抑制带外噪声和干扰。中频放大器的带宽、增益稳定性和噪声系数是影响接收机整体性能的重要参数，直接关系到雷达的探测距离和信噪比。</Description>
-    </Item>
-    <Item id="Filter" title="匹配滤波器">
-        <Image>resources/assets/MCFJLCL/8.png</Image>
-        <Description>匹配滤波器是一种最优滤波器，其冲激响应与输入信号的波形相匹配。在噪声背景下，匹配滤波器能够最大化输出信噪比，提高目标检测概率。对于脉冲雷达，匹配滤波器可以压缩接收脉冲，提高距离分辨率，同时保持信号能量基本不变，是现代雷达信号处理的重要技术。</Description>
-    </Item>
-    <Item id="Detector" title="包络检波器">
-        <Image>resources/assets/MCFJLCL/9.png</Image>
-        <Description>包络检波器从已放大的中频信号中提取幅度包络信息，去除高频载波成分，输出反映目标回波强度的视频信号。检波后的视频信号保留了目标的距离和幅度信息，便于进行信号显示、时间测量和目标检测。检波器的非线性特性和动态范围直接影响测距系统的线性度和动态范围。</Description>
-    </Item>
-
-</GroupRadar>
+        <Item id="Modulator" title="脉冲调制器">
+            <Image>resources/assets/MCFJLCL/1.png</Image>
+            <Description>脉冲调制器是雷达发射机的核心部件之一，负责将触发脉冲信号转换为特定宽度和幅度的调制脉冲信号。它控制着发射信号的时序和波形特性，直接影响雷达的距离分辨率和探测性能。调制器通过精确控制脉冲宽度τ，在满足探测距离要求的同时，实现对目标的精确定位。</Description>
+        </Item>
+        <Item id="Trigger" title="触发脉冲">
+            <Image>resources/assets/MCFJLCL/2.png</Image>
+            <Description>触发脉冲模块产生周期性的定时信号，作为整个重达系统的时问基准。它以固定的脉冲重复频率（PRF）工作，同步控制发射机的脉冲发射和接收机的时间门控，确保系统各部分协调一致地工作。触发脉冲的稳定性直接关系到测距精度和系统的可靠性。</Description>
+        </Item>
+        <Item id="DIF" title="数字中频">
+            <Image>resources/assets/MCFJLCL/3.png</Image>
+            <Description>数字中频模块负责生成雷达发射所需的中频信号。通过数字信号处理技术，可以灵活地生成各种复杂波形，如线性调频、相位编码等。中频信号在上变频后成为射频发射信号。采用数字化方式生成中频信号，具有频率稳定度高、波形可编程、相位噪声低等优点。</Description>
+        </Item>
+        <Item id="Antenna" title="天线">
+            <Image>resources/assets/MCFJLCL/4.png</Image>
+            <Description>天线是雷达系统与空间的接口，承担着发射电磁波和接收回波信号的双重任务。发射时，天线将射频信号转换为定向辐射的电磁波；接收时，将空间中的电磁波转换为电信号。天线的增益、方间性和极化特性决定了雷达的作用距离、角度分辨率和抗干扰能力。</Description>
+        </Item>
+        <Item id="Oscillator" title="本振">
+            <Image>resources/assets/MCFJLCL/5.png</Image>
+            <Description>本振（本地振荡器）为混频器提供稳定的参考频率信号，是接收机频率变换的关键部件。本振信号与接收到的射频信号在混频器中进行混频，实现射频到中频的下变频过程。本振的频率稳定性、相位噪声和频谱纯度直接影响接收机的灵敏度和测距精度。</Description>
+        </Item>
+        <Item id="Mixer" title="混频器">
+            <Image>resources/assets/MCFJLCL/6.png</Image>
+            <Description>混频器实现射频信号到中频信号的频率变换。接收到的微弱射频回波信号与本振信号在混频器中相乘，产生包含两者频率之和与频率之差的信号，通过滤波器选取差频分量，得到中频信号。这个过程不仅实现了频率变换，还为后续信号处理提供了更合适的工作频率。</Description>
+        </Item>
+        <Item id="IFA" title="中频放大器">
+            <Image>resources/assets/MCFJLCL/7.png</Image>
+            <Description>中频放大器对混频后的中频信号进行放大，提高信号强度以满足后续处理的需要。中放不仅提供足够的增益，还通过滤波作用抑制带外噪声和干扰。中频放大器的带宽、增益稳定性和噪声系数是影响接收机整体性能的重要参数，直接关系到雷达的探测距离和信噪比。</Description>
+        </Item>
+        <Item id="Filter" title="匹配滤波器">
+            <Image>resources/assets/MCFJLCL/8.png</Image>
+            <Description>匹配滤波器是一种最优滤波器，其冲激响应与输入信号的波形相匹配。在噪声背景下，匹配滤波器能够最大化输出信噪比，提高目标检测概率。对于脉冲雷达，匹配滤波器可以压缩接收脉冲，提高距离分辨率，同时保持信号能量基本不变，是现代雷达信号处理的重要技术。</Description>
+        </Item>
+        <Item id="Detector" title="包络检波器">
+            <Image>resources/assets/MCFJLCL/9.png</Image>
+            <Description>包络检波器从已放大的中频信号中提取幅度包络信息，去除高频载波成分，输出反映目标回波强度的视频信号。检波后的视频信号保留了目标的距离和幅度信息，便于进行信号显示、时间测量和目标检测。检波器的非线性特性和动态范围直接影响测距系统的线性度和动态范围。</Description>
+        </Item>
+    </GroupRadar>
 
     <GroupPrinciple visible="true">
-    <Item id="p1" title="脉冲法测距原理">
-        <Image>resources/assets/MCFJLCL/10.png</Image>
-        <Description><![CDATA[<p style='font-size: 16px; line-height: 1.35; margin: 0;'><b>脉冲法测距雷达原理</b>是基于电磁波传播时间的测量原理。</p><p style='font-size: 16px; line-height: 1.3; margin: 1px 0 0 0;'><b>基本原理：</b><br>1. 雷达发射一个短脉冲电磁波<br>2. 电磁波以光速 c 传播到目标<br>3. 目标反射电磁波回到雷达<br>4. 雷达接收回波信号并测量往返时间 Δt</p><p style='font-size: 16px; line-height: 1.3; margin: 1px 0 0 0;'><b>距离计算公式：</b><br><center style='font-size: 15px; margin: 0;'>R = C·Δt / 2</center>其中：<br>• R：目标距离（km）<br>• c：光速（≈3×10⁵ km/s）<br>• Δt：往返时间（s）<br>• 除以2是因为电磁波往返两次</p>]]></Description>
-    </Item>
-</GroupPrinciple>
+        <Item id="p1" title="脉冲法测距原理">
+            <Image>resources/assets/MCFJLCL/10.png</Image>
+            <Description><![CDATA[<p style='font-size: 16px; line-height: 1.35; margin: 0;'><b>脉冲法测距雷达原理</b>是基于电磁波传播时间的测量原理。</p><p style='font-size: 16px; line-height: 1.3; margin: 1px 0 0 0;'><b>基本原理：</b><br>1. 雷达发射一个短脉冲电磁波<br>2. 电磁波以光速 c 传播到目标<br>3. 目标反射电磁波回到雷达<br>4. 雷达接收回波信号并测量往返时间 Δt</p><p style='font-size: 16px; line-height: 1.3; margin: 1px 0 0 0;'><b>距离计算公式：</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R = C·Δt / 2<br>其中：<br>• R：目标距离（km）<br>• c：光速（≈3×10⁵ km/s）<br>• Δt：往返时间（s）<br>• 除以2是因为电磁波往返两次</p>]]></Description>
+        </Item>
+    </GroupPrinciple>
 
     <GroupStep visible="true">
-    <Item id="s1" title="设置目标位置" txBit="">
-        <Image>resources/assets/MCFJLCL/huagui.png</Image>
-        <Description>设置目标物体的位置参数，请手动设置滑轨上的目标位置。</Description>
-    </Item>
-    <Item id="s2" title="触发脉冲信号" txBit="s1:1">
-        <Image>resources/assets/MCFJLCL/14.png</Image>
-        <Description>触发脉冲信号由系统定时电路产生，用于控制整个测距过程的时间基准。它作为起始信号，触发发射机产生调制脉冲，同时启动接收通道的时间计数，为距离测量提供统一的时间参考。</Description>
-    </Item>
-    <Item id="s3" title="调制脉冲信号" txBit="s1:2">
-        <Image>resources/assets/MCFJLCL/15.png</Image>
-        <Description>调制脉冲信号是在触发信号的作用下生成的矩形脉冲，用于控制发射机的工作。脉冲宽度与发射能量、距离分辨率相关，是决定测距性能的重要参数。脉宽越窄，距离分辨率越高。</Description>
-    </Item>
-    <Item id="s4" title="中频信号" txBit="s1:4">
-        <Image>resources/assets/MCFJLCL/16.png</Image>
-        <Description>雷达发射机的中频信号是经由频率综合器生成的、已调制特定波形且频率介于基带与射频之间的模拟信号。其核心作用在于利用中频便于实现复杂波形的高精度生成与调理，再通过上变频至射频，从而有效简化系统结构、保证信号质量，并为频率捷变和相干处理奠定基础。</Description>
-    </Item>
-    <Item id="s5" title="本振信号" txBit="s1:8">
-        <Image>resources/assets/MCFJLCL/17.png</Image>
-        <Description>接收机的本振信号由振荡器产生，为混频器提供稳定的参考频率，用于实现射频到中频的变换。其频率稳定性和相位噪声直接影响中频信号的质量和测距精度。</Description>
-    </Item>
-    <Item id="s6" title="射频发射信号" txBit="s1:16">
-        <Image>resources/assets/MCFJLCL/18.png</Image>
-        <Description>射频发射信号是在调制脉冲的控制下，由发射机产生并通过天线向目标辐射的高频电磁波。信号功率与波束方向决定了雷达的探测距离与分辨能力。</Description>
-    </Item>
-    <Item id="s7" title="射频接收信号" txBit="s1:32">
-        <Image>resources/assets/MCFJLCL/19.png</Image>
-        <Description>射频接收信号是目标反射回来的回波信号，经过天线接收后送入接收机。其幅度和到达时间反映目标的距离、反射特性和空间分布。</Description>
-    </Item>
-    <Item id="s8" title="基带信号" txBit="s1:64">
-        <Image>resources/assets/MCFJLCL/20.png</Image>
-        <Description>基带信号是经过检波后的低频信号，去除了高频载波，保留了目标回波的幅度包络信息，便于后续视频显示和距离计算。</Description>
-    </Item>
-    <Item id="s9" title="检波器输出信号" txBit="s1:128">
-        <Image>resources/assets/MCFJLCL/21.png</Image>
-        <Description>检波器输出的视频信号显示了发射与接收脉冲的时间延迟。视频信号的两个脉冲间距反映目标的往返传播时间，是计算距离的直接依据。</Description>
-    </Item>
-    <Item id="s10" title="门限电平信号" txBit="s1:256">
-        <Image>resources/assets/MCFJLCL/22.png</Image>
-        <Description>门限电平信号用于判定是否存在有效回波。系统通过设定门限电平区分噪声与目标回波，当接收信号超过门限时，目标才可能存在。</Description>
-    </Item>
-    <Item id="s11" title="和支路信号" txBit="s1:512">
-        <Image>resources/assets/MCFJLCL/23.png</Image>
-        <Description>来自接收机的视频回波与门限电平U0在比较器里作比较，输出宽度为τ的矩形脉冲，该脉冲作为和支路（Σ）的输出。</Description>
-    </Item>
-    <Item id="s12" title="微分信号" txBit="s1:1024">
-        <Image>resources/assets/MCFJLCL/24.png</Image>
-        <Description>微分信号是通过对视频信号求导获得的信号，用于增强脉冲边缘特性，提高时间判定的精度，从而改善距离分辨率。</Description>
-    </Item>
-    <Item id="s13" title="差支路信号" txBit="s1:2048">
-        <Image>resources/assets/MCFJLCL/25.png</Image>
-        <Description>微分信号和和支路信号加载到过零点检测电路形成差支路信号，用于提取目标方向性信息或时间差信号。它与触发脉冲配合，计算出回波延迟时间Δt。</Description>
-    </Item>
-    <Item id="s14" title="计算目标距离" txBit="">
-        <Image>:/images/step2_osc.png</Image>
-        <Description>显示触发脉冲与差支路信号，通过测量它们之间的时间延迟Δt，计算目标距离：d = c⋅Δt/2（c为光速，Δt为发射与回波间的往返时间差）。</Description>
-    </Item>
-
-</GroupStep>
+        <!-- special="noLight" 表示不受灯控制，直接显示 -->
+        <Item id="s1" title="设置目标位置" txBit="" special="noLight">
+            <Image>resources/assets/MCFJLCL/huagui.png</Image>
+            <Description>设置目标物体的位置参数，请手动设置滑轨上的目标位置。</Description>
+        </Item>
+        <Item id="s2" title="触发脉冲信号" txBit="s1:1" waveform="TriggerPulse">
+            <Image>resources/assets/MCFJLCL/14.png</Image>
+            <Description>触发脉冲信号由系统定时电路产生，用于控制整个测距过程的时间基准。它作为起始信号，触发发射机产生调制脉冲，同时启动接收通道的时间计数，为距离测量提供统一的时间参考。</Description>
+        </Item>
+        <Item id="s3" title="调制脉冲信号" txBit="s1:2" waveform="PulseModulation">
+            <Image>resources/assets/MCFJLCL/15.png</Image>
+            <Description>调制脉冲信号是在触发信号的作用下生成的矩形脉冲，用于控制发射机的工作。脉冲宽度与发射能量、距离分辨率相关，是决定测距性能的重要参数。脉宽越窄，距离分辨率越高。</Description>
+        </Item>
+        <Item id="s4" title="中频信号" txBit="s1:4" waveform="IntermediateFrequency">
+            <Image>resources/assets/MCFJLCL/16.png</Image>
+            <Description>雷达发射机的中频信号是经由频率综合器生成的、已调制特定波形且频率介于基带与射频之间的模拟信号。其核心作用在于利用中频便于实现复杂波形的高精度生成与调理，再通过上变频至射频，从而有效简化系统结构、保证信号质量，并为频率捷变和相干处理奠定基础。</Description>
+        </Item>
+        <Item id="s5" title="本振信号" txBit="s1:8" waveform="LocalOscillator">
+            <Image>resources/assets/MCFJLCL/17.png</Image>
+            <Description>接收机的本振信号由振荡器产生，为混频器提供稳定的参考频率，用于实现射频到中频的变换。其频率稳定性和相位噪声直接影响中频信号的质量和测距精度。</Description>
+        </Item>
+        <Item id="s6" title="射频发射信号" txBit="s1:16" waveform="RFEmit">
+            <Image>resources/assets/MCFJLCL/18.png</Image>
+            <Description>射频发射信号是在调制脉冲的控制下，由发射机产生并通过天线向目标辐射的高频电磁波。信号功率与波束方向决定了雷达的探测距离与分辨能力。</Description>
+        </Item>
+        <Item id="s7" title="射频接收信号" txBit="s1:32" waveform="RFReceive">
+            <Image>resources/assets/MCFJLCL/19.png</Image>
+            <Description>射频接收信号是目标反射回来的回波信号，经过天线接收后送入接收机。其幅度和到达时间反映目标的距离、反射特性和空间分布。</Description>
+        </Item>
+        <Item id="s8" title="基带信号" txBit="s1:64" waveform="Baseband">
+            <Image>resources/assets/MCFJLCL/20.png</Image>
+            <Description>基带信号是经过检波后的低频信号，去除了高频载波，保留了目标回波的幅度包络信息，便于后续视频显示和距离计算。</Description>
+        </Item>
+        <Item id="s9" title="检波器输出信号" txBit="s1:128" waveform="Detector">
+            <Image>resources/assets/MCFJLCL/21.png</Image>
+            <Description>检波器输出的视频信号显示了发射与接收脉冲的时间延迟。视频信号的两个脉冲间距反映目标的往返传播时间，是计算距离的直接依据。</Description>
+        </Item>
+        <Item id="s10" title="门限电平信号" txBit="s1:256" waveform="Threshold">
+            <Image>resources/assets/MCFJLCL/22.png</Image>
+            <Description>门限电平信号用于判定是否存在有效回波。系统通过设定门限电平区分噪声与目标回波，当接收信号超过门限时，目标才可能存在。</Description>
+        </Item>
+        <Item id="s11" title="和支路信号" txBit="s1:512" waveform="Branch">
+            <Image>resources/assets/MCFJLCL/23.png</Image>
+            <Description>来自接收机的视频回波与门限电平U0在比较器里作比较，输出宽度为τ的矩形脉冲，该脉冲作为和支路（Σ）的输出。</Description>
+        </Item>
+        <Item id="s12" title="微分信号" txBit="s1:1024" waveform="Differential">
+            <Image>resources/assets/MCFJLCL/24.png</Image>
+            <Description>微分信号是通过对视频信号求导获得的信号，用于增强脉冲边缘特性，提高时间判定的精度，从而改善距离分辨率。</Description>
+        </Item>
+        <Item id="s13" title="差支路信号" txBit="s1:2048" waveform="Tributary">
+            <Image>resources/assets/MCFJLCL/25.png</Image>
+            <Description>微分信号和和支路信号加载到过零点检测电路形成差支路信号，用于提取目标方向性信息或时间差信号。它与触发脉冲配合，计算出回波延迟时间Δt。</Description>
+        </Item>
+        <!-- special="distanceMeasure" 测试验证显示测距控件，waveform 留空（测试验证不走原理演示动画） -->
+        <Item id="s14" title="计算目标距离" txBit="" special="distanceMeasure" waveform="">
+            <Image>resources/assets/MCFJLCL/huagui.png</Image>
+            <Description>显示触发脉冲与差支路信号，通过测量它们之间的时间延迟Δt，计算目标距离：d = c⋅Δt/2（c为光速，Δt为发射与回波间的往返时间差）。</Description>
+        </Item>
+    </GroupStep>
 
     <GroupCourse visible="true">
         <Item id="home" title="课程总目录">

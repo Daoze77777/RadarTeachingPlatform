@@ -43,31 +43,30 @@
     </GroupPrinciple>
 
     <GroupStep visible="true">
-        <Item id="s1" title="设置目标位置">
+        <Item id="s1" title="设置目标位置" special="noLight" waveform="FMEmpty">
             <Image>resources/assets/TPFJLCL/huagui.png</Image>
             <Description>设置目标物体的位置参数，请手动设置滑轨上的目标位置。</Description>
         </Item>
-        <Item id="s2" title="调频发射信号">
+        <Item id="s2" title="调频发射信号" waveform="FMTransmission">
             <Image>resources/assets/TPFJLCL/7.png</Image>
             <Description>系统产生频率随时间线性变化的连续波（FMCW 信号），并由发射端发射出去。该信号作为整个测距实验的基准信号，用于后续回波的时间延迟和频率差分析。</Description>
         </Item>
-        <Item id="s3" title="调频接收信号">
+        <Item id="s3" title="调频接收信号" waveform="FMReception">
             <Image>resources/assets/TPFJLCL/8.png</Image>
             <Description>接收端获取目标反射回来的调频连续波回波信号。回波信号相对发射信号会产生时间延迟和频率偏移，包含目标距离与相对运动信息。</Description>
         </Item>
-        <Item id="s4" title="混频输出差频信号">
+        <Item id="s4" title="混频输出差频信号" waveform="MixedFrequency">
             <Image>resources/assets/TPFJLCL/9.png</Image>
             <Description>混频器将发射机直耦来的参考调频信号与接收回波信号相乘，产生和频与差频等分量。经滤波后保留的差频信号，其频率近似与目标往返时间成正比，为后续放大和测距计算提供基础。</Description>
         </Item>
-        <Item id="s5" title="频率计输出信号">
+        <Item id="s5" title="频率计输出信号" waveform="FrequencyMeter">
             <Image>resources/assets/TPFJLCL/10.png</Image>
             <Description>频率计测量差频信号得到的平均频率值用于距离计算，下方的 fbav​ 用于下一步的距离计算 R。</Description>
         </Item>
-        <Item id="s6" title="计算目标距离">
+        <Item id="s6" title="计算目标距离" special="distanceMeasure">
             <Image>resources/assets/TPFJLCL/11.png</Image>
             <Description>根据公式 R=c⋅fbav​/(8⋅Δf⋅Fm​) 计算目标距离，其中 Δf=1000 MHz，Fm​=500 Hz。</Description>
         </Item>
-
 
     </GroupStep>
 

@@ -61,27 +61,6 @@ void RadarDistanceWidget::feedDistance(int rawDistance)
 {
     m_rawDistance = rawDistance;
 }
-// void RadarDistanceWidget::onCaptureClicked()
-// {
-//     qDebug() << "[取得距离] m_rawDistance =" << m_rawDistance;
-
-//     if (m_rawDistance <= 0 || m_rawDistance == 9999) {
-//         m_lblDistanceValue->setText("无效数据");
-//         m_lblTimeValue->setText("-- ns");
-//         m_btnStart->setEnabled(false);
-//         return;
-//     }
-
-//     m_capturedMm     = m_rawDistance * 0.1;
-//     m_capturedTimeNs = m_capturedMm * 2.0 / 300.0;
-
-//     m_lblDistanceValue->setText(QString("%1 mm").arg(m_capturedMm, 0, 'f', 1));
-//     m_lblTimeValue->setText(QString("%1 ns").arg(m_capturedTimeNs, 0, 'f', 3));
-
-//     m_hasCaptured = true;
-//     m_btnStart->setEnabled(true);
-// }
-
 void RadarDistanceWidget::onCaptureClicked()
 {
     if (m_rawDistance <= 0 || m_rawDistance == 9999) {
@@ -105,7 +84,6 @@ void RadarDistanceWidget::onCaptureClicked()
     m_hasCaptured = true;
     m_btnStart->setEnabled(true);
 }
-
 void RadarDistanceWidget::onStartClicked()
 {
     if (!m_hasCaptured) return;
