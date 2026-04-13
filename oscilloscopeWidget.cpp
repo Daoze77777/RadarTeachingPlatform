@@ -1,7 +1,9 @@
 #include "oscilloScopeWidget.h"
+#include "pulseWaveforms.h"
 #include "FMWaveforms.h"
 #include "PhaseWaveforms.h"
 #include "DeblurWaveforms.h"
+#include "TrackingWaveforms.h"
 #include <QVBoxLayout>
 
 OscilloscopeWidget::OscilloscopeWidget(QWidget *parent)
@@ -93,6 +95,15 @@ void OscilloscopeWidget::registerWaveforms()
     m_waveforms["DeblurRS2"]               = std::make_shared<DeblurRS2Waveform>();
     m_waveforms["CoincidentTransmitted"]   = std::make_shared<CoincidentTransmittedWaveform>();
     m_waveforms["CoincidentReceived"]      = std::make_shared<CoincidentReceivedWaveform>();
+
+    //距离跟踪波形
+    m_waveforms["TrackingEmpty"]    = std::make_shared<TrackingEmptyWaveform>();
+    m_waveforms["TrackingTrigger"]  = std::make_shared<TrackingTriggerWaveform>();
+    m_waveforms["Echo"]             = std::make_shared<EchoWaveform>();
+    m_waveforms["TrackingSawtooth"] = std::make_shared<TrackingSawtoothWaveform>();
+    m_waveforms["Potentiometer"]    = std::make_shared<PotentiometerWaveform>();
+    m_waveforms["ManuallyTrack"]    = std::make_shared<ManuallyTrackWaveform>();
+    m_waveforms["ManualCapture"] = std::make_shared<ManualCaptureWaveform>();
 }
 
 void OscilloscopeWidget::setData(const QString &waveform)

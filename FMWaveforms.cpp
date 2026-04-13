@@ -36,11 +36,25 @@ void FMTransmissionWaveform::generate(QVector<double> &x, QVector<double> &y)
     x.resize(points);
     y.resize(points);
 
+    const double fMin   = 400.0;
+    const double fMax   = 1400.0;
+    const double period = 1000.0;
+
     for (int i = 0; i < points; ++i) {
         x[i] = i * (2000.0 / (points - 1));
-        double base   = triangleFreq(x[i]);
+
+        // phase 从 0 到 1，t=0 时 phase=0
+        double phase = fmod(x[i] / period, 1.0);
+
+        // tri：phase=0 时为 1.0（峰值），先下降到 0，再上升回 1
+        double tri;
+        if (phase < 0.5)
+            tri = 1.0 - phase * 2.0;   // 1.0 → 0.0
+        else
+            tri = (phase - 0.5) * 2.0; // 0.0 → 1.0
+
         double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 8.0;
-        y[i] = base + jitter;
+        y[i] = fMin + (fMax - fMin) * tri + jitter;
     }
 }
 
@@ -48,31 +62,59 @@ void FMTransmissionWaveform::generate(QVector<double> &x, QVector<double> &y)
 // graph(0) 绿色：发射信号（无延迟）
 void FMReceptionWaveform::generate(QVector<double> &x, QVector<double> &y)
 {
+    // const int points = 500;
+    // x.resize(points);
+    // y.resize(points);
+
+    // for (int i = 0; i < points; ++i) {
+    //     x[i] = i * (2000.0 / (points - 1));
+    //     double base   = triangleFreq(x[i]);
+    //     double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 8.0;
+    //     y[i] = base + jitter;
+    // }
+    // 和 FMTransmission 完全一样
+    FMTransmissionWaveform tx;
+    tx.generate(x, y);
+}
+
+// graph(1) 黄色：接收信号（延迟100µs）
+// void FMReceptionWaveform::generateExtra(QVector<double> &x, QVector<double> &y)
+// {
+//     const int    points = 500;
+//     const double delay  = 100.0; // µs
+//     x.resize(points);
+//     y.resize(points);
+
+//     for (int i = 0; i < points; ++i) {
+//         x[i] = i * (2000.0 / (points - 1));
+//         double base   = triangleFreq(x[i], delay);
+//         double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 8.0;
+//         y[i] = base + jitter;
+//     }
+// }
+void FMReceptionWaveform::generateExtra(QVector<double> &x, QVector<double> &y)
+{
     const int points = 500;
     x.resize(points);
     y.resize(points);
 
-    for (int i = 0; i < points; ++i) {
-        x[i] = i * (2000.0 / (points - 1));
-        double base   = triangleFreq(x[i]);
-        double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 8.0;
-        y[i] = base + jitter;
-    }
-}
-
-// graph(1) 黄色：接收信号（延迟100µs）
-void FMReceptionWaveform::generateExtra(QVector<double> &x, QVector<double> &y)
-{
-    const int    points = 500;
-    const double delay  = 100.0; // µs
-    x.resize(points);
-    y.resize(points);
+    const double fMin   = 400.0;
+    const double fMax   = 1400.0;
+    const double period = 1000.0;
+    const double delay  = 100.0;
 
     for (int i = 0; i < points; ++i) {
         x[i] = i * (2000.0 / (points - 1));
-        double base   = triangleFreq(x[i], delay);
+        double t     = x[i] - delay;
+        double phase = fmod((x[i] - delay) / period, 1.0);
+        if (phase < 0) phase += 1.0;
+        double tri;
+        if (phase < 0.5)
+            tri = 1.0 - phase * 2.0;
+        else
+            tri = (phase - 0.5) * 2.0;
         double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 8.0;
-        y[i] = base + jitter;
+        y[i] = fMin + (fMax - fMin) * tri + jitter;
     }
 }
 

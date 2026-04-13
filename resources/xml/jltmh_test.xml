@@ -47,7 +47,8 @@
         </Item>
         <Item id="s8" title="计算目标距离" special="distanceMeasure" waveform="">
             <Image>resources/assets/JLTMH/13.png</Image>
-            <Description>利用相位差公式 Φ=4πΔfR/c(Δf=1.5kHz) 计算目标实际距离，完成相位测距过程。</Description>
+            <Description>根据真实时延计算并验证目标距离。使用目标公式R = c * t/2计算真实距离，验证退模糊算法的正确性。</Description>
+
         </Item>
     </GroupStep>
 

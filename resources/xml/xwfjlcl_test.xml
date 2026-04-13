@@ -27,7 +27,7 @@
     <GroupPrinciple visible="true">
         <Item id="p1" title="相位法测距原理">
             <Image>resources/assets/XWFJLCL/14.png</Image>
-            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>相位法测距雷达原理</b>是基于双频连续波的相位差测量原理。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>基本原理：</b><br>1. 雷达同时发射频率为f₁和f₂的连续波信号<br>2. 目标反射回波相对于发射信号存在相位延迟<br>3. 通过测量两路信号的相位差Φ<br>4. 根据公式计算目标距离R</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>距离计算公式：</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R = (Φ·c) / (4π·Δf)<br>其中：<br>• R：目标距离（m）<br>• Φ：相位差（弧度）<br>• Δf：频率差（f₂-f₁，Hz）<br>• c：光速（≈3×10⁸ m/s）</p>]]></Description>
+            <Description><![CDATA[相位法测距雷达原理是基于双频连续波的相位差测量原理。<br><br><b>基本原理：</b><br>1. 雷达同时发射频率为f₁和f₂的连续波信号<br>2. 目标反射回波相对于发射信号存在相位延迟<br>3. 通过测量两路信号的相位差Φ<br>4. 根据公式计算目标距离R<br><br><b>距离计算公式：</b><br>R = (Φ·c) / (4π·Δf)<br><br>其中：<br>• R：目标距离（m）<br>• Φ：相位差（弧度）<br>• Δf：频率差（f₂-f₁，Hz）<br>• c：光速（≈3×10⁸ m/s）]]></Description>
         </Item>
     </GroupPrinciple>
 

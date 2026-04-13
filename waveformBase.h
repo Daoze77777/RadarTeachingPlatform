@@ -3,7 +3,7 @@
 
 #include <QVector>
 #include <QString>
-
+#include <QColor>
 class WaveformBase
 {
 public:
@@ -19,6 +19,8 @@ public:
     virtual double  xMin()   const { return 0.0; }
     virtual double  yMin()   const { return -0.1; }
     virtual double  yMax()   const { return 1.3; }
+    // 额外 graph 的颜色，默认黄色，子类可覆写
+    virtual QColor extraGraphColor() const { return QColor(255, 200, 0); }
 
     // X轴步长，0表示交给示波器自动决定
     virtual double  xStep()  const { return 0.0; }

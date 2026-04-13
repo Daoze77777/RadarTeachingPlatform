@@ -357,6 +357,11 @@ QWidget* MainWindow::setupComponentDetailWidget()
     m_detailBottomImage->setAlignment(Qt::AlignCenter);
     bottomLayout->addWidget(m_detailBottomImage);
 
+    // 新增动画组件，距离退模糊
+    m_rangeDeblurAnim = new RangeDeblurAnimation;
+    m_rangeDeblurAnim->setVisible(false);
+    bottomLayout->addWidget(m_rangeDeblurAnim);
+
     mainVLayout->addWidget(topArea, 5);
     mainVLayout->addWidget(bottomFrame, 5);
 
@@ -432,6 +437,10 @@ QWidget* MainWindow::setupStepDetailWidget()
     m_stepBottomImage = new QLabel();
     m_stepBottomImage->setAlignment(Qt::AlignCenter);
     bottomLayout->addWidget(m_stepBottomImage);
+
+    m_rangeDeblurAnimStep = new RangeDeblurAnimation;
+    m_rangeDeblurAnimStep->setVisible(false);
+    bottomLayout->addWidget(m_rangeDeblurAnimStep);
 
     mainVLayout->addWidget(topArea, 5);
     mainVLayout->addWidget(bottomFrame, 5);
@@ -529,16 +538,39 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
                                  Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
         // ===== special == "noLight"：不受灯控制，直接显示 =====
+        // if (item.special == "noLight") {
+        //     if (item.imagePath.isEmpty()) {
+        //         m_stepActionImage->setVisible(false);
+        //     } else {
+        //         m_stepActionImage->setVisible(true);
+        //     }
+        //     //m_stepActionImage->setVisible(true);
+        //     m_radarRangingDisply->setVisible(false);
+        //     m_radarDistanceWidget->setVisible(false);
+        //     QPixmap pix(item.imagePath);
+        //     if (!pix.isNull())
+        //         m_stepActionImage->setPixmap(pix.scaled(m_stepActionImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        //     m_oscilloscope->setData(item.waveform);
+        //     return;
+        // }
         if (item.special == "noLight") {
-            m_stepActionImage->setVisible(true);
             m_radarRangingDisply->setVisible(false);
             m_radarDistanceWidget->setVisible(false);
-            QPixmap pix(item.imagePath);
-            if (!pix.isNull())
-                m_stepActionImage->setPixmap(
-                    pix.scaled(m_stepActionImage->size(),
-                               Qt::KeepAspectRatio, Qt::SmoothTransformation));
-            //m_oscilloscope->setData("");
+
+            if (item.imagePath.isEmpty()) {
+                m_stepActionImage->setVisible(false);
+            } else {
+                QPixmap pix(item.imagePath);
+                if (pix.isNull()) {
+                    m_stepActionImage->setVisible(false);
+                } else {
+                    m_stepActionImage->setVisible(true);
+                    m_stepActionImage->setPixmap(
+                        pix.scaled(m_stepActionImage->size(),
+                                   Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                }
+            }
+
             m_oscilloscope->setData(item.waveform);
             return;
         }
@@ -591,6 +623,20 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
         } else {
             resetStepDisplay();
         }
+
+        if (bottomImgPath == "deblurAnimation") {
+            m_stepBottomImage->setVisible(false);
+            m_rangeDeblurAnimStep->setVisible(true);
+            m_rangeDeblurAnimStep->reset();
+        } else {
+            m_rangeDeblurAnimStep->setVisible(false);
+            m_stepBottomImage->setVisible(true);
+            QPixmap bottomPix(bottomImgPath);
+            if (!bottomPix.isNull())
+                m_stepBottomImage->setPixmap(
+                    bottomPix.scaled(m_stepBottomImage->size(),
+                                     Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
     }
     // ===== 普通组件/原理 分支 =====
     else {
@@ -606,10 +652,20 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
         else
             m_detailTopImage->setText("暂无图片");
 
-        QPixmap bottomPix(bottomImgPath);
-        if (!bottomPix.isNull())
-            m_detailBottomImage->setPixmap(
-                bottomPix.scaled(m_detailBottomImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        if (bottomImgPath == "deblurAnimation") {
+            qDebug()<<bottomImgPath;
+            m_detailBottomImage->setVisible(false);
+            m_rangeDeblurAnim->setVisible(true);
+            m_rangeDeblurAnim->reset();
+        } else {
+            m_rangeDeblurAnim->setVisible(false);
+            m_detailBottomImage->setVisible(true);
+            QPixmap bottomPix(bottomImgPath);
+            if (!bottomPix.isNull())
+                m_detailBottomImage->setPixmap(
+                    bottomPix.scaled(m_detailBottomImage->size(),
+                                     Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
     }
 }
 
@@ -711,28 +767,57 @@ void MainWindow::onRadarDataReceived(const RadarData &data)
     }
 }
 
+// void MainWindow::autoRefreshStep(const ExperimentContentItem &item)
+// {
+//     m_stepPromptLabel->setText(item.description);
+
+//     // distanceMeasure 步骤不走图片/波形刷新
+//     if (item.special == "distanceMeasure") {
+//         m_stepActionImage->setVisible(false);
+//         m_radarRangingDisply->setVisible(false);
+//         return;
+//     }
+
+//     m_stepActionImage->setVisible(true);
+//     m_radarRangingDisply->setVisible(false);
+
+//     QPixmap pix(item.imagePath);
+//     if (!pix.isNull()) {
+//         m_stepActionImage->setPixmap(
+//             pix.scaled(m_stepActionImage->size(),
+//                        Qt::KeepAspectRatio, Qt::SmoothTransformation));
+//     } else {
+//         m_stepActionImage->setText("暂无图片");
+//         m_stepActionImage->setAlignment(Qt::AlignCenter);
+//     }
+//     m_oscilloscope->setData(item.waveform); // ← waveform 字段
+// }
+
 void MainWindow::autoRefreshStep(const ExperimentContentItem &item)
 {
     m_stepPromptLabel->setText(item.description);
 
-    // distanceMeasure 步骤不走图片/波形刷新
     if (item.special == "distanceMeasure") {
         m_stepActionImage->setVisible(false);
         m_radarRangingDisply->setVisible(false);
         return;
     }
 
-    m_stepActionImage->setVisible(true);
     m_radarRangingDisply->setVisible(false);
 
-    QPixmap pix(item.imagePath);
-    if (!pix.isNull()) {
-        m_stepActionImage->setPixmap(
-            pix.scaled(m_stepActionImage->size(),
-                       Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    if (item.imagePath.isEmpty()) {
+        m_stepActionImage->setVisible(false);
     } else {
-        m_stepActionImage->setText("暂无图片");
-        m_stepActionImage->setAlignment(Qt::AlignCenter);
+        QPixmap pix(item.imagePath);
+        if (pix.isNull()) {
+            m_stepActionImage->setVisible(false);
+        } else {
+            m_stepActionImage->setVisible(true);
+            m_stepActionImage->setPixmap(
+                pix.scaled(m_stepActionImage->size(),
+                           Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
     }
-    m_oscilloscope->setData(item.waveform); // ← waveform 字段
+
+    m_oscilloscope->setData(item.waveform);
 }

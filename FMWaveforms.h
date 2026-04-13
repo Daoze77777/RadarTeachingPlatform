@@ -61,7 +61,7 @@ class MixedFrequencyWaveform : public WaveformBase
 public:
     void generate(QVector<double> &x, QVector<double> &y) override;
     QString xLabel() const override { return "时间 (µs)"; }
-    QString yLabel() const override { return "计数 (Counts)"; }
+    QString yLabel() const override { return "频率 (MHz)"; }
     double  xMin()   const override { return 0.0; }
     double  xMax()   const override { return 3.0; }
     double  yMin()   const override { return 0.0; }

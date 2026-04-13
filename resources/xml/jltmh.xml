@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Experiment id="4" name="距离退模糊实验" type="demo" txCount="6" bottomImagePath="resources/assets/JLTMH/8.png">
+<Experiment id="4" name="距离退模糊实验" type="demo" txCount="6" bottomImagePath="deblurAnimation">
 
     <GroupRadar visible="false">
     </GroupRadar>
@@ -12,7 +12,7 @@
 
           <Item id="p2" title="双高重复频率退模糊">
             <Image>resources/assets/JLTMH/9.png</Image>
-            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.6; margin: 0;'><b>当目标的真实距离大于雷达的最大单值测距范围时，就会出现距离模糊。</b></p><p style='font-size: 19px; line-height: 1.6; margin: 10px 0 5px 0;'><b>最大单值测距范围</b>由脉冲重复周期 Tr 决定：</p><p style='font-size: 15px; line-height: 1.5; margin: 0 0 0 20px;'>R<sub>max</sub> = c·Tr / 2</p><p style='font-size: 19px; line-height: 1.6; margin: 5px 0 0 0;'>其中 c 是光速。</p><p style='font-size: 19px; line-height: 1.6; margin: 10px 0 0 0;'>如果目标的真实距离 R<sub>true</sub> &gt; R<sub>max</sub>，那么它的回波会在下一次发射脉冲之后才返回。雷达只知道它在延迟 tr 时间后收到回波，却无法分辨这是"近距离目标"还是"远距离目标折叠"造成的，从而导致模糊。</p><p style='font-size: 19px; line-height: 1.6; margin: 10px 0 5px 0;'><b>总结：</b></p><p style='font-size: 19px; line-height: 1.6; margin: 0 0 0 10px;'>• <b>距离模糊的定义：</b>同一个回波对应多个可能的目标距离，测不准真实距离。</p><p style='font-size: 19px; line-height: 1.6; margin: 5px 0 0 10px;'>• <b>出现条件：</b>目标真实距离超过了由脉冲重复周期决定的最大单值测距范围 R<sub>max</sub>。</p>]]></Description>
+            <Description><![CDATA[<b>当目标的真实距离大于雷达的最大单值测距范围时，就会出现距离模糊。</b><br><br><b>最大单值测距范围</b>由脉冲重复周期 Tr 决定：<br>Rmax = c·Tr / 2<br>其中 c 是光速。<br><br>如果目标的真实距离 Rtrue > Rmax，那么它的回波会在下一次发射脉冲之后才返回。雷达只知道它在延迟 tr 时间后收到回波，却无法分辨这是"近距离目标"还是"远距离目标折叠"造成的，从而导致模糊。<br><br><b>总结：</b><br>• <b>距离模糊的定义：</b>同一个回波对应多个可能的目标距离，测不准真实距离。<br>• <b>出现条件：</b>目标真实距离超过了由脉冲重复周期决定的最大单值测距范围 Rmax。]]></Description>
         </Item>
     </GroupPrinciple>
 
@@ -47,7 +47,7 @@
         </Item>
         <Item id="s8" title="计算目标距离" special="distanceMeasure" waveform="">
             <Image>resources/assets/JLTMH/13.png</Image>
-            <Description>利用相位差公式 Φ=4πΔfR/c(Δf=1.5kHz) 计算目标实际距离，完成相位测距过程。</Description>
+            <Description>根据真实时延计算并验证目标距离。使用目标公式R = c * t/2计算真实距离，验证退模糊算法的正确性。</Description>
         </Item>
     </GroupStep>
 

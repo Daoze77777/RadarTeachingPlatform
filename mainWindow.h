@@ -14,6 +14,7 @@
 #include <QMessageBox>
 #include "radarDataParser.h"
 #include "radarDistanceWidget.h"
+#include "RangeDeblurAnimation.h"
 
 class MainWindow : public CustomMainWindow
 {
@@ -53,6 +54,8 @@ private:
     ExperimentSidebar *m_sidebar;
     QStackedWidget *m_centerStack;
     QStackedWidget *m_mainCenterStack;
+    RangeDeblurAnimation *m_rangeDeblurAnim = nullptr;  //距离退模糊原理演示
+    RangeDeblurAnimation *m_rangeDeblurAnimStep = nullptr; // 步骤页面用
     int m_currentExpId = 101;
 
     // 成员变量

@@ -65,6 +65,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         PhaseWaveforms.cpp
         DeblurWaveforms.h
         DeblurWaveforms.cpp
+        RangeDeblurAnimation.h
+        RangeDeblurAnimation.cpp
+        TrackingWaveforms.h
+        TrackingWaveforms.cpp
 
     )
 
