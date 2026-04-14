@@ -419,6 +419,47 @@ QWidget* MainWindow::setupStepDetailWidget()
     actionImageLayout->addWidget(m_radarRangingDisply);
     actionImageLayout->addWidget(m_radarDistanceWidget);
 
+    m_rangeDeblurWidget = new RangeDeblurWidget;
+    m_rangeDeblurWidget->setVisible(false);
+    actionImageLayout->addWidget(m_rangeDeblurWidget);
+
+    m_phaseRangingWidget = new PhaseRangingWidget;
+    m_phaseRangingWidget->setVisible(false);
+    actionImageLayout->addWidget(m_phaseRangingWidget);
+
+    m_fmRangingWidget = new FMRangingWidget;
+    m_fmRangingWidget->setVisible(false);
+    actionImageLayout->addWidget(m_fmRangingWidget);
+
+    // AutoTrack Δt/ΔR 标注
+    m_autoTrackInfoLabel = new QLabel(actionImageFrame);
+    m_autoTrackInfoLabel->setAlignment(Qt::AlignCenter);
+    m_autoTrackInfoLabel->setStyleSheet(
+        "QLabel { color: #1a1a1a; background: transparent; "
+        "font-size: 20px; font-weight: bold; }");
+    m_autoTrackInfoLabel->hide();
+    actionImageLayout->addWidget(m_autoTrackInfoLabel);
+
+    // 刷新 timer
+    m_autoTrackTimer = new QTimer(this);
+    m_autoTrackTimer->setInterval(100);
+    connect(m_autoTrackTimer, &QTimer::timeout, this, [this]() {
+        auto atWave = std::dynamic_pointer_cast<AutoTrackWaveform>(
+            m_oscilloscope->currentWaveform());
+        if (!atWave) { m_autoTrackTimer->stop(); return; }
+        double gatePos = atWave->gatePos();
+        double rangeM  = gatePos * 0.3 / 2.0 * 1000.0;
+        // 收敛后 snap 到整值
+        if (qAbs(gatePos - 133.0) < 0.5) {
+            gatePos = 133.0;
+            rangeM  = 20000.0;
+        }
+        m_autoTrackInfoLabel->setText(
+            QString("Δt = %1 µs\nΔR ≈ %2 m")
+                .arg(gatePos, 0, 'f', 1)
+                .arg(rangeM,  0, 'f', 0));
+    });
+
     leftPanelLayout->addWidget(promptFrame, 5);
     leftPanelLayout->addWidget(actionImageFrame, 5);
 
@@ -462,6 +503,15 @@ QWidget* MainWindow::setupStepDetailWidget()
         m_stepCtrl->completeStep(m_stepCtrl->totalSteps() - 1);
     });
 
+    connect(m_rangeDeblurWidget, &RangeDeblurWidget::waveformRequested,
+            m_oscilloscope, &OscilloscopeWidget::onDeblurWaveformRequested);
+
+    connect(m_phaseRangingWidget, &PhaseRangingWidget::waveformRequested,
+            m_oscilloscope, &OscilloscopeWidget::onPhaseWaveformRequested);
+
+    connect(m_fmRangingWidget, &FMRangingWidget::waveformRequested,
+            m_oscilloscope, &OscilloscopeWidget::onFMWaveformRequested);
+
     return stepDetailWidget;
 }
 
@@ -498,7 +548,13 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
 
     // ===== Step 分支 =====
     if (item.moduleType == "Step") {
-        //qDebug() << "[Step] id=" << item.id << "special=" << item.special << "waveform=" << item.waveform;
+        m_stepActionImage->setVisible(false);
+        m_radarRangingDisply->setVisible(false);
+        m_radarDistanceWidget->setVisible(false);
+        m_rangeDeblurWidget->setVisible(false);  // 新增
+        m_phaseRangingWidget->setVisible(false);
+        m_fmRangingWidget->setVisible(false);
+
         if (m_isTestMode) {
             int clickedIndex = -1;
 
@@ -554,6 +610,8 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
         //     return;
         // }
         if (item.special == "noLight") {
+            m_autoTrackInfoLabel->hide();
+            m_autoTrackTimer->stop();
             m_radarRangingDisply->setVisible(false);
             m_radarDistanceWidget->setVisible(false);
 
@@ -577,6 +635,8 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
 
         // ===== special == "distanceMeasure"：显示测距控件 =====
         if (item.special == "distanceMeasure") {
+            m_autoTrackInfoLabel->hide();
+            m_autoTrackTimer->stop();
             //qDebug() << "[s14] special=distanceMeasure 分支触发, isTestMode=" << m_isTestMode;
             m_stepActionImage->setVisible(false);
             if (m_isTestMode) {
@@ -598,10 +658,51 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
             m_radarDistanceWidget->setVisible(false);
             m_oscilloscope->resetWaveform("AutoTrack");
             m_oscilloscope->setData("AutoTrack");
+            m_autoTrackInfoLabel->show();
+            m_autoTrackTimer->start();
+            return;
+        }
+
+        if (item.special == "deblurMeasure") {
+            m_stepActionImage->setVisible(false);
+            m_radarRangingDisply->setVisible(false);
+            m_radarDistanceWidget->setVisible(false);
+            m_rangeDeblurWidget->setVisible(true);
+            if (m_isTestMode) {
+                m_rangeDeblurWidget->setManualInputEnabled(false);
+            } else {
+                m_rangeDeblurWidget->setManualInputEnabled(true);
+            }
+            m_oscilloscope->setData("");
+            return;
+        }
+
+        if (item.special == "phaseMeasure") {
+            m_stepActionImage->setVisible(false);
+            m_radarRangingDisply->setVisible(false);
+            m_radarDistanceWidget->setVisible(false);
+            m_rangeDeblurWidget->setVisible(false);
+            m_phaseRangingWidget->setVisible(true);
+            m_phaseRangingWidget->setManualInputEnabled(!m_isTestMode);
+            m_oscilloscope->setData("");
+            return;
+        }
+
+        if (item.special == "fmMeasure") {
+            m_stepActionImage->setVisible(false);
+            m_radarRangingDisply->setVisible(false);
+            m_radarDistanceWidget->setVisible(false);
+            m_rangeDeblurWidget->setVisible(false);
+            m_phaseRangingWidget->setVisible(false);
+            m_fmRangingWidget->setVisible(true);
+            m_fmRangingWidget->setManualInputEnabled(!m_isTestMode);
+            m_oscilloscope->setData("");
             return;
         }
 
         // ===== 普通步骤：根据灯状态显示 =====
+        m_autoTrackInfoLabel->hide();
+        m_autoTrackTimer->stop();
         bool lightIsOn = false;
         if (m_isTestMode && !item.txBit.isEmpty()) {
             QStringList parts = item.txBit.split(':');
@@ -701,7 +802,7 @@ void MainWindow::initSerial()
     m_serial = new QSerialPort(this);
     m_parser = new RadarDataParser(this);
 
-    m_serial->setPortName("COM7");
+    m_serial->setPortName("COM3");
     m_serial->setBaudRate(QSerialPort::Baud9600);
     m_serial->setDataBits(QSerialPort::Data8);
     m_serial->setParity(QSerialPort::NoParity);
@@ -724,10 +825,82 @@ void MainWindow::closeSerial()
     }
 }
 
+// void MainWindow::onRadarDataReceived(const RadarData &data)
+// {
+//     m_lastRadarData = data;
+//     m_radarDistanceWidget->feedDistance(data.distance);
+//     m_rangeDeblurWidget->feedDistance(data.distance);
+//     m_phaseRangingWidget->feedDistance(data.distance);
+//     m_fmRangingWidget->feedDistance(data.distance);
+
+//     if (!m_isTestMode || m_stepItems.isEmpty()) return;
+
+//     for (int i = 0; i < m_stepItems.size(); ++i) {
+//         const QString &txBit = m_stepItems[i].txBit;
+//         if (txBit.isEmpty()) continue;
+
+//         QStringList parts = txBit.split(':');
+//         if (parts.size() != 2) continue;
+
+//         quint16 mask = parts[1].toUShort();
+//         quint16 sVal = 0;
+//         if      (parts[0] == "s1") sVal = data.s1;
+//         else if (parts[0] == "s2") sVal = data.s2;
+//         else if (parts[0] == "s3") sVal = data.s3;
+
+//         bool isOn = (sVal & mask) != 0;
+
+//         // int tIndex = 0;
+//         // quint16 tmp = mask;
+//         // while (tmp > 1) { tmp >>= 1; tIndex++; }
+//         // tIndex += 1;
+
+//         // 改为：按步骤顺序，跳过 txBit 为空的步骤
+//         int tIndex = 0;
+//         for (int j = 0; j <= i; ++j) {
+//             if (!m_stepItems[j].txBit.isEmpty())
+//                 tIndex++;
+//         }
+//         m_instrumentPanel->setLightColor(QString("T%1").arg(tIndex), isOn ? "green" : "gray");
+
+//         bool isOnMainWorkPage = (m_mainCenterStack->currentIndex() == 1);
+//         bool isOnStepPage     = (m_centerStack->currentWidget() == m_stepDetailWidget);
+//         bool isCurrentStep    = (m_stepItems[i].id == m_currentStepId);
+
+//         if (!isOnMainWorkPage || !isOnStepPage || !isCurrentStep) continue;
+
+//         if (isOn) {
+//             autoRefreshStep(m_stepItems[i]);
+//             // distanceMeasure 步骤不靠灯完成，由 waveformRequested 信号处理
+//             if (m_stepItems[i].special != "distanceMeasure") {
+//                 m_stepCtrl->completeStep(i);
+//             }
+//         } else {
+//             resetStepDisplay();
+//         }
+//     }
+// }
+
+
 void MainWindow::onRadarDataReceived(const RadarData &data)
 {
     m_lastRadarData = data;
-    m_radarDistanceWidget->feedDistance(data.distance);
+
+    // 只在当前步骤是对应 special 时才喂距离
+    if (!m_currentStepId.isEmpty() && !m_stepItems.isEmpty()) {
+        for (const auto &item : m_stepItems) {
+            if (item.id != m_currentStepId) continue;
+            if (item.special == "distanceMeasure")
+                m_radarDistanceWidget->feedDistance(data.distance);
+            else if (item.special == "deblurMeasure")
+                m_rangeDeblurWidget->feedDistance(data.distance);
+            else if (item.special == "phaseMeasure")
+                m_phaseRangingWidget->feedDistance(data.distance);
+            else if (item.special == "fmMeasure")
+                m_fmRangingWidget->feedDistance(data.distance);
+            break;
+        }
+    }
 
     if (!m_isTestMode || m_stepItems.isEmpty()) return;
 
@@ -746,12 +919,6 @@ void MainWindow::onRadarDataReceived(const RadarData &data)
 
         bool isOn = (sVal & mask) != 0;
 
-        // int tIndex = 0;
-        // quint16 tmp = mask;
-        // while (tmp > 1) { tmp >>= 1; tIndex++; }
-        // tIndex += 1;
-
-        // 改为：按步骤顺序，跳过 txBit 为空的步骤
         int tIndex = 0;
         for (int j = 0; j <= i; ++j) {
             if (!m_stepItems[j].txBit.isEmpty())
@@ -767,7 +934,6 @@ void MainWindow::onRadarDataReceived(const RadarData &data)
 
         if (isOn) {
             autoRefreshStep(m_stepItems[i]);
-            // distanceMeasure 步骤不靠灯完成，由 waveformRequested 信号处理
             if (m_stepItems[i].special != "distanceMeasure") {
                 m_stepCtrl->completeStep(i);
             }
@@ -776,32 +942,6 @@ void MainWindow::onRadarDataReceived(const RadarData &data)
         }
     }
 }
-
-// void MainWindow::autoRefreshStep(const ExperimentContentItem &item)
-// {
-//     m_stepPromptLabel->setText(item.description);
-
-//     // distanceMeasure 步骤不走图片/波形刷新
-//     if (item.special == "distanceMeasure") {
-//         m_stepActionImage->setVisible(false);
-//         m_radarRangingDisply->setVisible(false);
-//         return;
-//     }
-
-//     m_stepActionImage->setVisible(true);
-//     m_radarRangingDisply->setVisible(false);
-
-//     QPixmap pix(item.imagePath);
-//     if (!pix.isNull()) {
-//         m_stepActionImage->setPixmap(
-//             pix.scaled(m_stepActionImage->size(),
-//                        Qt::KeepAspectRatio, Qt::SmoothTransformation));
-//     } else {
-//         m_stepActionImage->setText("暂无图片");
-//         m_stepActionImage->setAlignment(Qt::AlignCenter);
-//     }
-//     m_oscilloscope->setData(item.waveform); // ← waveform 字段
-// }
 
 void MainWindow::autoRefreshStep(const ExperimentContentItem &item)
 {

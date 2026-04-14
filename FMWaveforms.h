@@ -75,8 +75,6 @@ class FrequencyMeterWaveform : public WaveformBase
 {
 public:
     void generate(QVector<double> &x, QVector<double> &y) override;
-    void generateExtra(QVector<double> &x, QVector<double> &y) override; // 底部基线
-    bool needsExtraGraph() const override { return true; }
     QString xLabel() const override { return "时间 (µs)"; }
     QString yLabel() const override { return "频率 (MHz)"; }
     double  xMin()   const override { return 0.0; }
@@ -85,6 +83,24 @@ public:
     double  yMax()   const override { return 2000.0; }
     double  xStep()  const override { return 0.5; }
     double  yStep()  const override { return 200.0; }
+};
+
+// ===== 调频法测距结果波形（差频直线，随距离变化高低）=====
+class FMResultWaveform : public WaveformBase
+{
+public:
+    void setDeltaF(double deltaF_MHz) { m_deltaF = deltaF_MHz; }
+    void generate(QVector<double> &x, QVector<double> &y) override;
+    QString xLabel() const override { return "时间 (µs)"; }
+    QString yLabel() const override { return "频率 (MHz)"; }
+    double  xMin()   const override { return 0.0; }
+    double  xMax()   const override { return 3.0; }
+    double  yMin()   const override { return 0.0; }
+    double  yMax()   const override { return 1000.0; }
+    double  xStep()  const override { return 0.5; }
+    double  yStep()  const override { return 100.0; }
+private:
+    double m_deltaF = 0.0;
 };
 
 #endif // FMWAVEFORMS_H

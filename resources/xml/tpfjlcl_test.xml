@@ -74,7 +74,7 @@
        </Item>
 
        <!-- s6：计算目标距离，无灯，distanceMeasure交互 -->
-       <Item id="s6" title="计算目标距离" txBit="" special="distanceMeasure" waveform="">
+       <Item id="s6" title="计算目标距离" txBit="" special="fmMeasure" waveform="">
            <Image>resources/assets/TPFJLCL/11.png</Image>
            <Description>根据公式 R=c⋅fbav​/(8⋅Δf⋅Fm​) 计算目标距离，其中 Δf=1000 MHz，Fm​=500 Hz。</Description>
        </Item>

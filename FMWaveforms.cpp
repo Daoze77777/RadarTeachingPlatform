@@ -153,48 +153,27 @@ void MixedFrequencyWaveform::generate(QVector<double> &x, QVector<double> &y)
 // 和 MixedFrequency 形状一样，但 Y 轴单位是 MHz，底部有接近0的基线
 void FrequencyMeterWaveform::generate(QVector<double> &x, QVector<double> &y)
 {
-    const int    points   = 600;
-    const double baseline = 1500.0;
-    const double dipDepth = 1000.0;
-    const double sigma    = 0.08;
-
-    const QVector<double> dipCenters = {0.8, 2.3};
+    const int    points   = 500;
+    const double baseline = 200.0; // 差频200MHz，对应延迟100µs
 
     x.resize(points);
     y.resize(points);
 
-    // 底部基线（接近0）
-    // QVector<double> baseX, baseY;
-    // for (int i = 0; i < points; ++i) {
-    //     double xi = i * (3.0 / (points - 1));
-    //     baseX.append(xi);
-    //     baseY.append(2.0 + (QRandomGenerator::global()->generateDouble() * 2 - 1) * 1.0);
-    // }
-
     for (int i = 0; i < points; ++i) {
         x[i] = i * (3.0 / (points - 1));
-
-        double dip = 0.0;
-        for (double center : dipCenters) {
-            double dt = x[i] - center;
-            dip += dipDepth * qExp(-dt * dt / (2.0 * sigma * sigma));
-        }
-
-        double noiseAmp = (dip > 100) ? 5.0 : 15.0;
-        double jitter   = (QRandomGenerator::global()->generateDouble() * 2 - 1) * noiseAmp;
-
-        y[i] = qBound(0.0, baseline - dip + jitter, 2000.0);
+        double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 3.0;
+        y[i] = qBound(0.0, baseline + jitter, 2000.0);
     }
 }
 
-void FrequencyMeterWaveform::generateExtra(QVector<double> &x, QVector<double> &y)
+void FMResultWaveform::generate(QVector<double> &x, QVector<double> &y)
 {
-    const int points = 600;
+    const int points = 500;
     x.resize(points);
     y.resize(points);
-
     for (int i = 0; i < points; ++i) {
         x[i] = i * (3.0 / (points - 1));
-        y[i] = 2.0 + (QRandomGenerator::global()->generateDouble() * 2 - 1) * 1.0;
+        double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 3.0;
+        y[i] = qBound(0.0, m_deltaF + jitter, 1000.0);
     }
 }

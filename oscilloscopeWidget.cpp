@@ -76,6 +76,8 @@ void OscilloscopeWidget::registerWaveforms()
     m_waveforms["FMReception"]     = std::make_shared<FMReceptionWaveform>();
     m_waveforms["MixedFrequency"]  = std::make_shared<MixedFrequencyWaveform>();
     m_waveforms["FrequencyMeter"]  = std::make_shared<FrequencyMeterWaveform>();
+    m_fmResultWaveform = std::make_shared<FMResultWaveform>();
+    m_waveforms["FMResult"] = m_fmResultWaveform;
 
     //相位法波形
     m_waveforms["PhaseEmpty"]        = std::make_shared<PhaseEmptyWaveform>();
@@ -86,6 +88,8 @@ void OscilloscopeWidget::registerWaveforms()
     m_waveforms["Oscillation"]       = std::make_shared<OscillationWaveform>();
     m_waveforms["ReceiverMixer"]     = std::make_shared<ReceiverMixerWaveform>();
     m_waveforms["PhaseShifterZero"]  = std::make_shared<PhaseShifterZeroWaveform>();
+    m_phaseResultWaveform = std::make_shared<PhaseResultWaveform>();
+    m_waveforms["PhaseResult"] = m_phaseResultWaveform;
 
     //距离退模糊波形
     m_waveforms["DeblurEmpty"]             = std::make_shared<DeblurEmptyWaveform>();
@@ -95,6 +99,8 @@ void OscilloscopeWidget::registerWaveforms()
     m_waveforms["DeblurRS2"]               = std::make_shared<DeblurRS2Waveform>();
     m_waveforms["CoincidentTransmitted"]   = std::make_shared<CoincidentTransmittedWaveform>();
     m_waveforms["CoincidentReceived"]      = std::make_shared<CoincidentReceivedWaveform>();
+    m_deblurResultWaveform = std::make_shared<DeblurResultWaveform>();
+    m_waveforms["DeblurResult"] = m_deblurResultWaveform;
 
     //距离跟踪波形
     m_waveforms["TrackingEmpty"]    = std::make_shared<TrackingEmptyWaveform>();
@@ -363,4 +369,28 @@ void OscilloscopeWidget::onDistanceWaveformRequested(double timeUs)
     m_plot->graph(2)->setData({0.0, slopeEnd}, {0.58, 0.0});
 
     m_plot->replot();
+}
+
+void OscilloscopeWidget::onDeblurWaveformRequested(int track, double period, double delay)
+{
+    if (track == 0) { setData(""); return; }
+
+    m_deblurResultWaveform->setParams(period, delay);
+    m_currentWaveform  = m_deblurResultWaveform;
+    m_isDistanceUsMode = false; // 走 timer 刷新
+}
+
+void OscilloscopeWidget::onPhaseWaveformRequested(double phase1, double phase2)
+{
+    m_phaseResultWaveform->setParams(phase1, phase2);
+    m_currentWaveform  = m_phaseResultWaveform;
+    m_isDistanceUsMode = false;
+}
+
+void OscilloscopeWidget::onFMWaveformRequested(double deltaF_MHz)
+{
+    if (deltaF_MHz <= 0) { setData(""); return; }
+    m_fmResultWaveform->setDeltaF(deltaF_MHz);
+    m_currentWaveform  = m_fmResultWaveform;
+    m_isDistanceUsMode = false;
 }

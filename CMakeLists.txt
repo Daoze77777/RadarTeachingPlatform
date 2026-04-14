@@ -69,6 +69,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         RangeDeblurAnimation.cpp
         TrackingWaveforms.h
         TrackingWaveforms.cpp
+        rangedeblurwidget.h rangedeblurwidget.cpp
+        phaserangingwidget.h phaserangingwidget.cpp
+        fmrangingwidget.h fmrangingwidget.cpp
 
     )
 

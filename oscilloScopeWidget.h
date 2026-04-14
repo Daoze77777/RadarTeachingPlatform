@@ -9,12 +9,18 @@
 #include "WaveformBase.h"
 #include "PulseWaveforms.h"
 #include "TrackingWaveforms.h"
+#include "DeblurWaveforms.h"
+#include "PhaseWaveforms.h"
+#include "FMWaveforms.h"
 
 class OscilloscopeWidget : public QWidget {
     Q_OBJECT
 
 public:
     explicit OscilloscopeWidget(QWidget *parent = nullptr);
+
+    // public 区加
+    std::shared_ptr<WaveformBase> currentWaveform() const { return m_currentWaveform; }
 
     // 传入 waveform 字符串（对应 XML 里的 waveform 属性），空字符串清空波形
     void setData(const QString &waveform);
@@ -32,6 +38,12 @@ public slots:
     void onRadarAnimationFinished(double pulseTimeUs);
     // 测试验证用户点"开始"后触发（RadarDistanceWidget 信号）
     void onDistanceWaveformRequested(double timeUs);
+    //距离退模糊演示波形
+    void onDeblurWaveformRequested(int track, double period, double delay);
+    //相位法演示波形
+    void onPhaseWaveformRequested(double phase1, double phase2);
+    //调频法演示波形
+    void onFMWaveformRequested(double deltaF_MHz);
 
 private slots:
     void onRefreshTick();
@@ -61,6 +73,12 @@ private:
 
     //自动跟踪
     std::shared_ptr<AutoTrackWaveform> m_autoTrackWaveform;
+    //距离退模糊
+    std::shared_ptr<DeblurResultWaveform> m_deblurResultWaveform;
+    //相位法
+    std::shared_ptr<PhaseResultWaveform> m_phaseResultWaveform;
+    //调频法
+    std::shared_ptr<FMResultWaveform> m_fmResultWaveform;
 };
 
 #endif // OSCILLOSCOPEWIDGET_H

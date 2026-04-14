@@ -15,6 +15,9 @@
 #include "radarDataParser.h"
 #include "radarDistanceWidget.h"
 #include "RangeDeblurAnimation.h"
+#include "rangedeblurwidget.h"
+#include "PhaseRangingWidget.h"
+#include "FMRangingWidget.h"
 
 class MainWindow : public CustomMainWindow
 {
@@ -23,6 +26,7 @@ class MainWindow : public CustomMainWindow
 public:
     explicit MainWindow(int expId, QWidget *parent = nullptr);
     ~MainWindow();
+
 
 public:
     void onMenuExperimentSelected(int expId);
@@ -92,6 +96,17 @@ private:
 
     // 跳步检测（统一由 StepController 管理）
     StepController *m_stepCtrl = nullptr;
+
+    //距离跟踪
+    QLabel *m_autoTrackInfoLabel = nullptr;
+    QTimer *m_autoTrackTimer     = nullptr;
+
+    //退模糊
+    RangeDeblurWidget *m_rangeDeblurWidget = nullptr;
+    //相位法
+    PhaseRangingWidget *m_phaseRangingWidget = nullptr;
+    //调频法
+    FMRangingWidget *m_fmRangingWidget = nullptr;
 
 private slots:
     void onComponentSelected(const ExperimentContentItem &item, const QString &bottomImgPath);

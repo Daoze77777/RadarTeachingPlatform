@@ -85,4 +85,28 @@ public:
     double  yStep()  const override { return 0.6; }
 };
 
+// ===== 相位法测距结果波形（双轨，相位随距离动态变化）=====
+class PhaseResultWaveform : public WaveformBase
+{
+public:
+    void setParams(double phaseOffset1, double phaseOffset2) {
+        m_phase1 = phaseOffset1;
+        m_phase2 = phaseOffset2;
+    }
+    void generate(QVector<double> &x, QVector<double> &y) override;
+    void generateExtra(QVector<double> &x, QVector<double> &y) override;
+    bool needsExtraGraph() const override { return true; }
+    QString xLabel() const override { return "时间 (µs)"; }
+    QString yLabel() const override { return "电压 (V)"; }
+    double  xMin()   const override { return 0.0; }
+    double  xMax()   const override { return 1400.0; }
+    double  yMin()   const override { return 0.0; }
+    double  yMax()   const override { return 5.0; }
+    double  xStep()  const override { return 140.0; }
+    double  yStep()  const override { return 0.6; }
+private:
+    double m_phase1 = 0.0;
+    double m_phase2 = 0.0;
+};
+
 #endif // PHASEWAVEFORMS_H

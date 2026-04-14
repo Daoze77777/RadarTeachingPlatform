@@ -64,7 +64,7 @@
             <Image>resources/assets/XWFJLCL/12.png</Image>
             <Description>相位器对两路中频信号进行相位比较并"调零"，输出与相位差 Φ 成比例的直流电压。直流电平代表当前相位差，可用于读出目标距离。</Description>
         </Item>
-        <Item id="s9" title="计算目标距离" special="distanceMeasure" waveform="">
+        <Item id="s9" title="计算目标距离" special="phaseMeasure" waveform="">
             <Image>resources/assets/XWFJLCL/13.png</Image>
             <Description>利用相位差公式 Φ=4πΔfR/c(Δf=1.5kHz) 计算目标实际距离，完成相位测距过程。</Description>
         </Item>

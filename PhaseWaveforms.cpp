@@ -77,3 +77,29 @@ void PhaseShifterZeroWaveform::generate(QVector<double> &x, QVector<double> &y)
         y[i] = qBound(0.0, baseline + jitter, 5.0);
     }
 }
+
+void PhaseResultWaveform::generate(QVector<double> &x, QVector<double> &y)
+{
+    // 上轨：T1=650µs正弦波，相位偏移m_phase1
+    const int points = 500;
+    x.resize(points); y.resize(points);
+    for (int i = 0; i < points; ++i) {
+        x[i] = i * (1400.0 / (points - 1));
+        double base = 2.5 + 1.93 * qSin(2.0 * M_PI / 650.0 * x[i] + m_phase1);
+        double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.015;
+        y[i] = qBound(0.0, base + jitter, 5.0);
+    }
+}
+
+void PhaseResultWaveform::generateExtra(QVector<double> &x, QVector<double> &y)
+{
+    // 下轨：T2=700µs正弦波，相位偏移m_phase2
+    const int points = 500;
+    x.resize(points); y.resize(points);
+    for (int i = 0; i < points; ++i) {
+        x[i] = i * (1400.0 / (points - 1));
+        double base = 2.5 + 1.93 * qSin(2.0 * M_PI / 700.0 * x[i] + m_phase2);
+        double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.015;
+        y[i] = qBound(0.0, base + jitter, 5.0);
+    }
+}

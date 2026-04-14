@@ -88,4 +88,23 @@ public:
     double xStep() const override { return 200.0; }
 };
 
+// ===== 退模糊测量波形（双轨，回波位置随距离动态变化）=====
+class DeblurResultWaveform : public DeblurWaveformBase
+{
+public:
+    // period: 脉冲周期(µs)，delay: 回波延迟(µs)
+    void setParams(double period, double delay) {
+        m_period = period;
+        m_delay  = delay;
+    }
+    void generate(QVector<double> &x, QVector<double> &y) override;      // 上轨发射
+    void generateExtra(QVector<double> &x, QVector<double> &y) override; // 下轨回波
+    bool needsExtraGraph() const override { return true; }
+    double xMax()  const override { return m_period * 11; }
+    double xStep() const override { return m_period; }
+
+private:
+    double m_period = 200.0;
+    double m_delay  = 33.0;
+};
 #endif // DEBLURWAVEFORMS_H

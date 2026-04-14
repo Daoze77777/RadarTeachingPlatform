@@ -45,7 +45,7 @@
             <Image>resources/assets/JLTMH/6.png</Image>
             <Description>展示两个 PRF 的接收脉冲串重合波形。根据公式 tr​=(t1​Fr1​−t2​Fr2​+1)/(Fr1​−Fr2​) 计算真实时延。</Description>
         </Item>
-        <Item id="s8" title="计算目标距离" special="distanceMeasure" waveform="">
+        <Item id="s8" title="计算目标距离" special="deblurMeasure" waveform="">
             <Image>resources/assets/JLTMH/13.png</Image>
             <Description>根据真实时延计算并验证目标距离。使用目标公式R = c * t/2计算真实距离，验证退模糊算法的正确性。</Description>
 

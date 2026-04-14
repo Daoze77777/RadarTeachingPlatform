@@ -63,7 +63,7 @@
             <Image>resources/assets/TPFJLCL/10.png</Image>
             <Description>频率计测量差频信号得到的平均频率值用于距离计算，下方的 fbav​ 用于下一步的距离计算 R。</Description>
         </Item>
-        <Item id="s6" title="计算目标距离" special="distanceMeasure">
+        <Item id="s6" title="计算目标距离" special="fmMeasure">
             <Image>resources/assets/TPFJLCL/11.png</Image>
             <Description>根据公式 R=c⋅fbav​/(8⋅Δf⋅Fm​) 计算目标距离，其中 Δf=1000 MHz，Fm​=500 Hz。</Description>
         </Item>

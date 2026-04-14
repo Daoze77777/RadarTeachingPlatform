@@ -173,3 +173,13 @@ void CoincidentReceivedWaveform::generateExtra(QVector<double> &x, QVector<doubl
         y[i] = qBound(0.0, val + jitter, 8.0);
     }
 }
+
+void DeblurResultWaveform::generate(QVector<double> &x, QVector<double> &y)
+{
+    generatePulseTrain(x, y, 4.0, 6.0, m_period, m_period * 0.9, m_period * 11);
+}
+
+void DeblurResultWaveform::generateExtra(QVector<double> &x, QVector<double> &y)
+{
+    generatePulseTrain(x, y, 0.1, 2.3, m_period, m_period * 0.9 + m_delay, m_period * 11, 0.01);
+}
