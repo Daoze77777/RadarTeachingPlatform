@@ -104,6 +104,9 @@ void OscilloscopeWidget::registerWaveforms()
     m_waveforms["Potentiometer"]    = std::make_shared<PotentiometerWaveform>();
     m_waveforms["ManuallyTrack"]    = std::make_shared<ManuallyTrackWaveform>();
     m_waveforms["ManualCapture"] = std::make_shared<ManualCaptureWaveform>();
+    m_waveforms["FrontGate"] = std::make_shared<FrontGateWaveform>();
+    m_waveforms["RearGate"]  = std::make_shared<RearGateWaveform>();
+    m_waveforms["AutoTrack"] = std::make_shared<AutoTrackWaveform>();
 }
 
 void OscilloscopeWidget::setData(const QString &waveform)

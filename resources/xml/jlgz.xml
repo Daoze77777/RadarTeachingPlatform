@@ -64,7 +64,7 @@
             <Image>resources/assets/JLGZ/huagui.png</Image>
             <Description>在演示前设定目标距离，以便观察自动跟踪过程。请在面板中设置目标距离。</Description>
         </Item>
-        <Item id="s9" title="跟踪脉冲" waveform="TrackingPulse">
+        <Item id="s9" title="跟踪脉冲" waveform="ManuallyTrack">
             <Image>resources/assets/JLGZ/9.png</Image>
             <Description>显示自动跟踪环中的跟踪脉冲参考，观察跟踪脉冲的时序与门的关系。</Description>
         </Item>
@@ -80,9 +80,9 @@
             <Image>resources/assets/JLGZ/12.png</Image>
             <Description>显示后波门输出，观察门位置在回波右侧时的门输出。</Description>
         </Item>
-        <Item id="s13" title="演示自动距离跟踪目标" special="distanceMeasure" waveform="">
-            <Image>resources/assets/JLGZ/13.png</Image>
-            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>自动距离跟踪（AGC）</b>是通过闭环反馈系统自动调整跟踪门位置来跟踪目标的方法。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>分裂门：</b>系统产生前波门和后波门，分别位于回波信号的两侧<br>2. <b>误差检测：</b>时间鉴别器比较前后波门的输出，产生误差信号<br>3. <b>误差积分：</b>误差信号经过积分器进行平滑处理<br>4. <b>自动调整：</b>积分后的信号控制压控振荡器，自动调整跟踪门位置<br>5. <b>闭环跟踪：</b>系统形成闭环，跟踪门自动锁定在回波中心</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>验证要点：</b><br>• 门位置从初始位置逐渐向回波中心收敛<br>• 前后波门输出趋于平衡<br>• 最终实现稳定的自动跟踪状态</p>]]></Description>
+        <Item id="s13" title="自动距离跟踪目标" special="autoTrack" waveform="AutoTrack">
+            <Image></Image>
+            <Description><![CDATA[<b>自动距离跟踪（AGC）</b>是通过闭环反馈系统自动调整跟踪门位置来跟踪目标的方法。<br><br><b>工作原理：</b><br>1. <b>分裂门：</b>系统产生前波门和后波门，分别位于回波信号的两侧<br>2. <b>误差检测：</b>时间鉴别器比较前后波门的输出，产生误差信号<br>3. <b>误差积分：</b>误差信号经过积分器进行平滑处理<br>4. <b>自动调整：</b>积分后的信号控制压控振荡器，自动调整跟踪门位置<br>5. <b>闭环跟踪：</b>系统形成闭环，跟踪门自动锁定在回波中心<br><br><b>验证要点：</b><br>• 门位置从初始位置逐渐向回波中心收敛<br>• 前后波门输出趋于平衡<br>• 最终实现稳定的自动跟踪状态]]></Description>
         </Item>
     </GroupStep>
 

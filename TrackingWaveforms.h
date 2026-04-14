@@ -112,4 +112,68 @@ public:
     double  yStep()  const override { return 1.0; }
 };
 
+// ===== s11：前波门（方波在580~640µs）=====
+class FrontGateWaveform : public WaveformBase
+{
+public:
+    void generate(QVector<double> &x, QVector<double> &y) override;
+    QString xLabel() const override { return "时间 (µs)"; }
+    QString yLabel() const override { return "电压 (V)"; }
+    double  xMin()   const override { return 0.0; }
+    double  xMax()   const override { return 1000.0; }
+    double  yMin()   const override { return 0.0; }
+    double  yMax()   const override { return 5.0; }
+    double  xStep()  const override { return 100.0; }
+    double  yStep()  const override { return 0.6; }
+};
+
+// ===== s12：后波门（方波在640~700µs）=====
+class RearGateWaveform : public WaveformBase
+{
+public:
+    void generate(QVector<double> &x, QVector<double> &y) override;
+    QString xLabel() const override { return "时间 (µs)"; }
+    QString yLabel() const override { return "电压 (V)"; }
+    double  xMin()   const override { return 0.0; }
+    double  xMax()   const override { return 1000.0; }
+    double  yMin()   const override { return 0.0; }
+    double  yMax()   const override { return 5.0; }
+    double  xStep()  const override { return 100.0; }
+    double  yStep()  const override { return 0.6; }
+};
+
+//距离跟踪动画演示
+class AutoTrackWaveform : public WaveformBase
+{
+public:
+    AutoTrackWaveform() : m_gatePos(0.0) {}
+
+    void generate(QVector<double> &x, QVector<double> &y) override;
+    void generateExtra(QVector<double> &x, QVector<double> &y) override;
+    bool needsExtraGraph() const override { return true; }
+    QColor extraGraphColor() const override { return QColor(255, 180, 0); }
+
+    void reset() { m_gatePos = 0.0; }
+    double gatePos() const { return m_gatePos; }
+    void stepForward() {
+        double target = 133.0;
+        if (qAbs(m_gatePos - target) > 0.5)
+            m_gatePos += (target - m_gatePos) * 0.05;
+        else
+            m_gatePos = target;
+    }
+
+    QString xLabel() const override { return "时间 (µs)"; }
+    QString yLabel() const override { return "电压 (V)"; }
+    double  xMin()   const override { return 0.0; }
+    double  xMax()   const override { return 267.0; }
+    double  yMin()   const override { return 0.0; }
+    double  yMax()   const override { return 5.0; }
+    double  xStep()  const override { return 33.0; }
+    double  yStep()  const override { return 1.0; }
+
+private:
+    double m_gatePos;
+};
+
 #endif // TRACKINGWAVEFORMS_H

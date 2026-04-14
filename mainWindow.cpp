@@ -591,6 +591,16 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
             return;
         }
 
+        //距离跟踪动画演示
+        if (item.special == "autoTrack") {
+            m_stepActionImage->setVisible(false);
+            m_radarRangingDisply->setVisible(false);
+            m_radarDistanceWidget->setVisible(false);
+            m_oscilloscope->resetWaveform("AutoTrack");
+            m_oscilloscope->setData("AutoTrack");
+            return;
+        }
+
         // ===== 普通步骤：根据灯状态显示 =====
         bool lightIsOn = false;
         if (m_isTestMode && !item.txBit.isEmpty()) {

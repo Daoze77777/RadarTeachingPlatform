@@ -177,3 +177,66 @@ void ManualCaptureWaveform::generateExtra(QVector<double> &x, QVector<double> &y
         y[i] = qBound(0.0, peak * qExp(-dt*dt/(2.0*sigma*sigma)) + jitter, 5.0);
     }
 }
+
+static void generateGateWaveform(QVector<double> &x, QVector<double> &y, double pulseStart, double pulseEnd, double peakVal = 2.0)
+{
+    const int points = 500;
+    QMap<double, double> pts;
+
+    for (int i = 0; i < points; ++i) {
+        double xi  = i * (1000.0 / (points - 1));
+        double val = (xi >= pulseStart && xi <= pulseEnd) ? peakVal : 0.0;
+        double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.012;
+        pts[xi] = qBound(0.0, val + jitter, 5.0);
+    }
+    // 强制上升沿下降沿
+    pts[pulseStart - 0.1] = 0.0;
+    pts[pulseStart]       = peakVal;
+    pts[pulseEnd]         = peakVal;
+    pts[pulseEnd + 0.1]   = 0.0;
+
+    x = pts.keys().toVector();
+    y = pts.values().toVector();
+}
+
+void FrontGateWaveform::generate(QVector<double> &x, QVector<double> &y)
+{
+    generateGateWaveform(x, y, 580.0, 640.0);
+}
+
+void RearGateWaveform::generate(QVector<double> &x, QVector<double> &y)
+{
+    generateGateWaveform(x, y, 640.0, 700.0);
+}
+
+void AutoTrackWaveform::generate(QVector<double> &x, QVector<double> &y)
+{
+    stepForward();
+    const int    points = 300;
+    const double center = 133.0;
+    const double sigma  = 20.0;
+    x.resize(points); y.resize(points);
+    for (int i = 0; i < points; ++i) {
+        x[i] = i * (267.0 / (points - 1));
+        double dt = x[i] - center;
+        double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.015;
+        y[i] = qBound(0.0, 3.0 * qExp(-dt*dt/(2.0*sigma*sigma)) + jitter, 5.0);
+    }
+}
+
+void AutoTrackWaveform::generateExtra(QVector<double> &x, QVector<double> &y)
+{
+    QMap<double, double> pts;
+    double center = m_gatePos;
+    double width  = 33.0;
+    int points = 300;
+    for (int i = 0; i < points; ++i) {
+        double xi = i * (267.0 / (points - 1));
+        double dt = xi - center;
+        double val = (qAbs(dt) < width) ? 3.0 * (1.0 - qAbs(dt) / width) : 0.0;
+        pts[xi] = qBound(0.0, val, 5.0);
+    }
+    pts[center] = 3.0;
+    x = pts.keys().toVector();
+    y = pts.values().toVector();
+}

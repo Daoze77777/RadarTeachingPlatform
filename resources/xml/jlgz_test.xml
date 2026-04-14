@@ -23,11 +23,11 @@
         </Item>
         <Item id="p2" title="自动距离跟踪原理">
             <Image>resources/assets/JLGZ/14.png</Image>
-            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>自动距离跟踪（AGC）</b>是通过闭环反馈系统自动调整跟踪门位置来跟踪目标的方法。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>分裂门：</b>系统产生前波门和后波门，分别位于回波信号的两侧<br>2. <b>误差检测：</b>时间鉴别器比较前后波门的输出，产生误差信号<br>3. <b>误差积分：</b>误差信号经过积分器进行平滑处理<br>4. <b>自动调整：</b>积分后的信号控制压控振荡器，自动调整跟踪门位置<br>5. <b>闭环跟踪：</b>系统形成闭环，跟踪门自动锁定在回波中心</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>特点：</b><br>• 无需人工干预，自动连续跟踪<br>• 跟踪精度高，响应速度快<br>• 适用于实际雷达作战应用</p>]]></Description>
+            <Description><![CDATA[<b>自动距离跟踪(AGC)</b>是通过闭环反馈系统自动调整跟踪门位置来跟踪目标的方法。<br><br><b>工作原理：</b><br>1. <b>分裂门：</b>系统产生前波门和后波门，分别位于回波信号的两侧<br>2. <b>误差检测：</b>时间鉴别器比较前后波门的输出，产生误差信号<br>3. <b>误差积分：</b>误差信号经过积分器进行平滑处理<br>4. <b>自动调整：</b>积分后的信号控制压控振荡器，自动调整跟踪门位置<br>5. <b>闭环跟踪：</b>系统形成闭环，跟踪门自动锁定在回波中心<br><br><b>特点：</b><br>• 无需人工干预，自动连续跟踪<br>• 跟踪精度高，响应速度快<br>• 适用于实际雷达作战应用]]></Description>
         </Item>
         <Item id="p3" title="时间鉴别器工作原理">
             <Image>resources/assets/JLGZ/16.png</Image>
-            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>时间鉴别器</b>是自动距离跟踪系统的核心部件，用于产生误差信号来控制跟踪门位置。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>前后波门：</b>产生前波门（早门）和后波门（迟门），分别位于预期回波的前后<br>2. <b>门控回波：</b>前后波门分别与回波信号进行门控，提取对应时段的回波能量<br>3. <b>能量比较：</b>比较前后波门输出的能量差值<br>4. <b>误差输出：</b><br>   • 若前门能量 > 后门能量 → 输出正误差（门位置需后移）<br>   • 若前门能量 &lt; 后门能量 → 输出负误差（门位置需前移）<br>   • 若前门能量 = 后门能量 → 零误差（门位置准确锁定）</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>特点：</b><br>• 误差信号极性指示调整方向<br>• 误差信号幅度指示偏差大小<br>• 实现对目标距离的自动连续跟踪</p>]]></Description>
+            <Description><![CDATA[<b>时间鉴别器</b>是自动距离跟踪系统的核心部件，用于产生误差信号来控制跟踪门位置。<br><br><b>工作原理：</b><br>1. <b>前后波门：</b>产生前波门（早门）和后波门（迟门），分别位于预期回波的前后<br>2. <b>门控回波：</b>前后波门分别与回波信号进行门控，提取对应时段的回波能量<br>3. <b>能量比较：</b>比较前后波门输出的能量差值<br>4. <b>误差输出：</b><br>• 若前门能量 > 后门能量 → 输出正误差（门位置需后移）<br>• 若前门能量 &lt; 后门能量 → 输出负误差（门位置需前移）<br>• 若前门能量 = 后门能量 → 零误差（门位置准确锁定）<br><br><b>特点：</b><br>• 误差信号极性指示调整方向<br>• 误差信号幅度指示偏差大小<br>• 实现对目标距离的自动连续跟踪]]></Description>
         </Item>
     </GroupPrinciple>
 
@@ -62,8 +62,8 @@
             <Image>resources/assets/JLGZ/8.png</Image>
             <Description>观察脉冲产生器输出的跟踪门脉冲信号，注意跟踪门脉冲信号与回波信号的位置关系。</Description>
         </Item>
-        <Item id="s7" title="手动跟踪捕获目标" txBit="" waveform="">
-            <Image>resources/assets/JLGZ/6.png</Image>
+        <Item id="s7" title="手动跟踪捕获目标" txBit="" waveform="ManualCapture">
+            <Image></Image>
             <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>手动距离跟踪</b>是依靠操作员手动调整跟踪门位置来跟踪目标的方法。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>观察波形：</b>操作员在示波器上观察回波信号和跟踪门的位置关系<br>2. <b>手动调整：</b>通过旋转手动跟踪旋钮调整线性电位器的输出电压<br>3. <b>锯齿波比较：</b>电位器电压与锯齿波电压进行比较，产生跟踪门脉冲<br>4. <b>对准目标：</b>调整电位器使跟踪门脉冲与回波信号对准</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>操作步骤：</b><br>• 旋转手动跟踪旋钮，观察跟踪门位置变化<br>• 调整直至跟踪门中心与回波峰值对齐<br>• 实现对目标的手动捕获和跟踪</p>]]></Description>
         </Item>
         <Item id="s8" title="设置目标位置(自动)" txBit="" special="noLight" waveform="TrackingEmpty">
@@ -71,7 +71,7 @@
             <Description>在演示前设定目标距离，以便观察自动跟踪过程。请在面板中设置目标距离。</Description>
         </Item>
         <!-- s9：跟踪脉冲，S3 bit3，掩码4 -->
-        <Item id="s9" title="跟踪脉冲" txBit="s3:4" waveform="TrackingPulse">
+        <Item id="s9" title="跟踪脉冲" txBit="s3:4" waveform="ManuallyTrack">
             <Image>resources/assets/JLGZ/9.png</Image>
             <Description>显示自动跟踪环中的跟踪脉冲参考，观察跟踪脉冲的时序与门的关系。</Description>
         </Item>
@@ -90,15 +90,15 @@
             <Image>resources/assets/JLGZ/12.png</Image>
             <Description>显示后波门输出，观察门位置在回波右侧时的门输出。</Description>
         </Item>
-        <Item id="s13" title="演示自动距离跟踪目标" txBit="" special="distanceMeasure" waveform="">
-            <Image>resources/assets/JLGZ/13.png</Image>
-            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>自动距离跟踪（AGC）</b>是通过闭环反馈系统自动调整跟踪门位置来跟踪目标的方法。</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>工作原理：</b><br>1. <b>分裂门：</b>系统产生前波门和后波门，分别位于回波信号的两侧<br>2. <b>误差检测：</b>时间鉴别器比较前后波门的输出，产生误差信号<br>3. <b>误差积分：</b>误差信号经过积分器进行平滑处理<br>4. <b>自动调整：</b>积分后的信号控制压控振荡器，自动调整跟踪门位置<br>5. <b>闭环跟踪：</b>系统形成闭环，跟踪门自动锁定在回波中心</p><p style='font-size: 19px; line-height: 1.3; margin: 1px 0 0 0;'><b>验证要点：</b><br>• 门位置从初始位置逐渐向回波中心收敛<br>• 前后波门输出趋于平衡<br>• 最终实现稳定的自动跟踪状态</p>]]></Description>
+        <Item id="s13" title="自动距离跟踪目标" txBit="" special="autoTrack" waveform="AutoTrack">
+            <Image></Image>
+            <Description><![CDATA[<b>自动距离跟踪（AGC）</b>是通过闭环反馈系统自动调整跟踪门位置来跟踪目标的方法。<br><br><b>工作原理：</b><br>1. <b>分裂门：</b>系统产生前波门和后波门，分别位于回波信号的两侧<br>2. <b>误差检测：</b>时间鉴别器比较前后波门的输出，产生误差信号<br>3. <b>误差积分：</b>误差信号经过积分器进行平滑处理<br>4. <b>自动调整：</b>积分后的信号控制压控振荡器，自动调整跟踪门位置<br>5. <b>闭环跟踪：</b>系统形成闭环，跟踪门自动锁定在回波中心<br><br><b>验证要点：</b><br>• 门位置从初始位置逐渐向回波中心收敛<br>• 前后波门输出趋于平衡<br>• 最终实现稳定的自动跟踪状态]]></Description>
         </Item>
     </GroupStep>
 
     <GroupCourse visible="true">
         <Item id="home" title="课程总目录">
-            <Image>:/images/course_book.png</Image>
+            <Image></Image>
             <Description>回到目录</Description>
         </Item>
     </GroupCourse>

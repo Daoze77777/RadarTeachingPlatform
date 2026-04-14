@@ -8,6 +8,7 @@
 #include <QTimer>
 #include "WaveformBase.h"
 #include "PulseWaveforms.h"
+#include "TrackingWaveforms.h"
 
 class OscilloscopeWidget : public QWidget {
     Q_OBJECT
@@ -17,6 +18,14 @@ public:
 
     // 传入 waveform 字符串（对应 XML 里的 waveform 属性），空字符串清空波形
     void setData(const QString &waveform);
+
+    void resetWaveform(const QString &name) {
+        auto it = m_waveforms.find(name);
+        if (it != m_waveforms.end()) {
+            if (auto w = std::dynamic_pointer_cast<AutoTrackWaveform>(it.value()))
+                w->reset();
+        }
+    }
 
 public slots:
     // 原理演示动画完成后触发（RadarRangingDisplay 信号）
@@ -49,6 +58,9 @@ private:
 
     // 标记当前是否为 DistanceUs 模式（该模式不参与 timer 刷新）
     bool m_isDistanceUsMode = false;
+
+    //自动跟踪
+    std::shared_ptr<AutoTrackWaveform> m_autoTrackWaveform;
 };
 
 #endif // OSCILLOSCOPEWIDGET_H
