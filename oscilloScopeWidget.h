@@ -33,6 +33,14 @@ public:
         }
     }
 
+    void setManualTrackEchoPos(double echoPos) {
+        if (m_trackingLocked) return;  // 跟踪中不更新回波
+        m_manualTrackWaveform->setEchoPos(echoPos);
+    }
+
+    void setTrackingLocked(bool locked) { m_trackingLocked = locked; }
+
+
 public slots:
     // 原理演示动画完成后触发（RadarRangingDisplay 信号）
     void onRadarAnimationFinished(double pulseTimeUs);
@@ -44,6 +52,8 @@ public slots:
     void onPhaseWaveformRequested(double phase1, double phase2);
     //调频法演示波形
     void onFMWaveformRequested(double deltaF_MHz);
+    //距离跟踪演示波形
+    void onManualTrackGatePosChanged(double gatePos);
 
 private slots:
     void onRefreshTick();
@@ -57,6 +67,8 @@ private:
     QCustomPlot  *m_plot;
     QCPGraph     *m_graph;
     QTimer       *m_timer;
+
+    bool m_trackingLocked = false;
 
     // 波形注册表：waveform名 → 波形对象
     QMap<QString, std::shared_ptr<WaveformBase>> m_waveforms;
@@ -79,6 +91,8 @@ private:
     std::shared_ptr<PhaseResultWaveform> m_phaseResultWaveform;
     //调频法
     std::shared_ptr<FMResultWaveform> m_fmResultWaveform;
+    //距离跟踪
+    std::shared_ptr<ManualTrackDynamicWaveform> m_manualTrackWaveform;
 };
 
 #endif // OSCILLOSCOPEWIDGET_H

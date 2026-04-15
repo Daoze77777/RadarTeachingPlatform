@@ -10,6 +10,7 @@
 
 MainWindow::MainWindow(int expId, QWidget *parent)
 {
+    qDebug() << "MainWindow 构造开始";
     m_stepCtrl = new StepController(this);
     connect(m_stepCtrl, &StepController::experimentFinished, this, [this]() {
         QMessageBox::information(this, "恭喜", "实验已完成！\n点击第一步可重新开始实验。");
@@ -431,6 +432,14 @@ QWidget* MainWindow::setupStepDetailWidget()
     m_fmRangingWidget->setVisible(false);
     actionImageLayout->addWidget(m_fmRangingWidget);
 
+    m_manualTrackWidget = new ManualTrackWidget;
+    m_manualTrackWidget->setVisible(false);
+    actionImageLayout->addWidget(m_manualTrackWidget);
+
+    m_autoTrackTestWidget = new AutoTrackTestWidget;
+    m_autoTrackTestWidget->setVisible(false);
+    actionImageLayout->addWidget(m_autoTrackTestWidget);
+
     // AutoTrack Δt/ΔR 标注
     m_autoTrackInfoLabel = new QLabel(actionImageFrame);
     m_autoTrackInfoLabel->setAlignment(Qt::AlignCenter);
@@ -512,6 +521,28 @@ QWidget* MainWindow::setupStepDetailWidget()
     connect(m_fmRangingWidget, &FMRangingWidget::waveformRequested,
             m_oscilloscope, &OscilloscopeWidget::onFMWaveformRequested);
 
+
+    connect(m_manualTrackWidget, &ManualTrackWidget::gatePosChanged,
+            m_oscilloscope, &OscilloscopeWidget::onManualTrackGatePosChanged);
+
+    connect(m_autoTrackTestWidget, &AutoTrackTestWidget::gatePosChanged,
+            m_oscilloscope, &OscilloscopeWidget::onManualTrackGatePosChanged);
+
+    connect(m_autoTrackTestWidget, &AutoTrackTestWidget::trackingStarted,
+            this, [this]() {
+                m_oscilloscope->setTrackingLocked(true);
+            });
+
+    connect(m_autoTrackTestWidget, &AutoTrackTestWidget::trackingReset,
+            this, [this]() {
+                m_oscilloscope->setTrackingLocked(false);
+            });
+
+    connect(m_manualTrackWidget, &ManualTrackWidget::resetted,
+            this, [this]() {
+                m_oscilloscope->setTrackingLocked(false);
+            });
+
     return stepDetailWidget;
 }
 
@@ -554,6 +585,8 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
         m_rangeDeblurWidget->setVisible(false);  // 新增
         m_phaseRangingWidget->setVisible(false);
         m_fmRangingWidget->setVisible(false);
+        m_manualTrackWidget->setVisible(false);
+        m_autoTrackTestWidget->setVisible(false);
 
         if (m_isTestMode) {
             int clickedIndex = -1;
@@ -630,6 +663,17 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
             }
 
             m_oscilloscope->setData(item.waveform);
+            // 不靠灯完成，直接标记当前步骤完成
+                int clickedIndex = -1;
+            for (int i = 0; i < m_stepItems.size(); ++i) {
+                if (m_stepItems[i].id == item.id) {
+                    clickedIndex = i;
+                    break;
+                }
+            }
+            if (clickedIndex != -1)
+                m_stepCtrl->completeStep(clickedIndex);
+
             return;
         }
 
@@ -697,6 +741,75 @@ void MainWindow::onComponentSelected(const ExperimentContentItem &item, const QS
             m_fmRangingWidget->setVisible(true);
             m_fmRangingWidget->setManualInputEnabled(!m_isTestMode);
             m_oscilloscope->setData("");
+            return;
+        }
+
+        if (item.special == "manualTrack") {
+            m_stepActionImage->setVisible(false);
+            m_radarRangingDisply->setVisible(false);
+            m_radarDistanceWidget->setVisible(false);
+            m_rangeDeblurWidget->setVisible(false);
+            m_phaseRangingWidget->setVisible(false);
+            m_fmRangingWidget->setVisible(false);
+            m_autoTrackTestWidget->setVisible(false);
+            m_manualTrackWidget->setVisible(true);
+            m_manualTrackWidget->setManualInputEnabled(!m_isTestMode);
+            m_oscilloscope->setTrackingLocked(false);  // 新增，确保每次进入都解锁
+            m_oscilloscope->setData("ManualTrackDynamic");
+
+            // 立即用当前串口数据初始化
+            if (m_isTestMode) {
+                double R_km    = m_lastRadarData.distance * 0.1 * (200.0 / 2000.0);
+                double echoPos = fmod(2.0 * R_km / 0.3, 267.0);
+                m_manualTrackWidget->feedEchoPos(echoPos);
+                m_oscilloscope->setManualTrackEchoPos(echoPos);
+                m_manualTrackWidget->feedKnobVoltage(m_lastRadarData.knobVoltage);
+            }
+
+            // 标记完成
+            int clickedIndex = -1;
+            for (int i = 0; i < m_stepItems.size(); ++i) {
+                if (m_stepItems[i].id == item.id) {
+                    clickedIndex = i;
+                    break;
+                }
+            }
+            if (clickedIndex != -1)
+                m_stepCtrl->completeStep(clickedIndex);
+
+            return;
+        }
+
+        if (item.special == "autoTrackTest") {
+            m_stepActionImage->setVisible(false);
+            m_radarRangingDisply->setVisible(false);
+            m_radarDistanceWidget->setVisible(false);
+            m_rangeDeblurWidget->setVisible(false);
+            m_phaseRangingWidget->setVisible(false);
+            m_fmRangingWidget->setVisible(false);
+            m_manualTrackWidget->setVisible(false);
+            m_autoTrackTestWidget->setVisible(true);
+            m_oscilloscope->setData("ManualTrackDynamic");
+
+            // 立即用当前已有的串口数据喂一次
+            m_autoTrackTestWidget->feedDistance(m_lastRadarData.distance);
+
+            // 同步回波位置到波形
+            double R_km   = m_lastRadarData.distance * 0.1 * (200.0 / 2000.0);
+            double echoPos = fmod(2.0 * R_km / 0.3, 267.0);
+            m_oscilloscope->setManualTrackEchoPos(echoPos);
+
+            // 标记完成
+            int clickedIndex = -1;
+            for (int i = 0; i < m_stepItems.size(); ++i) {
+                if (m_stepItems[i].id == item.id) {
+                    clickedIndex = i;
+                    break;
+                }
+            }
+            if (clickedIndex != -1)
+                m_stepCtrl->completeStep(clickedIndex);
+
             return;
         }
 
@@ -898,6 +1011,22 @@ void MainWindow::onRadarDataReceived(const RadarData &data)
                 m_phaseRangingWidget->feedDistance(data.distance);
             else if (item.special == "fmMeasure")
                 m_fmRangingWidget->feedDistance(data.distance);
+            else if (item.special == "manualTrack") {
+                double R_km    = data.distance * 0.1 * (200.0 / 2000.0);
+                double echoPos = fmod(2.0 * R_km / 0.3, 267.0);
+                m_manualTrackWidget->feedEchoPos(echoPos);
+                // echoPos 没被锁定才更新示波器回波位置
+                if (!m_manualTrackWidget->isEchoLocked()) {
+                    m_oscilloscope->setManualTrackEchoPos(echoPos);
+                }
+                m_manualTrackWidget->feedKnobVoltage(data.knobVoltage);
+            }
+            else if (item.special == "autoTrackTest") {
+                m_autoTrackTestWidget->feedDistance(data.distance);
+                double R_km    = data.distance * 0.1 * (200.0 / 2000.0);
+                double echoPos = fmod(2.0 * R_km / 0.3, 267.0);
+                m_oscilloscope->setManualTrackEchoPos(echoPos);
+            }
             break;
         }
     }

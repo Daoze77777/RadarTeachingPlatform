@@ -72,6 +72,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         rangedeblurwidget.h rangedeblurwidget.cpp
         phaserangingwidget.h phaserangingwidget.cpp
         fmrangingwidget.h fmrangingwidget.cpp
+        manualtrackwidget.h manualtrackwidget.cpp
+        autotracktestwidget.h autotracktestwidget.cpp
 
     )
 

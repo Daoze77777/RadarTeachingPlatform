@@ -113,6 +113,8 @@ void OscilloscopeWidget::registerWaveforms()
     m_waveforms["FrontGate"] = std::make_shared<FrontGateWaveform>();
     m_waveforms["RearGate"]  = std::make_shared<RearGateWaveform>();
     m_waveforms["AutoTrack"] = std::make_shared<AutoTrackWaveform>();
+    m_manualTrackWaveform = std::make_shared<ManualTrackDynamicWaveform>();
+    m_waveforms["ManualTrackDynamic"] = m_manualTrackWaveform;
 }
 
 void OscilloscopeWidget::setData(const QString &waveform)
@@ -392,5 +394,12 @@ void OscilloscopeWidget::onFMWaveformRequested(double deltaF_MHz)
     if (deltaF_MHz <= 0) { setData(""); return; }
     m_fmResultWaveform->setDeltaF(deltaF_MHz);
     m_currentWaveform  = m_fmResultWaveform;
+    m_isDistanceUsMode = false;
+}
+
+void OscilloscopeWidget::onManualTrackGatePosChanged(double gatePos)
+{
+    m_manualTrackWaveform->setGatePos(gatePos);
+    m_currentWaveform  = m_manualTrackWaveform;
     m_isDistanceUsMode = false;
 }

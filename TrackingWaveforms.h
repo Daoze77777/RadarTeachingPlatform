@@ -176,4 +176,31 @@ private:
     double m_gatePos;
 };
 
+// ===== 手动跟踪波形（门位置可动态设置）=====
+class ManualTrackDynamicWaveform : public WaveformBase
+{
+public:
+    void setGatePos(double pos) { m_gatePos = pos; }
+    void setEchoPos(double pos)  { m_echoPos  = pos; }  // 新增
+    double gatePos() const { return m_gatePos; }
+
+    void generate(QVector<double> &x, QVector<double> &y) override;      // 黄色跟踪门
+    void generateExtra(QVector<double> &x, QVector<double> &y) override; // 绿色回波（固定133µs）
+    bool needsExtraGraph() const override { return true; }
+    QColor extraGraphColor() const override { return QColor(255, 180, 0); }
+
+    QString xLabel() const override { return "时间 (µs)"; }
+    QString yLabel() const override { return "电压 (V)"; }
+    double  xMin()   const override { return 0.0; }
+    double  xMax()   const override { return 267.0; }
+    double  yMin()   const override { return 0.0; }
+    double  yMax()   const override { return 5.0; }
+    double  xStep()  const override { return 33.0; }
+    double  yStep()  const override { return 1.0; }
+
+private:
+    double m_gatePos = 0.0;
+    double m_echoPos = 133.0;  // 新增，默认133
+};
+
 #endif // TRACKINGWAVEFORMS_H

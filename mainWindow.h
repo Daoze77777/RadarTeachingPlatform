@@ -18,6 +18,8 @@
 #include "rangedeblurwidget.h"
 #include "PhaseRangingWidget.h"
 #include "FMRangingWidget.h"
+#include "ManualTrackWidget.h"
+#include "AutoTrackTestWidget.h"
 
 class MainWindow : public CustomMainWindow
 {
@@ -107,6 +109,9 @@ private:
     PhaseRangingWidget *m_phaseRangingWidget = nullptr;
     //调频法
     FMRangingWidget *m_fmRangingWidget = nullptr;
+    //距离跟踪
+    ManualTrackWidget *m_manualTrackWidget = nullptr;
+    AutoTrackTestWidget *m_autoTrackTestWidget = nullptr;
 
 private slots:
     void onComponentSelected(const ExperimentContentItem &item, const QString &bottomImgPath);

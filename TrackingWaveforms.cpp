@@ -240,3 +240,36 @@ void AutoTrackWaveform::generateExtra(QVector<double> &x, QVector<double> &y)
     x = pts.keys().toVector();
     y = pts.values().toVector();
 }
+
+// generate 改成画回波（原来generateExtra的内容）
+void ManualTrackDynamicWaveform::generate(QVector<double> &x, QVector<double> &y)
+{
+    const int    points = 300;
+    const double center = m_echoPos;
+    const double sigma  = 20.0;
+    x.resize(points); y.resize(points);
+    for (int i = 0; i < points; ++i) {
+        x[i] = i * (267.0 / (points - 1));
+        double dt = x[i] - center;
+        double jitter = (QRandomGenerator::global()->generateDouble() * 2 - 1) * 0.015;
+        y[i] = qBound(0.0, 3.0 * qExp(-dt*dt/(2.0*sigma*sigma)) + jitter, 5.0);
+    }
+}
+
+// generateExtra 改成画跟踪门（原来generate的内容）
+void ManualTrackDynamicWaveform::generateExtra(QVector<double> &x, QVector<double> &y)
+{
+    QMap<double, double> pts;
+    double center = m_gatePos;
+    double width  = 33.0;
+    int points = 300;
+    for (int i = 0; i < points; ++i) {
+        double xi = i * (267.0 / (points - 1));
+        double dt = xi - center;
+        double val = (qAbs(dt) < width) ? 3.0 * (1.0 - qAbs(dt) / width) : 0.0;
+        pts[xi] = qBound(0.0, val, 5.0);
+    }
+    pts[center] = 3.0;
+    x = pts.keys().toVector();
+    y = pts.values().toVector();
+}
