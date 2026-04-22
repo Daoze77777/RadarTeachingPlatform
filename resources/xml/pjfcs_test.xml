@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="11" name="平均法测速实验" type="test" txCount="4" bottomImagePath="resources/assets/PJFCS/1.png">
+
+    <GroupRadar visible="true">
+       <Item id="Position Sensor" title="位置传感器">
+            <Image>resources/assets/PJFCS/8.png</Image>
+            <Description>位置传感器是平均法测速雷达系统的核心组件，用于精确测量目标在不同时刻的空间位置。传感器通过周期性采集目标的位置信息，建立目标的运动轨迹。在平均法测速中，传感器在固定的时间间隔内连续记录多个位置点，这些位置数据是速度计算的基础。位置传感器采用高精度测量技术，支持高频采样以满足动态目标的测量需求，测量范围覆盖雷达作用距离内的全部空间。传感器能够快速响应目标位置变化，实时跟踪目标运动，并具备良好的抗环境干扰能力。通过计算相邻位置点之间的距离差与时间差的比值，系统能够准确获得目标的平均速度。位置数据以电信号形式输出，传递给后续处理系统进行速度解算和显示。</Description>
+        </Item>
+        <Item id="SPS" title="同步脉冲信号">
+            <Image>resources/assets/PJFCS/9.png</Image>
+            <Description>同步脉冲信号是平均法测速雷达系统的时序基准，为整个系统提供统一的时间参考。同步脉冲以固定的时间间隔产生标准脉冲，控制位置传感器的采样时刻，确保系统各部分协调工作。每当同步脉冲到来时，触发一次位置测量，建立精确的时间与位置的对应关系。同步脉冲采用窄脉冲设计以减小时间误差，脉冲重复频率根据测速精度要求设定，通常在 10-100Hz 范围内。系统采用高精度晶振保证频率稳定性，严格控制脉冲到达时刻的抖动，确保时间基准的准确性。同步脉冲信号保证在固定时间间隔内进行位置测量，通过计算公式 v=Δs/Δt（其中Δs为位置变化量，Δt为时间间隔），系统能够准确测量目标的平均速度。时间间隔的精确性直接影响测速精度，因此同步脉冲信号的稳定性至关重要。</Description>
+        </Item> 
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="平均法测速原理">
+            <Image>resources/assets/PJFCS/10.png</Image>
+            <Description>平均法测速是基于目标位置变化的时间平均速度测量技术。系统通过位置传感器在固定时间间隔内连续测量目标位置，建立目标运动轨迹。通过计算相邻位置点之间的距离差与对应时间间隔的比值，获得目标的瞬时速度。将多个瞬时速度值进行算术平均，得到目标在测量时段内的平均速度。这种方法能够有效消除单次测量误差，提高测速精度。系统采用同步脉冲信号作为时间基准，确保位置采样的时间同步性。平均法测速特别适用于匀速或近似匀速运动目标的速度测量，在气象雷达中广泛应用于云团和降水粒子的移动速度监测。</Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标位置和速度" special="noLight" waveform="">
+            <Image></Image>
+            <Description>请在下方下拉框中选择目标角度位置，然后点击确定按钮，右侧将显示配置信息。</Description>
+        </Item>
+        <Item id="s2" title="触发脉冲信号" waveform="">
+            <Image>resources/assets/PJFCS/3.png</Image>
+            <Description>触发脉冲信号用于产生雷达发射与接收的时间基准，每一个脉冲对应一次测量过程，为后续的视频回波和目标位置提取提供统一的时间参考。</Description>
+        </Item>
+        <Item id="s3" title="视频回波信号" waveform="">
+            <Image>resources/assets/PJFCS/4.png</Image>
+            <Description>视频回波信号表示雷达接收到的目标回波电压随时间变化的情况，回波出现时刻与目标距离成正比，可由此判断目标距离的远近及其随时间的变化。</Description>
+        </Item>
+        <Item id="s4" title="目标位置跟踪信号" waveform="">
+            <Image>resources/assets/PJFCS/5.png</Image>
+            <Description>目标位置跟踪信号是在处理视频回波后得到的距离 — 时间曲线，用于表示目标在测量时间内位置 R 随时间的变化情况，为计算目标平均速度提供依据。</Description>
+        </Item>
+        <Item id="s5" title="平均速度信号" waveform="">
+            <Image>resources/assets/PJFCS/6.png</Image>
+            <Description>系统根据设定的起点位置 R1​、终点位置 R2​ 和时间间隔 ΔT 计算出目标的平均速度v，并利用 u=kv（k=0.1）将平均速度转换为对应的电压信号，形成平均速度信号输出。</Description>
+        </Item>
+        <Item id="s6" title="计算目标平均速度" waveform="">
+            <Image></Image>
+            <Description>本步骤根据测得的平均速度电压信号u，利用公式 u=kv</Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

@@ -24,9 +24,6 @@ TeachingMainWindow::TeachingMainWindow(QWidget *parent)
     initUI();
     //设置窗口大小
     resize(1920, 1033);
-
-
-
 }
 TeachingMainWindow::~TeachingMainWindow() {}
 void TeachingMainWindow::initUI()
@@ -72,10 +69,14 @@ QWidget *TeachingMainWindow::createHomePage()
     titleLayout->setContentsMargins(0, 0, 0, 0);             // 无内边距
     titleLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft); // 左上对齐
 
-    m_cnTitleLabel = new QLabel("测距原理实验平台", titleArea);
+    //m_cnTitleLabel = new QLabel("测距原理实验平台", titleArea);   //测距用
+    //m_cnTitleLabel = new QLabel("测角原理实验平台", titleArea);     //测角用
+    m_cnTitleLabel = new QLabel("测速原理实验平台", titleArea);     //测速用
     m_cnTitleLabel->setObjectName("mainTitle");
 
-    m_enTitleLabel = new QLabel("Distance measurement experimental platform", titleArea);
+    //m_enTitleLabel = new QLabel("Distance measurement experimental platform", titleArea);     //测距用
+    //m_enTitleLabel = new QLabel("Angle measurement experimental platform", titleArea);          //测角用
+    m_enTitleLabel = new QLabel("Velocity measurement experimental platform", titleArea);          //测角用
     m_enTitleLabel->setObjectName("subTitle");
 
     titleLayout->addWidget(m_cnTitleLabel);

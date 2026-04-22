@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="13" name="脉冲雷达速度模糊实验" type="test" txCount="0" bottomImagePath="resources/assets/MCLDMH/01.png">
+
+    <GroupRadar visible="false">
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="什么是盲速现象？">
+            <Image>resources/assets/MCLDMH/2.png</Image>
+            <Description>速度模糊是脉冲多普勒雷达中的一种重要现象，当目标的径向速度使产生的多普勒频移fd等于脉冲重复频率fr的整数倍时，雷达无法检测到该目标的运动，这种现象称为盲速。盲速条件：fd=n·fr（n=0,±1,±2,...）。盲速计算公式：Vb=n·λ·fr/2=n·λ/(2·Tr)，其中λ为雷达工作波长，fr为脉冲重复频率，Tr为脉冲重复周期。第一盲速：V1=λ·fr/2=λ/(2·Tr)。当目标速度为盲速时，相邻脉冲回波之间的相位差恰好为2π的整数倍，导致MTI（动目标显示）滤波器输出为零，目标被误判为静止杂波而被抑制。频闪效应：当目标速度接近盲速时，目标回波幅度会周期性变化，在雷达显示器上出现闪烁现象，称为频闪。</Description>
+        </Item>
+        <Item id="p1" title="什么是频闪现象？">
+            <Image>resources/assets/MCLDMH/1.png</Image>
+            <Description>消除速度模糊的主要方法有以下几种。一是参差重复频率法（PRF参差），使用两个或多个不同的脉冲重复频率交替发射，每个PRF对应不同的盲速值，当目标对某个PRF为盲速时，对其他PRF不是盲速，通过综合处理可恢复目标信息。二是提高脉冲重复频率，提高fr可使第一盲速V1=λ·fr/2增大，使实际目标速度落在第一盲速以下的无模糊区域，高PRF雷达可获得较大的无模糊速度范围。三是增大工作波长，由V1=λ·fr/2可知，增大波长λ可提高第一盲速，但会影响雷达的角分辨率和天线尺寸。</Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="盲速现象频谱分析" special="noLight" waveform="">
+            <Image></Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>实验目的：</b>观察脉冲雷达产生盲速现象时的频谱特征</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>盲速现象原理：</b><br>• 盲速是指脉冲多普勒雷达对某些特定速度的目标无法检测的现象<br>• 当目标径向速度使多普勒频移 fd = n·fr 时，雷达无法检测目标<br>• 盲速公式：Vb = n·λ·fr/2（n为整数）</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>频谱特征：</b><br>• 频谱中出现周期性零点，对应盲速频率<br>• MTI 滤波器在盲速频率处增益为零<br>• 目标回波被完全抑制，无法检测</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>观察要点：</b><br>请查看测量原理模块中的"什么是盲速现象？"</p>]]></Description>        </Item>
+        <Item id="s2" title="频闪现象频谱分析" waveform="">
+            <Image></Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>实验目的：</b>观察脉冲雷达产生频闪现象时的频谱特征</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>频闪现象原理：</b><br>• 频闪是指多普勒频率模糊导致速度测量不准确的现象<br>• 当目标多普勒频移超过奈奎斯特频率时发生频率混叠<br>• 能检测到目标，但速度测量错误</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>数学表达：</b><br>• 最大不模糊速度：Vmax = λ·fr/4<br>• 表观速度：Vapparent = V - n·λ·fr/2<br>• 速度会折叠到不模糊速度范围内</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>频谱分析：</b><br>观察频谱中的频闪特征，理解频闪现象的物理机制</p>]]></Description>        </Item>
+        <Item id="s3" title="盲速矢量和波形图" waveform="">
+            <Image></Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>实验目的：</b>通过矢量图和波形图深入分析盲速现象的数学原理</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>盲速数学本质：</b><br>• 盲速发生时，目标回波与雷达脉冲重复频率同步<br>• 相邻脉冲回波的相位差为2π的整数倍<br>• MTI滤波器输出为零，目标被误判为静止</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>矢量分析：</b><br>• 矢量图显示相邻脉冲回波的相位关系<br>• 盲速时矢量重合，相位差为0或2π<br>• 波形图展现时域信号的周期性特征</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>分析要点：</b><br>结合矢量图和波形图理解盲速的数学本质</p>]]></Description>        </Item>
+        <Item id="s4" title="频闪矢量和波形图" waveform="">
+            <Image></Image>
+            <Description><![CDATA[<p style='font-size: 19px; line-height: 1.35; margin: 0;'><b>实验目的：</b>通过矢量图和波形图深入分析频闪现象的数学原理</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>频闪数学机制：</b><br>• 频闪导致速度模糊，需要解模糊技术恢复真实速度<br>• 多普勒频移超出采样频率的一半时发生混叠<br>• 真实频率被折叠到基频带内</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>矢量分析：</b><br>• 矢量图显示频率混叠后的相位关系<br>• 高速目标的矢量旋转被低估<br>• 波形图展现混叠后的拍频现象</p><p style='font-size: 19px; line-height: 1.3; margin: 4px 0 0 0;'><b>解模糊方法：</b><br>• 双 PRF 技术</p>]]></Description>        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

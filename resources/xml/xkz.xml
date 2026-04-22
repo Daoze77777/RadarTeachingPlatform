@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="10" name="相控阵天线模拟" type="demo" txCount="8" bottomImagePath="resources/assets/XKZTX/01.png">
+
+    <GroupRadar visible="false">
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="相位扫描法基本原理">
+            <Image>resources/assets/XKZTX/10.png</Image>
+            <Description>相位扫描法是相控阵天线通过控制各阵元发射信号的相位差来实现波束电子扫描的核心技术。工作原理：相位控制：通过移相器控制每个阵元发射信号的相位相位递变：相邻阵元间存在固定的相位差Δϕ波束合成：各阵元信号在空间相干叠加，形成定向波束波束偏转：调整相位递变量实现波束指向角的改变数学关系：相位递变量与波束指向角的关系为：Δϕ= λ2π⋅d⋅sinθd：阵元间距θ：波束指向角λ：工作波长</Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标角度位置" special="noLight" waveform="">
+            <Image>resources/assets/XKZTX/huagui.png</Image>
+            <Description>请在下方下拉框中选择目标角度位置，然后点击确定按钮，右侧将显示配置信息。</Description>
+        </Item>
+        <Item id="s2" title="发射信号1" waveform="">
+            <Image>resources/assets/XKZTX/1.png</Image>
+            <Description>第 1 号阵元开始发射电磁波信号，作为阵列的基准信号。此时信号相位为参考相位，其他阵元的相位都相对于它进行调整。</Description>
+        </Item>
+        <Item id="s3" title="发射信号2" waveform="">
+            <Image>resources/assets/XKZTX/2.png</Image>
+            <Description>第 2 号阵元发射与第 1 号阵元频率相同的信号，但在相位上加入一固定相移Δϕ。通过这个相移，使得在目标方向上，第 1 号和第 2 号阵元的信号在空间中相干叠加、相互加强。</Description>
+        </Item>
+        <Item id="s4" title="发射信号3" waveform="">
+            <Image>resources/assets/XKZTX/3.png</Image>
+            <Description>第 3 号阵元发射信号时，相位在第 1 号阵元的参考相位基础上增加2Δϕ。随着阵元编号增加，相位按一定步进变化，保证在设定目标角度方向上形成更明显的主波束。</Description>
+        </Item>
+        <Item id="s5" title="发射信号4" waveform="">
+            <Image>resources/assets/XKZTX/4.png</Image>
+            <Description>第 4 号阵元继续按照相位扫描规律发射信号，相位约为3Δϕ。多个阵元发射的信号在目标方向上相位逐渐对齐，在其他方向则相位不一致，从而形成波束指向性。</Description>
+        </Item>
+        <Item id="s6" title="发射信号5" waveform="">
+            <Image>resources/assets/XKZTX/5.png</Image>
+            <Description>第 5 号阵元发射信号，相位为4Δϕ左右（相对于参考阵元）。阵列中更多阵元参与叠加后，主瓣增益继续提高，旁瓣相对减小，波束形状更加集中、锐利。</Description>
+        </Item>
+        <Item id="s7" title="发射信号6" waveform="">
+            <Image>resources/assets/XKZTX/6.png</Image>
+            <Description>第 6 号阵元发射信号，相位依次推演为5Δϕ。通过精确控制每个阵元的发射相位，整个相控阵可以在无需机械转动天线的情况下，实现电子扫描。</Description>
+        </Item>
+        <Item id="s8" title="发射信号7" waveform="">
+            <Image>resources/assets/XKZTX/7.png</Image>
+            <Description>第 7 号阵元按同样规律发射信号，相位约为6Δϕ。此时，阵列中大部分阵元已经按照目标角度完成相位排布，波束在空间中已经明显偏向设定方向（如30∘或50∘）。</Description>
+        </Item>
+        <Item id="s9" title="发射信号8" waveform="">
+            <Image>resources/assets/XKZTX/8.png</Image>
+            <Description>第 8 号阵元发射信号，相位为7Δϕ，完成对整个线阵中所有阵元的相位控制。全部 8 个阵元的信号在目标方向上同相叠加形成主瓣，在非目标方向形成干涉削弱，实现对目标角度的定向照射和扫描。</Description>
+        </Item>
+        <Item id="s10" title="波束指向角形成扫描" waveform="">
+            <Image></Image>
+            <Description>波束扫描原理：相控阵天线通过控制各个阵元的相位差，可以实现波束指向角的灵活调整，从而形成波束扫描效果。控制方法：相位控制公式：Δϕ=λ2π⋅d⋅sinθ​其中：Δϕ 为相邻阵元的相位差，d 为阵元间距θ， 为波束指向角，λ 为工作波长。扫描过程：通过改变各阵元的相位差，可以使波束在空间中扫描，实现对不同角度目标的探测。</Description>
+        </Item>
+      
+ 
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="6" name="相位法测角实验" type="demo" txCount="6" bottomImagePath="resources/assets/XWFJDCL/XWFJDCL.png">
+
+    <GroupRadar visible="true">
+        <Item id="Mixer" title="混频器">
+            <Image>resources/assets/XWFJDCL/1.png</Image>
+            <Description>混频器负责将接收到的回波信号与本地振荡器信号进行混频处理，下变频到中频信号。混频器的输出包含了角度信息，通过相位关系可以反映目标的角度位置。两路接收天线的混频输出信号相位差与目标角度θ存在对应关系。</Description>
+        </Item>
+        <Item id="Intermediate Frequency" title="中频放大器">
+            <Image>resources/assets/XWFJDCL/12.png</Image>
+            <Description>中频放大器（中放）对混频器输出的中频信号进行放大处理，提高信号的信噪比和幅度。中放采用多级放大电路，具有高增益和良好的频率选择性，能够有效抑制带外干扰。经过中放处理后的信号幅度稳定，相位关系保持不变，为后续的相位比较提供高质量的输入信号。</Description>
+        </Item>
+        <Item id="Phase Comparator" title="相位比较器">
+            <Image>resources/assets/XWFJDCL/2.png</Image>
+            <Description>相位比较器用于比较两路混频器输出信号之间的相位差，输出与相位差成正比的电压信号UO​。根据公式UO​=K⋅​sin(45∘−2θ​)​其中K为相位检波系数，θ为目标角度。通过测量输出电压UO​，可以反算出目标的角度位置。相位比较器是相位法测角系统的核心部件。</Description>
+        </Item>
+         <Item id="Local Oscillator" title="本振">
+            <Image>resources/assets/XWFJDCL/3.png</Image>
+            <Description>本地振荡器（本振）产生稳定的高频正弦信号，作为混频器的参考信号源。本振频率通常设置为接收信号频率附近，通过混频可以将高频射频信号下变频到便于处理的中频信号。本振信号的频率稳定度和相位噪声直接影响测角系统的精度。</Description>
+        </Item>
+         <Item id="AGC" title="自动增益控制">
+            <Image>resources/assets/XWFJDCL/4.png</Image>
+            <Description>自动增益控制（AGC）电路用于自动调整接收信号的增益，使输出信号幅度保持在恒定范围内。AGC 可以补偿不同距离目标的回波强度差异，确保相位比较器在最佳工作状态。当目标距离变化时，AGC 自动调整增益，保证测角精度不受信号强度影响。</Description>
+        </Item>
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="二极管相位检波器原理">
+            <Image>resources/assets/XWFJDCL/13.png</Image>
+            <Description>二极管相位检波器是相位法测角系统的核心部件，用于将相位信息转换为电压信号。它接收来自左右天线通道的两路混频后的中频信号，利用二极管的非线性特性进行相位比较，根据两路信号的相位差输出相应的电压值。输出电压UO​与相位差ϕ的关系为：UO​=K⋅​sin(45∘−2θ​)​其中K为相位检波系数，由电路参数决定，θ为目标角度，ϕ为两路信号相位差。二极管相位检波器具有线性度好、灵敏度高、响应快速等特点，在一定角度范围内输出电压与角度呈近似线性关系，能够检测微小的相位变化，二极管开关速度快适合动态目标测角。通过测量输出电压UO​，结合系统参数K和基准角度45∘，可以反算出目标的实际角度θ，这是相位法测角系统实现精确角度测量的基础。</Description>
+        </Item>
+        <Item id="p2" title="相位法测角原理">
+            <Image>resources/assets/XWFJDCL/14.png</Image>
+            <Description>相位法测角是利用两个天线接收同一目标回波信号的相位差来确定目标角度的测角方法。双天线左右对称布置，间距为d，当目标角度θ不为 0 时，到达两天线的路程差为Δr=d⋅sinθ产生相位差ϕ=λ2π⋅d⋅sinθ​根据测角公式sinθ=2π⋅dϕ⋅λ​可以精确计算目标角度，其中λ为波长，ϕ为相位差。系统由双天线阵列、混频器、本振、相位检波器和 AGC 电路组成。角度分辨力Δθ≈2⋅d⋅cosθλ​天线间距越大测角精度越高。相位法测角具有精度高、响应快、结构简单和抗干扰等优势。</Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标角度位置" special="noLight" waveform="">
+            <Image>resources/assets/XWFJDCL/huagui.png</Image>
+            <Description>设置目标物体的角度位置参数。相位法测角通过测量两个接收天线之间的相位差来确定目标角度，目标位置的改变会直接影响两路接收信号的相位差。请手动调节滑台位置角度，观察不同角度下相位差的变化规律。</Description>
+        </Item>
+        <Item id="s2" title="回波信号1" waveform="">
+            <Image>resources/assets/XWFJDCL/5.png</Image>
+            <Description>左侧天线接收的目标回波信号。该信号经过天线 1 接收后，包含了目标的角度信息。信号频率为9.34GHz，幅度受目标距离和反射特性影响，相位受目标角度影响。这是相位法测角的第一路参考信号。</Description>
+        </Item>
+        <Item id="s3" title="回波信号2" waveform="">
+            <Image>resources/assets/XWFJDCL/6.png</Image>
+            <Description>右侧天线接收的目标回波信号。该信号经过天线 2 接收后，与回波信号 1 具有相同的频率和幅度，但由于天线间距的存在，两路信号存在相位差Δϕ=(2πd/λ)⋅sinθ，其中d为天线间距，λ为波长，θ为目标角度。这是相位法测角的第二路参考信号。</Description>
+        </Item>
+        <Item id="s4" title="本振信号" waveform="">
+            <Image>resources/assets/XWFJDCL/7.png</Image>
+            <Description>本振信号由本地振荡器产生，为混频器提供稳定的参考频率。频率为9.34GHz，用于将接收的射频信号下变频至中频，便于后续相位比较。本振信号的频率稳定性和相位噪声直接影响测角精度。</Description>
+        </Item>
+        <Item id="s5" title="中频信号1" waveform="">
+            <Image>resources/assets/XWFJDCL/8.png</Image>
+            <Description>左侧通道的中频信号。回波信号 1 与本振信号经混频器混频后，下变频至中频（如60MHz），保留了原始信号的相位信息。中频信号的相位ϕ1​包含了目标角度信息，为后续相位比较提供第一路信号。</Description>
+        </Item>
+        <Item id="s6" title="中频信号2" waveform="">
+            <Image>resources/assets/XWFJDCL/9.png</Image>
+            <Description>右侧通道的中频信号。回波信号 2 与本振信号经混频器混频后，下变频至中频（如60MHz），保留了原始信号的相位信息。中频信号的相位ϕ2​与中频信号 1 存在相位差Δϕ=ϕ2​−ϕ1​=λ2πd​⋅sinθ这个相位差正是测角的核心依据。</Description>
+        </Item>
+        <Item id="s7" title="相位器比较输出信号"  waveform="">
+            <Image>resources/assets/XWFJDCL/10.png</Image>
+            <Description>相位比较器将两路中频信号的相位差ϕ转换为直流电压UO​。输出公式：UO​=Kd​⋅U1​⋅​sin(45∘+2ϕ​)​−Kd​⋅U1​⋅​sin(45∘−2ϕ​)​其中Kd​为鉴相系数，U1​为信号幅度。</Description>
+        </Item>
+        <Item id="s8" title="计算目标角度" special="" waveform="">
+            <Image></Image>
+            <Description>在步骤7中，系统已经给出了相位比较器输出电压 UO​。根据线性标定关系V=90∘θ​×0.33其中 0.33 V 是比较器在相位差达到 ±90∘ 时的最大输出电压，用作电压与角度的满量程对应。将步骤 7 的 UO​ 代入公式即可得到目标角度，用于验证测角结果的正确性。</Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

@@ -59,7 +59,7 @@
 
         <Item id="s7" title="手动跟踪捕获目标" special="manualTrack" waveform="">
             <Image></Image>
-            <Description>手动距离跟踪是依靠操作员手动调整跟踪门位置来跟踪目标的方法。操作步骤：1. 旋转手动跟踪旋钮，观察跟踪门位置变化。2. 调整直至跟踪门中心与回波峰值对齐。3. 实现对目标的手动捕获和跟踪</Description>
+            <Description>手动距离跟踪是依靠操作员手动调整跟踪门位置来跟踪目标的方法。操作步骤：1. 滑动跟踪门位置滑块，观察跟踪门位置变化。2. 调整直至跟踪门中心与回波峰值对齐。3. 实现对目标的手动捕获和跟踪</Description>
         </Item>
 
         <Item id="s8" title="设置目标位置(自动)" special="noLight" waveform="TrackingEmpty">

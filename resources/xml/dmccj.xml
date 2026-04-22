@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="9" name="单脉冲测角实验" type="demo" txCount="2" bottomImagePath="resources/assets/DMCCJ/DMCCJ.png">
+
+    <GroupRadar visible="true">
+        <Item id="Mixer" title="混频器">
+            <Image>resources/assets/DMCCJ/1.png</Image>
+            <Description>混频器是将接收的高频信号与本振信号混频，转换为中频信号的关键器件。在单脉冲测角雷达中，混频器将接收的微波信号变换到便于处理的中频信号，为后续的信号处理做准备。</Description>
+        </Item>
+        <Item id="Local Oscillator" title="本振">
+            <Image>resources/assets/DMCCJ/2.png</Image>
+            <Description>本振（本地振荡器）为混频器提供稳定的参考信号。本振信号与接收的高频信号在混频器中混频，产生中频信号。本振的频率稳定性直接影响雷达系统的测距和测角精度。</Description>
+        </Item>
+        <Item id="AGC" title="自动增益控制">
+            <Image>resources/assets/DMCCJ/3.png</Image>
+            <Description>自动增益控制（AGC）电路根据接收信号强度自动调整放大器的增益，使输出信号幅度保持在合适范围内。在单脉冲测角雷达中，AGC 确保不同距离目标的回波信号都能被正确处理，避免因目标距离变化导致的信号幅度波动。</Description>
+        </Item>
+         <Item id="Envelope detector" title="包络检波器">
+            <Image>resources/assets/DMCCJ/4.png</Image>
+            <Description>包络检波器从调制信号中提取包络信息，即信号的幅度变化信息。在单脉冲测角雷达中，包络检波器用于提取回波脉冲的包络，为测距和信号识别提供依据。</Description>
+        </Item>
+         <Item id="Hard Limiter" title="硬限幅器">
+            <Image>resources/assets/DMCCJ/5.png</Image>
+            <Description>硬限幅器将输入信号限制在固定的幅度范围内，消除信号的幅度信息，保留相位信息。在单脉冲测角雷达的相位比较通道中，硬限幅器确保相位比较不受信号幅度波动的影响，提高测角精度。</Description>
+        </Item>
+         <Item id="Band-pass filter" title="带通滤波器">
+            <Image>resources/assets/DMCCJ/6.png</Image>
+            <Description>带通滤波器只允许特定频率范围内的信号通过，抑制带外干扰和噪声。在单脉冲测角雷达中，带通滤波器用于选择中频信号频段，滤除杂波和干扰，提高系统的信噪比和抗干扰能力。</Description>
+        </Item>
+         <Item id="Phase comparator" title="相位比较器">
+            <Image>resources/assets/DMCCJ/7.png</Image>
+            <Description>相位比较器用于比较和通道与差通道信号之间的相位差，输出与目标角偏差成正比的误差信号。这是单脉冲测角雷达的核心器件，通过相位比较可以在一个脉冲内完成目标角度的精确测量。</Description>
+        </Item>
+         <Item id="TRSwitch" title="收发开关">
+            <Image>resources/assets/DMCCJ/8.png</Image>
+            <Description>检波器从中频信号中提收发开关在发射和接收之间进行切换，使天线在发射时连接到发射机，在接收时连接到接收机。这样可以用同一副天线完成收发功能，简化系统结构，并有效保护接收机不受强发射信号的损坏。取包络信息，将调制在载波上的目标信息解调出来，输出视频脉冲信号。</Description>
+        </Item>
+         <Item id="Transmitter" title="发射机">
+            <Image>resources/assets/DMCCJ/9.png</Image>
+            <Description>发射机产生高功率微波脉冲信号，经天线辐射到空间。发射机的功率决定了雷达的作用距离，脉冲宽度和重复频率影响雷达的测距精度和最大不模糊距离。</Description>
+        </Item>
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="双通道单脉冲雷达原理">
+            <Image>resources/assets/DMCCJ/01.png</Image>
+            <Description>双通道单脉冲雷达是经典的单脉冲测角雷达系统，通过同时接收和处理两路独立的信号来实现精确测角。系统采用左右（或上下）对称布置的两个接收天线，每个天线对应一个完整的接收处理通道。通过和差网络将两路信号进行和 (Σ)、差 (Δ) 运算，和通道用于目标检测和距离测量，差通道用于提取角度误差信息。当两个通道同时接收目标回波信号后，进行和差处理：Σ=A1​+A2​，Δ=A1​−A2​，通过误差提取得到角度误差 ε=Δ/Σ，最后根据误差信号计算目标角偏差。双通道单脉冲雷达具有高精度、快速响应、抗干扰能力强等优点，单次脉冲即可完成角度测量，适合快速机动目标跟踪。和差处理可有效抑制公共模干扰。但系统需要两套完整的接收处理通道，结构相对复杂，对两个通道的幅度和相位一致性要求较高。该技术广泛应用于精密跟踪雷达、导弹制导和火控系统中。</Description>
+        </Item>
+        <Item id="p2" title="单通道单脉冲雷达原理">
+            <Image>resources/assets/DMCCJ/02.png</Image>
+            <Description>单通道单脉冲雷达是对传统双通道单脉冲雷达的简化设计，采用单个接收通道实现测角功能。系统通过时分复用或开关切换方式，在不同时刻分别接收两个天线的信号，然后进行和差处理获取角度误差信息。相比双通道系统，单通道方案仅需一套接收处理电路，大大降低了系统复杂度和成本。其工作原理是：通过高速开关在两个天线之间快速切换，分时采集两路信号A1​和A2​，然后进行和差运算：Σ=A1​+A2​，Δ=A1​−A2​。通过计算差和比 ε=Δ/Σ 获得角度误差信号。单通道单脉冲雷达的优点是结构简单、成本低、体积小，易于集成。缺点是由于分时采集，对快速机动目标的跟踪精度会有所下降，且容易受到目标闪烁效应的影响。该技术广泛应用于中小型雷达系统、无人机载雷达和便携式雷达等对成本和体积敏感的应用场合。</Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标角度位置" special="noLight" waveform="">
+            <Image>resources/assets/DMCCJ/huagui.png</Image>
+            <Description>设置目标物体的角度位置参数。单脉冲测角通过同时接收两个天线的回波信号，比较其幅度或相位差来确定目标角度。目标位置的改变会导致左右天线接收到的回波能量不同，从而产生差信号。请手动调节滑台位置角度，观察不同角度下和差信号的变化规律。</Description>
+        </Item>
+        <Item id="s2" title="距离跟踪脉冲信号" waveform="">
+            <Image>resources/assets/DMCCJ/10.png</Image>
+            <Description>距离跟踪脉冲信号用于确定目标的距离信息。通过跟踪门与回波信号的时间关系，可以精确测量目标距离。这是单脉冲雷达系统中距离维度的测量基础，与角度测量配合可以获得目标的完整空间位置信息。观察门控与回波门的关系。</Description>
+        </Item>
+        <Item id="s3" title="方位指向信号" waveform="">
+            <Image>resources/assets/DMCCJ/11.png</Image>
+            <Description>单脉冲雷达通过和差信号的比值Δ/Σ获得误差信号。输出电压Uo​与角度偏差θt​成正比：Uo​=K⋅UA​⋅θt​其中K=1/π，UA​=3V。读取Uo​值用于计算目标角度。</Description>
+        </Item>
+        <Item id="s4" title="计算目标角度" waveform="">
+            <Image></Image>
+            <Description>根据方位指向信号Uo​和系统参数，计算目标角度θ。计算步骤：从示波器读取Uo​值；根据公式θt​=K⋅UA​Uo​​=3Uo​⋅π​计算角度偏差；结合天线指向，得到目标绝对角度。其中K=1/π为比例系数，UA​=3V为归一化幅度。单脉冲测角的优点是测角精度高、响应速度快、能够在一个脉冲内完成测角，避免了目标角度闪烁的影响。</Description>
+        </Item>
+ 
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <QObject>
 
-
 // 1. 单个实验的数据结构
 struct ExperimentInfo {
     int expId;              // 全局唯一ID (建议：测距101-119, 测角201-299，避免冲突)
@@ -117,7 +116,9 @@ private:
     ExperimentManager()
     {
         m_baseXmlPath = "resources/xml/";
-        m_currentSystemId = 1; // 默认加载：1=距离测量平台
+        //m_currentSystemId = 1; // 默认加载：1=距离测量平台
+        //m_currentSystemId = 2;
+        m_currentSystemId = 3;
         initMockData();        // 初始化数据
     }
 
@@ -126,7 +127,7 @@ private:
         // --- 1. 构造距离测量平台 (System ID: 1) ---
         SystemPlatformInfo distSystem;
         distSystem.systemId = 1;
-        distSystem.systemName = "距离测量实验平台";
+        distSystem.systemName = "测距原理实验平台";
         // 赋予 10 个实验
         distSystem.experiments = {
             {101, "实验科目1. 脉冲法距离测量-原理演示实验", "mcfjlcl.xml",      12, false},
@@ -143,18 +144,40 @@ private:
         m_platforms.insert(1, distSystem);
 
         // --- 2. 构造角度测量平台 (System ID: 2) ---
-        // SystemPlatformInfo angleSystem;
-        // angleSystem.systemId = 2;
-        // angleSystem.systemName = "角度测量实验平台";
-        // // 赋予 8 个实验
-        // angleSystem.experiments = {
-        //     {201, "实验科目1. 相位法测角-原理演示", "angle_01.xml"},
-        //     // ... 一直到 208
-        // };
-        // m_platforms.insert(2, angleSystem);
+        SystemPlatformInfo angleSystem;
+        angleSystem.systemId = 2;
+        angleSystem.systemName = "测角原理实验平台";
+        // 赋予 10 个实验
+        angleSystem.experiments = {
+             {201, "实验科目1. 相位法测角-原理演示实验",    "xwfjdcl.xml",      6, false},
+             {202, "实验科目2. 相位法测角-测试验证实验",    "xwfjdcl_test.xml", 6, true},
+             {203, "实验科目3. 振幅法测角-原理演示实验",    "zffjdcl.xml",      2, false},
+             {204, "实验科目4. 振幅法测角-测试验证实验",    "zffjdcl_test.xml", 2, true},
+             {205, "实验科目5. 角度自动跟踪-原理演示实验",  "jdzdgz.xml",       9, false},
+             {206, "实验科目6. 角度自动跟踪-测试验证实验",  "jdzdgz_test.xml",  9, true},
+             {207, "实验科目7. 单脉冲测角-演示实验",        "dmccj.xml",        2, false},
+             {208, "实验科目8. 单脉冲测角-测试实验",        "dmccj_test.xml",   2, true},
+             {209, "实验科目9. 相控阵天线模拟-演示实验",    "xkz.xml",        8, false},
+             {210, "实验科目10. 相控阵天线模拟-自主设计实验","xkz_test.xml",   8, true},
+        };
+        m_platforms.insert(2, angleSystem);
 
         // --- 3. 构造速度测量平台 (System ID: 3) ---
-        // 同理...
+        SystemPlatformInfo speedSystem;
+        speedSystem.systemId = 3;
+        speedSystem.systemName = "测速原理实验平台";
+        // 赋予 8 个实验
+        speedSystem.experiments = {
+            {301, "实验科目1. 平均法测速-演示实验",        "pjfcs.xml",      4, false},
+            {302, "实验科目2. 平均法测速-验证实验",        "pjfcs_test.xml", 4, true},
+            {303, "实验科目3. 瞬时测速-演示实验",          "sscs.xml",       12, false},
+            {304, "实验科目4. 瞬时测速-验证实验",          "sscs_test.xml",  12, true},
+            {305, "实验科目5. 脉冲雷达速度模糊-演示实验",  "sdmh.xml",       0, false},
+            {306, "实验科目6. 脉冲雷达速度模糊-自主设计实验",  "sdmh_test.xml",  0, true},
+            {307, "实验科目7. 脉冲雷达解速度模糊-演示实验","jsdmh.xml",      0, false},
+            {308, "实验科目8. 脉冲雷达解速度模糊-自主设计实验","jsdmh_test.xml", 0, true},
+        };
+        m_platforms.insert(3, speedSystem);
 
         // 建立一个快捷查找映射，方便通过 expId 直接拿到 XML 文件名
         for(const auto& sys : m_platforms) {

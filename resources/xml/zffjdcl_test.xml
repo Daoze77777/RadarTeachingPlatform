@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="7" name="振幅法测角实验" type="test" txCount="2" bottomImagePath="resources/assets/ZFFJDCL/ZFFJDCL.png">
+
+    <GroupRadar visible="false">
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="最大振幅法测角原理">
+            <Image>resources/assets/ZFFJDCL/4.png</Image>
+            <Description>最大振幅法是一种通过旋转天线寻找回波强度最大值来确定目标方位的测角方法。该方法基于天线方向图特性：当天线主瓣对准目标时，接收到的回波信号强度达到最大值。系统通过机械或电子方式连续扫描空域，记录不同角度的回波幅度，找到回波强度峰值对应的角度，即为目标所在方位角。测角精度主要取决于天线波束宽度θ3dB​，波束越窄精度越高。最大振幅法具有原理简单、易于实现、抗干扰能力强等优点，但测角速度较慢，需要完整扫描才能确定目标位置，不适合快速运动目标的实时跟踪。该方法常用于搜索雷达和初始目标捕获阶段。</Description>
+        </Item>
+        <Item id="p2" title="等信号法测角原理">
+            <Image>resources/assets/ZFFJDCL/5.png</Image>
+            <Description>等信号法是振幅法测角的改进方案，使用两个部分重叠的天线波束进行测角。两个波束指向稍有偏差，形成交叉覆盖区域。当目标位于两波束交叉点（等信号轴）时，两路接收信号幅度相等，此时角度误差为零。偏离等信号轴时，两路信号幅度差ΔU与角度偏差Δθ成正比：ΔU∝Δθ。通过比较两路信号差值，可以判断目标相对等信号轴的偏离方向和程度，形成角度误差信号用于跟踪控制。等信号法无需扫描全空域，测角速度快，适合目标跟踪。典型实现方式包括：圆锥扫描（单波束绕轴旋转）和单脉冲测角（多波束同时接收）。等信号法测角精度高、响应快，广泛应用于跟踪雷达和精密测角系统。</Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标角度位置(振幅法)" special="noLight" waveform="">
+            <Image>resources/assets/ZFFJDCL/huagui.png</Image>
+            <Description>设置目标物体的角度位置参数。最大振幅法测角通过旋转天线找到回波强度最大的方向来确定目标角度。目标位置的改变会直接影响回波信号的幅度，请手动调节滑台位置角度，观察不同角度下回波强度的变化规律。</Description>
+        </Item>
+        <Item id="s2" title="回波强度视频信号" waveform="">
+            <Image>resources/assets/ZFFJDCL/1.png</Image>
+            <Description>目标回波的强度视频信号。该信号反映了目标回波的幅度包络，受天线方向性图和目标角度的影响。当天线对准目标时，回波强度达到最大值；当天线偏离目标时，回波强度随偏离角度增大而减小。</Description>
+        </Item>
+        <Item id="s3" title="天线指向信号" waveform="">
+            <Image>resources/assets/ZFFJDCL/2.png</Image>
+            <Description>天线指向信号反映天线指向角度与目标角度的偏差。输出电压UO​=K⋅UA​⋅θt​，其中K为比例系数（1/π），UA​为归一化幅度（3V）。通过测量UO​可计算目标角度偏差，进而确定目标角度。</Description>
+        </Item>
+        <Item id="s4" title="计算目标角度" waveform="">
+            <Image></Image>
+            <Description>在步骤 3 中，系统已经给出了天线指向信号输出电压 UO​。根据UO​=K⋅UA​⋅θt​，其中K=1/π 为比例系数，UA​=3V 为归一化幅度。将步骤 3 的 UO​ 代入公式即可得到目标角度偏差，用于验证最大振幅法测角原理的正确性。</Description>
+        </Item>
+        <Item id="s5" title="设置目标角度位置(等信号法)" special="noLight" waveform="">
+            <Image>resources/assets/ZFFJDCL/huagui.png</Image>
+            <Description>设置目标物体的角度位置参数。等信号法测角采用两个部分重叠的波束，通过比较两个波束的回波强度差来确定目标角度。目标位置的改变会导致两个波束接收到的回波能量不同，从而产生差信号。请手动调节滑台位置角度，观察不同角度下差波束和和波束的变化规律。</Description>
+        </Item>
+        <Item id="s6" title="波束通道信号" waveform="">
+            <Image></Image>
+            <Description>两个部分重叠波束的回波信号。波束 1 和波束 2 具有相同的波束宽度，但波束中心方向相差约半个波束宽度。当目标偏离等信号方向时，两个波束接收到的回波能量不同。波束 1 能量：E1​=F1​(θ)，波束 2 能量：E2​=F2​(θ)，其中F为天线方向性函数。这两路信号是等信号法测角的基础。</Description>
+        </Item>
+        <Item id="s7" title="差波束信号"  waveform="">
+            <Image></Image>
+            <Description>差波束信号由两个波束通道信号相减得到：Δ=E1​−E2​。当目标位于等信号方向（两波束交点）时，E1​=E2​，差信号为零；当目标偏离等信号方向时，产生非零差信号，差信号的符号表示偏离方向，幅度表示偏离程度。差波束的方向性图在等信号方向呈现零点，是等信号法测角的关键特征。</Description>
+        </Item>
+        <Item id="s8" title="和波束信号"  waveform="">
+            <Image></Image>
+            <Description>和波束信号由两个波束通道信号相加得到：Σ=E1​+E2​。和波束的方向性图在等信号方向达到最大值，用于对差信号进行归一化处理。通过计算比值Δ/Σ，可以消除目标距离和反射特性的影响，得到只与角度相关的测角信号。和波束信号在角度轴上显示，横轴刻度自适应调整为θ∗（等信号方向）。</Description>
+        </Item>
+        <Item id="s9" title="天线指向信号"  waveform="">
+            <Image></Image>
+            <Description>天线指向信号反映天线指向角度与目标角度的偏差。输出电压UO​=K⋅UA​⋅θt​，其中K为比例系数（1/π），UA​为归一化幅度（3V）。通过测量UO​可计算目标角度偏差，进而确定目标角度。</Description>
+        </Item>
+        <Item id="s10" title="计算目标角度" special="" waveform="">
+            <Image></Image>
+            <Description>在步骤 9 中，系统已经给出了天线指向信号输出电压 UO​。根据UO​=K⋅UA​⋅θt​，其中K=1/π 为比例系数，UA​=3V 为归一化幅度。将步骤 3 的 UO​ 代入公式即可得到目标角度偏差，用于验证最大振幅法测角原理的正确性。</Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

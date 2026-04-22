@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="8" name="角度自动跟踪实验" type="test" txCount="9" bottomImagePath="resources/assets/JDZDGZ/JDZDGZ.png">
+
+    <GroupRadar visible="true">
+     <Item id="Transmitter" title="发射机">
+            <Image>resources/assets/JDZDGZ/1.png</Image>
+            <Description>雷达发射机产生高功率的射频脉冲信号，并通过天线辐射出去。发射机的核心指标包括发射功率、工作频率、脉冲重复频率等。</Description>
+        </Item>
+        <Item id="TR Switch" title="收发开关">
+            <Image>resources/assets/JDZDGZ/2.png</Image>
+            <Description>收发开关（T/R 开关）是雷达系统中的关键部件，用于在发射和接收状态之间快速切换，保护接收机免受高功率发射信号的损坏。</Description>
+        </Item>
+        <Item id="ADTS" title="自动距离跟踪系统">
+            <Image>resources/assets/JDZDGZ/3.png</Image>
+            <Description>自动距离跟踪系统通过波门跟踪技术实时跟踪目标距离变化，包括前波门、后波门生成、时间鉴别器和控制环路等模块。</Description>
+        </Item>
+         <Item id="HF" title="接收机高频部分">
+            <Image>resources/assets/JDZDGZ/4.png</Image>
+            <Description>接收机高频部分对回波信号进行低噪声放大和下变频处理，包括低噪声放大器（LNA）、混频器和本振等关键组件。</Description>
+        </Item>
+         <Item id="AGC" title="自动增益控制">
+            <Image>resources/assets/JDZDGZ/5.png</Image>
+            <Description>自动增益控制（AGC）自动调节接收机增益，使输出信号幅度保持稳定，避免强信号饱和或弱信号丢失，提高系统动态范围。</Description>
+        </Item>
+         <Item id="PD Branch" title="距离支路中放">
+            <Image>resources/assets/JDZDGZ/6.png</Image>
+            <Description>距离支路中频放大器对距离跟踪支路的中频信号进行选择性放大，提供足够的信号增益用于后续的距离信息提取。</Description>
+        </Item>
+         <Item id="PAT Branch" title="角度跟踪支路中放">
+            <Image>resources/assets/JDZDGZ/7.png</Image>
+            <Description>角度跟踪支路中频放大器处理用于角度跟踪的差通道信号，为角误差信号提取提供适当的增益和滤波。</Description>
+        </Item>
+         <Item id="Detector" title="检波器">
+            <Image>resources/assets/JDZDGZ/8.png</Image>
+            <Description>检波器从中频信号中提取包络信息，将调制在载波上的目标信息解调出来，输出视频脉冲信号。</Description>
+        </Item>
+         <Item id="VA" title="视频放大器">
+            <Image>resources/assets/JDZDGZ/9.png</Image>
+            <Description>视频放大器对检波后的视频信号进行放大和整形，提高信噪比，使信号达到后续处理电路所需的幅度水平。</Description>
+        </Item>
+         <Item id="Pulse Detector" title="脉冲检波器">
+            <Image>resources/assets/JDZDGZ/10.png</Image>
+            <Description>脉冲检波器专门用于检测和提取脉冲信号，具有良好的脉冲保持特性，能准确恢复目标回波脉冲的时间和幅度信息。</Description>
+        </Item>
+         <Item id="CSFTA" title="锥扫频率调谐放大器">
+            <Image>resources/assets/JDZDGZ/11.png</Image>
+            <Description>锥扫频率调谐放大器选择性放大锥扫调制频率的误差信号，抑制其他频率干扰，提高角度测量精度。</Description>
+        </Item>
+         <Item id="EPD" title="仰角相位鉴别器">
+            <Image>resources/assets/JDZDGZ/12.png</Image>
+            <Description>仰角相位鉴别器通过相位比较提取仰角误差信号，将目标偏离天线轴线的仰角偏差转换为控制电压。</Description>
+        </Item>
+         <Item id="APD" title="方向角相位鉴别器">
+            <Image>resources/assets/JDZDGZ/13.png</Image>
+            <Description>方位角相位鉴别器通过相位比较提取方位误差信号，将目标偏离天线轴线的方位偏差转换为控制电压。</Description>
+        </Item>
+         <Item id="SA" title="伺服放大器">
+            <Image>resources/assets/JDZDGZ/14.png</Image>
+            <Description>伺服放大器将误差信号放大到足够的功率水平，驱动天线伺服系统，实现天线的精确指向控制。</Description>
+        </Item>
+         <Item id="PA" title="功率放大器">
+            <Image>resources/assets/JDZDGZ/15.png</Image>
+            <Description>功率放大器为天线驱动电机提供足够的驱动功率，确保天线能够快速准确地跟踪目标运动。</Description>
+        </Item>
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="圆锥扫描角跟踪原理">
+            <Image>resources/assets/JDZDGZ/25.png</Image>
+            <Description>圆锥扫描（Conical Scan）跟踪是一种经典的自动角度跟踪技术。其工作原理是让天线波束轴线以一定角速度绕雷达视轴作圆锥运动，扫描频率通常为 30～100Hz。当目标不在雷达视轴上时，接收到的回波信号会产生与扫描频率相同的幅度调制。调制信号的幅度与目标偏离视轴的角度成正比，相位则指示目标偏离的方向（方位或仰角）。通过检测这个调制信号的幅度和相位，可以提取出方位角误差和仰角误差信号，驱动伺服系统使天线自动跟踪目标。当目标位于视轴上时，调制信号幅度为零，系统达到平衡状态。锥扫跟踪系统具有结构简单、成本较低的优点，但存在扫描损失（约 3dB），且易受角闪烁干扰影响。该技术广泛应用于火控雷达和早期制导系统中。</Description>
+        </Item>
+        <Item id="p2" title="振幅和差式角度跟踪原理">
+            <Image>resources/assets/JDZDGZ/27.png</Image>
+            <Description>振幅和差式角度跟踪是单脉冲测角技术的一种实现方式，通过比较多个波束接收信号的幅度差来确定角度误差。系统采用对称的多波束天线（如四波束），通过特定的和差网络形成和通道（Σ）和差通道（Δ）。和通道将所有波束信号相加，用于目标检测和距离测量；差通道将对称波束信号相减，形成方位差信号和仰角差信号。当目标偏离天线视轴时，各波束接收到的信号幅度不同，差通道输出非零误差信号。通过差和比运算Δ/Σ可得到归一化角误差，该误差与目标角偏差成线性关系。振幅和差式跟踪具有单脉冲测角、响应速度快、抗干扰能力强的优点，但需要严格的幅度一致性和校准。该技术广泛应用于精密跟踪雷达和导弹制导系统。</Description>
+        </Item>
+        <Item id="p3" title="相位和差式角度跟踪原理">
+            <Image>resources/assets/JDZDGZ/28.png</Image>
+            <Description>相位和差式角度跟踪利用信号相位差信息进行角度测量，是单脉冲测角的另一种重要实现方式。系统采用多个天线单元或子阵列，通过相位比较网络形成和通道与差通道。相位和差式跟踪测量的是各通道接收信号之间的相位差，该相位差与目标角偏差成正比。相比振幅和差式，相位和差式对接收机幅度特性要求较低，主要依赖相位测量精度。典型实现包括相位干涉仪体制和相位单脉冲体制。相位干涉仪利用空间分置天线的相位差测角，测角精度与天线基线长度成正比。相位单脉冲则通过和差网络的相位鉴别实现角度跟踪。相位和差式跟踪具有测角精度高、动态范围大、抗幅度波动能力强等优点，但存在相位模糊问题，需要配合粗测角方法解模糊。现代相控阵雷达常采用相位和差式跟踪技术。</Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标角度位置(圆锥扫描)" special="noLight" waveform="">
+            <Image>resources/assets/JDZDGZ/huagui.png</Image>
+            <Description>在圆锥扫描角度跟踪系统中设置目标的初始角度位置。圆锥扫描是一种经典的角度跟踪技术，通过天线波束的圆锥运动来实现对目标的自动跟踪。调节目标角度位置参数，观察系统如何通过圆锥扫描方式捕获并锁定目标。圆锥扫描的基本原理是让天线波束轴以一定角度围绕视轴作圆锥运动，当目标偏离视轴时，接收信号会产生幅度调制，通过解调可以获得目标的角度偏差信息。</Description>
+        </Item>
+        <Item id="s2" title="距离支路中放信号" waveform="">
+            <Image>resources/assets/JDZDGZ/16.png</Image>
+            <Description>距离支路中频放大器对接收到的中频信号进行放大处理。中频放大器是雷达接收机的核心部件，其主要功能是将混频后的中频信号放大到检波器所需的电平。距离支路负责处理目标的距离信息，通过对回波信号的时延测量来确定目标距离。中频放大器需要具有足够的增益、良好的线性度和较低的噪声系数，以确保距离测量的精度。</Description>
+        </Item>
+        <Item id="s3" title="角跟踪支路中放信号" waveform="">
+            <Image>resources/assets/JDZDGZ/17.png</Image>
+            <Description>角跟踪支路中频放大器对角度误差信号进行放大处理。在圆锥扫描系统中，角跟踪支路负责提取和处理目标的角度偏差信息。当目标偏离天线视轴时，由于圆锥扫描的调制作用，接收信号会产生与角度偏差成正比的幅度调制。角跟踪支路的中频放大器将这些微弱的角度误差信号放大，为后续的角度跟踪处理提供足够强度的信号。</Description>
+        </Item>
+        <Item id="s4" title="距离支路检波视放信号" waveform="">
+            <Image>resources/assets/JDZDGZ/18.png</Image>
+            <Description>距离支路的检波器将中频信号转换为视频信号，视频放大器进一步放大视频信号。检波过程实现了信号的包络检测，将高频载波信号转换为反映目标信息的低频信号。视频放大器对检波后的信号进行放大，提高信号的幅度以便于后续处理。距离支路的视频信号包含了目标的距离信息，通过测量脉冲往返时间可以精确计算目标距离。</Description>
+        </Item>
+        <Item id="s5" title="角跟踪检波视放信号" waveform="">
+            <Image>resources/assets/JDZDGZ/19.png</Image>
+            <Description>角跟踪支路的检波器解调出角度误差信号，视频放大器对其进行放大。在圆锥扫描系统中，角度误差信息以扫描频率调制在回波信号上。检波器通过包络检测提取出这个调制信号，得到反映目标角度偏差的视频信号。视频放大器将该信号放大到适合伺服系统处理的电平，为天线的自动跟踪控制提供误差信号。</Description>
+        </Item>
+         <Item id="s6" title="演示自动角度跟踪目标" waveform="">
+            <Image></Image>
+            <Description>角跟踪支路的检波器解调出角度误差信号，视频放大器对其进行放大。在圆锥扫描系统中，角度误差信息以扫描频率调制在回波信号上。检波器通过包络检测提取出这个调制信号，得到反映目标角度偏差的视频信号。视频放大器将该信号放大到适合伺服系统处理的电平，为天线的自动跟踪控制提供误差信号。</Description>
+        </Item>
+        <Item id="s7" title="设置目标角度位置(单脉冲)" special="noLight" waveform="">
+            <Image>resources/assets/JDZDGZ/huagui.png</Image>
+            <Description>在单脉冲角度跟踪系统中设置目标的角度位置。单脉冲技术是一种更先进的角度跟踪方法，通过比较多个接收通道的信号来获得角度信息。与圆锥扫描不同，单脉冲系统可以从单个脉冲回波中提取完整的角度误差信息，具有更高的数据率和抗干扰能力。系统通常采用和差波束技术，通过比较和波束与差波束的信号来确定目标的角度偏差。</Description>
+        </Item>
+        <Item id="s8" title="发射信号" waveform="">
+            <Image>resources/assets/JDZDGZ/20.png</Image>
+            <Description>雷达发射机产生并发射高功率的射频脉冲信号。发射信号是雷达系统的探测基础，其参数直接影响雷达的探测性能。发射信号的主要参数包括载频、脉冲宽度、脉冲重复频率和发射功率等。在单脉冲雷达中，发射信号通过天线辐射到空间，遇到目标后产生反射回波，为角度测量提供信息载体。</Description>
+        </Item>
+        <Item id="s9" title="回波和信号"  waveform="">
+            <Image>resources/assets/JDZDGZ/21.png</Image>
+            <Description>目标反射的回波信号被和波束接收通道接收处理。和波束是单脉冲雷达的主接收波束，具有最大的增益和最佳的信噪比。和信号包含了目标的存在信息和距离信息，是雷达探测和跟踪的基础。通过和信号可以检测目标、测量目标距离，并作为角度测量的参考信号。和波束通常指向天线视轴方向，形成雷达的主探测区域。</Description>
+        </Item>
+        <Item id="s10" title="回波差信号"  waveform="">
+            <Image>resources/assets/JDZDGZ/22.png</Image>
+            <Description>差波束接收通道产生的差信号反映目标的角度偏差。在单脉冲雷达中，差波束在视轴方向具有零值响应，在偏离视轴时产生与角度偏差成正比的输出。差信号的幅度表示角度偏差的大小，相位表示偏差的方向。通过比较差信号与和信号，可以精确确定目标相对于天线视轴的角度位置。单脉冲系统通常包含方位差和俯仰差两个通道，分别测量两个维度的角度。</Description>
+        </Item>
+        <Item id="s11" title="和支路检波视放信号"  waveform="">
+            <Image>resources/assets/JDZDGZ/23.png</Image>
+            <Description>和支路的检波器和视频放大器处理和信号。检波器将中频和信号转换为视频信号，提取出目标的幅度信息。视频放大器将检波后的信号放大到适合处理的电平。和支路的输出作为归一化参考，用于消除目标距离和反射特性变化对角度测量的影响。这种归一化处理是单脉冲测角的关键技术之一。</Description>
+        </Item>
+         <Item id="s12" title="和差信号相位检波信号" waveform="">
+            <Image>resources/assets/JDZDGZ/24.png</Image>
+            <Description>相位检波器比较和信号与差信号的相位关系，提取角度误差的方向信息。在振幅和差式单脉冲系统中，需要通过相位检波来确定目标偏离的方向。相位检波器输出的直流信号，其极性表示目标偏离的方向（左 / 右或上 / 下），幅度表示偏离的大小。这个误差信号经过处理后用于驱动天线伺服系统，实现对目标的自动跟踪。</Description>
+        </Item>
+        <Item id="s13" title="演示自动角度跟踪目标" special="" waveform="">
+            <Image></Image>
+            <Description>相位检波器比较和信号与差信号的相位关系，提取角度误差的方向信息。在振幅和差式单脉冲系统中，需要通过相位检波来确定目标偏离的方向。相位检波器输出的直流信号，其极性表示目标偏离的方向（左 / 右或上 / 下），幅度表示偏离的大小。这个误差信号经过处理后用于驱动天线伺服系统，实现对目标的自动跟踪。</Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

@@ -20,8 +20,8 @@ InstrumentPanel::InstrumentPanel(QWidget *parent) : QWidget(parent)
 
     mainLayout->addWidget(createPanelItem("电源", "power",  "green"));
     mainLayout->addWidget(createPanelItem("通信", "comm",   "green"));
-    mainLayout->addWidget(createPanelItem("传感", "sensor", "gray"));
-    mainLayout->addWidget(createPanelItem("端口", "port",   "gray"));
+    mainLayout->addWidget(createPanelItem("传感", "sensor", "green"));
+    mainLayout->addWidget(createPanelItem("端口", "port",   "green"));
     mainLayout->addSpacing(10);
 
     // ===== 目标模块 =====

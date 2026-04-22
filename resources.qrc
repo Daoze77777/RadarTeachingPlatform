@@ -76,6 +76,22 @@
         <file>resources/xml/jltmh_test.xml</file>
         <file>resources/xml/jlgz.xml</file>
         <file>resources/xml/jlgz_test.xml</file>
+        <file>resources/xml/xwfjdcl.xml</file>
+        <file>resources/xml/xwfjdcl_test.xml</file>
+        <file>resources/xml/zffjdcl.xml</file>
+        <file>resources/xml/zffjdcl_test.xml</file>
+        <file>resources/xml/jdzdgz.xml</file>
+        <file>resources/xml/jdzdgz_test.xml</file>
+        <file>resources/xml/dmccj.xml</file>
+        <file>resources/xml/dmccj_test.xml</file>
+        <file>resources/xml/xkz.xml</file>
+        <file>resources/xml/xkz_test.xml</file>
+        <file>resources/xml/jsdmh.xml</file>
+        <file>resources/xml/jsdmh_test.xml</file>
+        <file>resources/xml/sdmh.xml</file>
+        <file>resources/xml/sdmh_test.xml</file>
+        <file>resources/xml/sscs.xml</file>
+        <file>resources/xml/sscs_test.xml</file>
     </qresource>
     <qresource prefix="/assets">
         <file>resources/assets/MCFJLCL/MCFCJYLT.png</file>

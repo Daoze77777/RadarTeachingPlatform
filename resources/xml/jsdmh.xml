@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="14" name="脉冲雷达解速度模糊实验" type="demo" txCount="0" bottomImagePath="resources/assets/MCLDJMH/01.png">
+
+    <GroupRadar visible="false">
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="什么是DPRF解速度模糊？">
+            <Image>resources/assets/MCLDJMH/9.png</Image>
+            <Description><![CDATA[DPRF（Dual PRF）是使用两个不同的脉冲重复频率来解决速度模糊问题的方法。<br><br>工作原理：<br>使用两个 PRF（如 PRF1 和 PRF2）交替发射脉冲，每个 PRF 都会产生不同的速度模糊模式。通过中国剩余定理，结合两个 PRF 测得的模糊速度，可以解算出真实速度。<br><br>解模糊原理：<br>设两个 PRF 分别为 fr1 和 fr2，对应的最大不模糊速度为 Va1 和 Va2。当目标真实速度 V 产生模糊时，测得的速度分别为 v1 和 v2，满足：<br>V = v1 + n1·2Va1 = v2 + n2·2Va2<br>利用中国剩余定理可唯一确定 V 的值。<br><br>优点：<br>• 能够扩展不模糊速度范围<br>• 实现简单，硬件成本低<br>• 实时性好<br>• 是气象雷达最常用的解速度模糊方法]]></Description>        
+        </Item>
+        <Item id="p1" title="什么是软件解速度模糊？">
+            <Image>resources/assets/MCLDJMH/10.png</Image>
+            <Description><![CDATA[软件解速度模糊是通过信号处理算法对模糊的速度数据进行后处理，恢复真实速度的方法。<br><br><b>主要方法：</b><br>1. 多 PRF 算法：使用多个 PRF 的测量结果，通过算法解算真实速度<br>2. 相位展开：利用相位信息进行速度解模糊，基于空间连续性假设展开相位<br>3. 频谱分析：通过 FFT 等方法分析速度谱，识别真实速度峰值<br>4. 环境风场约束：利用背景风场信息约束解模糊结果<br><br><b>优点：</b><br>• 灵活性高，可适应不同场景<br>• 可以处理复杂的模糊情况<br>• 精度可通过算法优化提升<br>• 适合后处理和质量控制]]></Description>        
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="展示DPRF退速度模糊图" special="noLight" waveform="">
+            <Image></Image>
+            <Description><![CDATA[<b>实验目的：</b>展示双脉冲重复频率（DPRF）方法解决速度模糊问题的原理图<br><br><b>DPRF 解模糊原理：</b><br>• DPRF 是使用两个不同脉冲重复频率来解决速度模糊的方法<br>• 设两个 PRF 分别为 fr1 和 fr2，对应最大不模糊速度 Va1 和 Va2<br>• 当目标真实速度 V 产生模糊时，测得速度分别为 v1 和 v2<br><br><b>数学关系：</b><br>V = v1 + n1·2Va1 = v2 + n2·2Va2<br>利用中国剩余定理可唯一确定 V 的值<br><br><b>观察要点：</b><br>请观察右侧 DPRF 退速度模糊原理图，理解双 PRF 交替发射的工作机制]]></Description>   
+        </Item>
+        <Item id="s2" title="展示DPRF退速度清晰图" waveform="">
+            <Image></Image>
+            <Description><![CDATA[<b>实验目的：</b>展示 DPRF 方法解模糊后得到的清晰速度测量结果<br><br><b>解模糊效果对比：</b><br>• 解模糊前：由于采样率限制，高速目标被误测为低速<br>• 解模糊后：通过 DPRF 技术恢复目标真实速度<br>• 速度测量精度显著提升，消除了周期性模糊<br><br><b>清晰图特征：</b><br>• 速度值连续无跳变<br>• 速度范围扩展到原来的数倍<br>• 高速运动目标得到正确识别<br><br><b>观察要点：</b><br>对比模糊图和清晰图，观察 DPRF 解模糊的实际效果]]></Description>       
+        </Item>
+        <Item id="s3" title="雷达气象折叠模糊成因" waveform="">
+            <Image></Image>
+            <Description><![CDATA[<b>实验目的：</b>介绍雷达气象学中折叠模糊的物理成因<br><br><b>折叠模糊成因：</b><br>• 当目标的多普勒频移 fd 大于脉冲重复频率 fr 的一半时<br>• 会出现频闪效应，回波功率谱线发生折叠错位<br>• 对 fd 的识别产生混淆，造成测速模糊<br>• 雷达气象学称其为折叠模糊]]></Description>        
+        </Item>
+        <Item id="s4" title="软件解速度模糊图" waveform="">
+            <Image></Image>
+            <Description><![CDATA[<b>实验目的：</b>展示通过软件算法进行速度解模糊的原理和方法<br><br><b>软件解模糊方法：</b><br>• 多 PRF 算法：使用多个 PRF 测量结果，通过算法解算真实速度<br>• 相位展开：利用相位信息进行速度解模糊，基于空间连续性假设展开相位<br>• 频谱分析：通过 FFT 等方法分析速度谱，识别真实速度峰值<br>• 环境风场约束：利用背景风场信息约束解模糊结果<br><br><b>观察要点：</b><br>请观察右侧软件解模糊原理图，了解算法工作流程]]></Description>        
+        </Item>
+         <Item id="s5" title="软件解速度模糊处理" waveform="">
+            <Image></Image>
+            <Description><![CDATA[<b>实验目的：</b>实际演示软件解速度模糊的处理过程和结果<br><br><b>处理流程：</b><br>1. 数据采集：获取双 PRF 或多 PRF 的速度测量数据<br>2. 模糊检测：识别可能存在模糊的区域或目标<br>3. 解模糊计算：应用中国剩余定理或其他算法解算<br>4. 结果验证：检验解模糊结果的合理性<br><br><b>处理效果：</b><br>• 高速目标正确识别<br>• 消除速度跳变和不连续<br><br><b>观察要点：</b><br>观察软件解模糊的实际效果，对比处理前后的差异]]></Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>

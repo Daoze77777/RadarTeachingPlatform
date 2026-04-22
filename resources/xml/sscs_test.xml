@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="12" name="瞬时测速实验" type="test" txCount="12" bottomImagePath="resources/assets/SSCS/01.png">
+
+    <GroupRadar visible="true">
+       <Item id="CWT" title="连续波发射机">
+            <Image>resources/assets/SSCS/1.png</Image>
+            <Description>连续波发射机是瞬时测速雷达系统的核心发射组件，产生稳定的连续电磁波信号。与脉冲雷达不同，连续波发射机持续输出恒定频率和幅度的微波信号，不需要脉冲调制。发射机采用高稳定度振荡器确保频率精度，通常工作在 X 波段（8-12GHz）或更高频段。连续波体制特别适合多普勒测速，因为可以精确测量目标运动产生的频率偏移。发射功率相对较小但效率高，典型功率为毫瓦到瓦级，具有良好的频率稳定性和相位噪声特性。发射机内部集成了功率监控和保护电路，确保长时间稳定工作。通过测量发射波与回波之间的多普勒频移，系统能够精确计算目标的径向速度，实现瞬时测速功能。</Description>
+        </Item>
+        <Item id="Power Amplifier" title="功率放大器">
+            <Image>resources/assets/SSCS/2.png</Image>
+            <Description>功率放大器是瞬时测速雷达发射链路的关键组件，负责将连续波发射机产生的微弱信号放大到所需的发射功率水平。功率放大器采用多级放大结构，包括前级驱动放大和末级功率放大，确保信号的线性放大。放大器工作在连续波模式下，需要良好的散热设计和热管理。采用高效率的功率管如 GaN 或 GaAs 器件，提供稳定的增益和低失真输出。放大器具有自动增益控制（AGC）功能，可根据需要调节输出功率。内置保护电路防止过载和失配损坏，支持故障检测和状态监控。功率放大器的线性度和相位稳定性直接影响多普勒测速精度，因此设计上特别注重相位噪声抑制和频谱纯度。</Description>
+        </Item> 
+         <Item id="Phase detector" title="相位检波器">
+            <Image>resources/assets/SSCS/3.png</Image>
+            <Description>相位检波器是瞬时测速雷达接收系统的核心解调组件，用于提取回波信号中的多普勒频率信息。相位检波器采用相干检测技术，将接收到的回波信号与本振参考信号进行混频，提取出包含目标速度信息的多普勒频移。检波器具有高灵敏度和宽动态范围，能够检测微弱的相位变化。采用正交 I/Q 解调结构，可同时获取速度的大小和方向信息。相位检波器的相位精度直接决定速度测量精度，典型相位分辨率可达 0.1 度。内部集成低噪声放大器和滤波器，提高信噪比。通过精确的相位测量和处理，相位检波器输出与目标径向速度成正比的多普勒频率信号，为后续的速度计算提供准确的基础数据。</Description>
+        </Item> 
+         <Item id="Doppler filter" title="多普勒滤波器">
+            <Image>resources/assets/SSCS/4.png</Image>
+            <Description>多普勒滤波器是瞬时测速雷达信号处理的重要组件，用于从复杂的回波信号中提取特定的多普勒频率成分。滤波器采用窄带带通设计，中心频率可调，能够精确选择感兴趣的速度范围。多普勒滤波器组由多个并行的窄带滤波器组成，每个滤波器对应一个速度通道，实现速度的精细分辨。采用数字信号处理技术，通过 FFT 或滤波器组实现高效的频谱分析。滤波器具有良好的频率选择性和带外抑制能力，有效滤除杂波和干扰。自适应滤波算法可根据环境动态调整滤波参数，提高在复杂环境下的测速性能。多普勒滤波器输出清晰的速度谱，使系统能够同时测量多个目标的速度，实现多目标瞬时测速。</Description>
+        </Item> 
+         <Item id="Indicator" title="指示器">
+            <Image>resources/assets/SSCS/5.png</Image>
+            <Description>指示器是瞬时测速雷达的显示终端，直观呈现目标的速度测量结果。指示器采用数字显示技术，可实时显示目标的瞬时速度值，精度可达 0.1m/s 或 0.1km/h。显示界面包括速度数值显示、速度 - 时间曲线、速度分布直方图等多种显示模式。指示器支持多目标同时显示，用不同颜色或符号区分各个目标。具有速度报警功能，当检测到超速目标时发出声光报警。内置数据记录功能，可存储历史测速数据供后续分析。指示器提供友好的人机界面，支持触摸屏操作和参数设置。通过 RS232/485 或以太网接口，可将测速数据传输到上位机或控制中心。指示器的实时性和准确性确保操作人员能够及时获取目标速度信息。</Description>
+        </Item> 
+         <Item id="Pulse Debugger" title="脉冲调试器">
+            <Image>resources/assets/SSCS/6.png</Image>
+            <Description>脉冲调制器在瞬时测速雷达中用于产生测试和校准脉冲，虽然主体工作在连续波模式，但脉冲调制器用于系统自检和性能验证。调制器能够产生精确的调制脉冲，用于模拟不同速度的目标回波。采用直接数字合成（DDS）技术，可精确控制脉冲参数。调制器支持多种调制方式，包括幅度调制、频率调制和相位调制。内置校准信号源，产生已知多普勒频移的参考信号，用于系统校准。脉冲调制器还可用于产生门控信号，实现距离选通功能，提高特定距离范围内的测速精度。通过程控接口，可灵活设置调制参数，满足不同测试需求。脉冲调制器的精度和稳定性确保系统测速性能的可靠性。</Description>
+        </Item> 
+         <Item id="Receiver" title="接收机">
+            <Image>resources/assets/SSCS/7.png</Image>
+            <Description>接收机是瞬时测速雷达接收链路的核心组件，负责接收和处理目标反射的微弱回波信号。接收机采用超外差式结构，具有高灵敏度和大动态范围。前端低噪声放大器（LNA）将微弱信号放大，同时保持低噪声系数。混频器将射频信号下变频到中频，便于后续处理。中频放大器提供主要增益，采用自动增益控制（AGC）适应不同强度的回波。接收机带宽根据预期的多普勒频移范围设计，确保覆盖所有可能的目标速度。内置滤波器组抑制带外干扰和杂散信号。接收机的相位稳定性和频率精度直接影响测速精度，因此采用高稳定度本振和温度补偿设计。输出的中频信号包含完整的多普勒信息，为速度测量提供高质量的信号源。</Description>
+        </Item> 
+         <Item id="Continuous oscillator" title="连续振荡器">
+            <Image>resources/assets/SSCS/8.png</Image>
+            <Description>连续振荡器是瞬时测速雷达的频率基准源，为发射机和接收机提供高稳定度的本振信号。振荡器采用温度补偿晶体振荡器（TCXO）或恒温晶体振荡器（OCXO）作为参考源，确保长期频率稳定度。通过锁相环（PLL）技术，将参考频率倍频到所需的微波频段。振荡器具有极低的相位噪声特性，典型值在 - 120dBc/Hz@10kHz 以下。频率稳定度优于10−9，确保多普勒频移测量的准确性。振荡器输出功率稳定，具有良好的频谱纯度。支持频率微调功能，可通过外部控制进行频率校准。内置监测电路，实时监控振荡器工作状态。连续振荡器的性能直接决定了整个雷达系统的测速精度和稳定性。</Description>
+        </Item> 
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="连续波多普勒雷达原理">
+            <Image>resources/assets/SSCS/22.png</Image>
+            <Description>连续波多普勒雷达是基于多普勒频移效应的测速雷达系统。系统连续发射恒定频率的电磁波，当电磁波遇到运动目标时，反射回波的频率会发生偏移，这种频率偏移称为多普勒频移。多普勒频移Δf与目标径向速度vr​的关系为：Δf=c2vr​⋅f0​​其中f0​为发射频率，c为光速。连续波雷达通过混频器将发射信号与回波信号进行混频，得到包含多普勒频移信息的差频信号。经过放大和滤波处理后，通过频率测量电路精确测定多普勒频移，进而计算出目标的径向速度。连续波体制具有测速精度高、实时性好的优点，但无法直接测量目标距离，主要用于交通测速、工业测速等应用场景。系统结构相对简单，功耗较低，适合小型化应用。</Description>
+        </Item>
+        <Item id="p1" title="脉冲多普勒雷达原理">
+            <Image>resources/assets/SSCS/23.png</Image>
+            <Description>脉冲多普勒雷达结合了脉冲雷达的测距能力和多普勒雷达的测速能力，是现代雷达系统的主流技术。系统发射周期性脉冲信号，通过测量脉冲的飞行时间实现距离测量，同时利用连续脉冲之间的相位关系提取多普勒信息进行速度测量。脉冲多普勒雷达采用相参检测技术，保持各脉冲间的相位相干性。回波信号经过正交检波后得到 I、Q 两路基带信号，通过相位比较器测量相邻脉冲间的相位差，从而计算出多普勒频移和目标速度。系统具有同时测距测速的能力，能够区分不同距离上的多个目标及其运动状态。通过脉冲压缩技术可以进一步提高距离分辨率。脉冲多普勒雷达广泛应用于空中交通管制、气象监测、导弹制导等领域，是现代雷达技术发展的重要方向。</Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标速度" special="noLight" waveform="">
+            <Image>resources/assets/SSCS/huagui.png</Image>
+            <Description>请手动调整目标物体的运动位置，系统会根据该位置值换算出目标物体的运动速度（约0∼30 m/s），用于后续多普勒频率的计算。</Description>
+        </Item>
+        <Item id="s2" title="连续波发射信号" waveform="">
+            <Image>resources/assets/SSCS/9.png</Image>
+            <Description>请观察连续波发射信号的频谱特征。图中在工作频率附近（约 9.34 GHz）出现一条窄而高的谱线，其余频率处仅有较低噪声，说明发射的是单一频率、功率稳定的连续波。</Description>
+        </Item>
+        <Item id="s3" title="连续波接收信号" waveform="">
+            <Image>resources/assets/SSCS/10.png</Image>
+            <Description>请观察连续波接收信号的频谱特征，并与连续波发射信号进行对比。可以看到接收谱线中心频率基本不变，但幅度减小、噪声底升高，反映了传播损耗和目标反射对信号的影响。</Description>
+        </Item>
+        <Item id="s4" title="相位检波器输出信号" waveform="">
+            <Image>resources/assets/SSCS/11.png</Image>
+            <Description>请观察相位检波器输出信号的频谱特征。发射与接收信号经相干检波后变为低频差拍信号，在低频段出现明显谱线，其中主峰对应的频率即多普勒频率 fd​，与目标径向速度成正比。</Description>
+        </Item>
+        <Item id="s5" title="多普勒频率信号" waveform="">
+            <Image>resources/assets/SSCS/12.png</Image>
+            <Description>请观察多普勒频率信号的频域波形。图中横轴为频率（Hz），纵轴为电压（V），在雷达照射时间内信号保持近似恒幅输出，其持续时间对应观测时间，后续将依据该信号的多普勒频率计算目标运动速度。</Description>
+        </Item>
+        <Item id="s6" title="计算目标运动速度" waveform="">
+            <Image></Image>
+            <Description>根据测得的多普勒频移，利用公式 v=fd​⋅λ/2 计算目标的径向运动速度。其中v为目标速度，fd​为多普勒频率，λ为雷达工作波长。这是连续波多普勒雷达测速的核心计算过程，体现了多普勒效应在雷达测速中的实际应用。</Description>
+        </Item>
+         <Item id="s7" title="设置目标速度" special="noLight" waveform="">
+            <Image>resources/assets/SSCS/huagui.png</Image>
+            <Description>请重新调整目标物体的运动速度，为脉冲多普勒雷达测速实验做准备。</Description>
+        </Item>
+         <Item id="s8" title="连续振荡信号" waveform="">
+            <Image>resources/assets/SSCS/13.png</Image>
+            <Description>连续振荡信号为雷达发射机和本振产生的稳定载频正弦波，是形成脉冲载波以及实现相干检波的基础信号，频率稳定性直接影响测速精度。</Description>
+        </Item>
+         <Item id="s9" title="脉冲发射信号" waveform="">
+            <Image>resources/assets/SSCS/14.png</Image>
+            <Description>脉冲发射信号通过对连续振荡信号进行脉冲调制得到，在每个脉冲重复周期内发射一串载频脉冲，其脉宽和重复频率决定雷达的距离分辨率和测速模糊范围。</Description>
+        </Item>
+         <Item id="s10" title="回波信号(固定)" waveform="">
+            <Image>resources/assets/SSCS/15.png</Image>
+            <Description>回波信号（固定）表示来自地面或建筑物等固定目标的回波，由于没有径向速度，其相邻脉冲间相位基本不变，主要形成背景杂波，用于对比运动目标回波特性。</Description>
+        </Item>
+         <Item id="s11" title="回波信号(运动)" waveform="">
+            <Image>resources/assets/SSCS/16.png</Image>
+            <Description>回波信号（运动）表示来自运动目标的回波，相邻脉冲间会产生连续的相位变化，体现为多普勒频移，为后续相干处理和测速提供基础信息。</Description>
+        </Item>
+         <Item id="s12" title="相干检波器信号(固定)" waveform="">
+            <Image>resources/assets/SSCS/17.png</Image>
+            <Description>相干检波器对固定目标回波与本振信号进行混频，输出的基带信号幅度较大但频率接近零，主要表现为低频或直流成分，是脉冲多普勒中需要抑制的固定杂波。</Description>
+        </Item>
+         <Item id="s13" title="相干检波器信号(运动)" waveform="">
+            <Image>resources/assets/SSCS/18.png</Image>
+            <Description>相干检波器对运动目标回波进行混频后，输出的基带信号在时间上呈现周期性变化，等效频率即为多普勒频率，用于在后续处理中区分不同速度的运动目标。</Description>
+        </Item>
+         <Item id="s14" title="回波脉冲包络信号" waveform="">
+            <Image>resources/assets/SSCS/19.png</Image>
+            <Description>回波脉冲包络信号是对相干检波输出进行包络检波和抽样后得到的结果，反映各个距离单元内回波强度随脉冲序号的变化情况，是进行距离 — 多普勒处理的输入信号。</Description>
+        </Item>
+         <Item id="s15" title="多普勒频率信号" waveform="">
+            <Image>resources/assets/SSCS/20.png</Image>
+            <Description>请观察脉冲多普勒系统的频域波形。图中横轴为频率（Hz），纵轴为电压（V），在雷达照射时间内信号保持近似恒幅输出，其持续时间对应观测时间，后续将依据该信号的多普勒频率计算目标运动速度。</Description>
+        </Item>
+         <Item id="s16" title="计算目标运动速度" waveform="">
+            <Image></Image>
+            <Description>基于脉冲多普勒雷达测得的多普勒频移，利用相同的计算公式 v=fd​⋅λ/2 计算目标的径向运动速度。脉冲多普勒体制在保持高测速精度的同时，还能提供精确的距离信息，实现了距离 - 速度的综合测量能力。</Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>
+<?xml version="1.0" encoding="UTF-8"?>
+<Experiment id="12" name="瞬时测速实验" type="demo" txCount="12" bottomImagePath="resources/assets/SSCS/01.png">
+
+    <GroupRadar visible="true">
+       <Item id="CWT" title="连续波发射机">
+            <Image>resources/assets/SSCS/1.png</Image>
+            <Description>连续波发射机是瞬时测速雷达系统的核心发射组件，产生稳定的连续电磁波信号。与脉冲雷达不同，连续波发射机持续输出恒定频率和幅度的微波信号，不需要脉冲调制。发射机采用高稳定度振荡器确保频率精度，通常工作在 X 波段（8-12GHz）或更高频段。连续波体制特别适合多普勒测速，因为可以精确测量目标运动产生的频率偏移。发射功率相对较小但效率高，典型功率为毫瓦到瓦级，具有良好的频率稳定性和相位噪声特性。发射机内部集成了功率监控和保护电路，确保长时间稳定工作。通过测量发射波与回波之间的多普勒频移，系统能够精确计算目标的径向速度，实现瞬时测速功能。</Description>
+        </Item>
+        <Item id="Power Amplifier" title="功率放大器">
+            <Image>resources/assets/SSCS/2.png</Image>
+            <Description>功率放大器是瞬时测速雷达发射链路的关键组件，负责将连续波发射机产生的微弱信号放大到所需的发射功率水平。功率放大器采用多级放大结构，包括前级驱动放大和末级功率放大，确保信号的线性放大。放大器工作在连续波模式下，需要良好的散热设计和热管理。采用高效率的功率管如 GaN 或 GaAs 器件，提供稳定的增益和低失真输出。放大器具有自动增益控制（AGC）功能，可根据需要调节输出功率。内置保护电路防止过载和失配损坏，支持故障检测和状态监控。功率放大器的线性度和相位稳定性直接影响多普勒测速精度，因此设计上特别注重相位噪声抑制和频谱纯度。</Description>
+        </Item> 
+         <Item id="Phase detector" title="相位检波器">
+            <Image>resources/assets/SSCS/3.png</Image>
+            <Description>相位检波器是瞬时测速雷达接收系统的核心解调组件，用于提取回波信号中的多普勒频率信息。相位检波器采用相干检测技术，将接收到的回波信号与本振参考信号进行混频，提取出包含目标速度信息的多普勒频移。检波器具有高灵敏度和宽动态范围，能够检测微弱的相位变化。采用正交 I/Q 解调结构，可同时获取速度的大小和方向信息。相位检波器的相位精度直接决定速度测量精度，典型相位分辨率可达 0.1 度。内部集成低噪声放大器和滤波器，提高信噪比。通过精确的相位测量和处理，相位检波器输出与目标径向速度成正比的多普勒频率信号，为后续的速度计算提供准确的基础数据。</Description>
+        </Item> 
+         <Item id="Doppler filter" title="多普勒滤波器">
+            <Image>resources/assets/SSCS/4.png</Image>
+            <Description>多普勒滤波器是瞬时测速雷达信号处理的重要组件，用于从复杂的回波信号中提取特定的多普勒频率成分。滤波器采用窄带带通设计，中心频率可调，能够精确选择感兴趣的速度范围。多普勒滤波器组由多个并行的窄带滤波器组成，每个滤波器对应一个速度通道，实现速度的精细分辨。采用数字信号处理技术，通过 FFT 或滤波器组实现高效的频谱分析。滤波器具有良好的频率选择性和带外抑制能力，有效滤除杂波和干扰。自适应滤波算法可根据环境动态调整滤波参数，提高在复杂环境下的测速性能。多普勒滤波器输出清晰的速度谱，使系统能够同时测量多个目标的速度，实现多目标瞬时测速。</Description>
+        </Item> 
+         <Item id="Indicator" title="指示器">
+            <Image>resources/assets/SSCS/5.png</Image>
+            <Description>指示器是瞬时测速雷达的显示终端，直观呈现目标的速度测量结果。指示器采用数字显示技术，可实时显示目标的瞬时速度值，精度可达 0.1m/s 或 0.1km/h。显示界面包括速度数值显示、速度 - 时间曲线、速度分布直方图等多种显示模式。指示器支持多目标同时显示，用不同颜色或符号区分各个目标。具有速度报警功能，当检测到超速目标时发出声光报警。内置数据记录功能，可存储历史测速数据供后续分析。指示器提供友好的人机界面，支持触摸屏操作和参数设置。通过 RS232/485 或以太网接口，可将测速数据传输到上位机或控制中心。指示器的实时性和准确性确保操作人员能够及时获取目标速度信息。</Description>
+        </Item> 
+         <Item id="Pulse Debugger" title="脉冲调试器">
+            <Image>resources/assets/SSCS/6.png</Image>
+            <Description>脉冲调制器在瞬时测速雷达中用于产生测试和校准脉冲，虽然主体工作在连续波模式，但脉冲调制器用于系统自检和性能验证。调制器能够产生精确的调制脉冲，用于模拟不同速度的目标回波。采用直接数字合成（DDS）技术，可精确控制脉冲参数。调制器支持多种调制方式，包括幅度调制、频率调制和相位调制。内置校准信号源，产生已知多普勒频移的参考信号，用于系统校准。脉冲调制器还可用于产生门控信号，实现距离选通功能，提高特定距离范围内的测速精度。通过程控接口，可灵活设置调制参数，满足不同测试需求。脉冲调制器的精度和稳定性确保系统测速性能的可靠性。</Description>
+        </Item> 
+         <Item id="Receiver" title="接收机">
+            <Image>resources/assets/SSCS/7.png</Image>
+            <Description>接收机是瞬时测速雷达接收链路的核心组件，负责接收和处理目标反射的微弱回波信号。接收机采用超外差式结构，具有高灵敏度和大动态范围。前端低噪声放大器（LNA）将微弱信号放大，同时保持低噪声系数。混频器将射频信号下变频到中频，便于后续处理。中频放大器提供主要增益，采用自动增益控制（AGC）适应不同强度的回波。接收机带宽根据预期的多普勒频移范围设计，确保覆盖所有可能的目标速度。内置滤波器组抑制带外干扰和杂散信号。接收机的相位稳定性和频率精度直接影响测速精度，因此采用高稳定度本振和温度补偿设计。输出的中频信号包含完整的多普勒信息，为速度测量提供高质量的信号源。</Description>
+        </Item> 
+         <Item id="Continuous oscillator" title="连续振荡器">
+            <Image>resources/assets/SSCS/8.png</Image>
+            <Description>连续振荡器是瞬时测速雷达的频率基准源，为发射机和接收机提供高稳定度的本振信号。振荡器采用温度补偿晶体振荡器（TCXO）或恒温晶体振荡器（OCXO）作为参考源，确保长期频率稳定度。通过锁相环（PLL）技术，将参考频率倍频到所需的微波频段。振荡器具有极低的相位噪声特性，典型值在 - 120dBc/Hz@10kHz 以下。频率稳定度优于10−9，确保多普勒频移测量的准确性。振荡器输出功率稳定，具有良好的频谱纯度。支持频率微调功能，可通过外部控制进行频率校准。内置监测电路，实时监控振荡器工作状态。连续振荡器的性能直接决定了整个雷达系统的测速精度和稳定性。</Description>
+        </Item> 
+    </GroupRadar>
+
+    <GroupPrinciple visible="true">
+        <Item id="p1" title="连续波多普勒雷达原理">
+            <Image>resources/assets/SSCS/22.png</Image>
+            <Description>连续波多普勒雷达是基于多普勒频移效应的测速雷达系统。系统连续发射恒定频率的电磁波，当电磁波遇到运动目标时，反射回波的频率会发生偏移，这种频率偏移称为多普勒频移。多普勒频移Δf与目标径向速度vr​的关系为：Δf=c2vr​⋅f0​​其中f0​为发射频率，c为光速。连续波雷达通过混频器将发射信号与回波信号进行混频，得到包含多普勒频移信息的差频信号。经过放大和滤波处理后，通过频率测量电路精确测定多普勒频移，进而计算出目标的径向速度。连续波体制具有测速精度高、实时性好的优点，但无法直接测量目标距离，主要用于交通测速、工业测速等应用场景。系统结构相对简单，功耗较低，适合小型化应用。</Description>
+        </Item>
+        <Item id="p1" title="脉冲多普勒雷达原理">
+            <Image>resources/assets/SSCS/23.png</Image>
+            <Description>脉冲多普勒雷达结合了脉冲雷达的测距能力和多普勒雷达的测速能力，是现代雷达系统的主流技术。系统发射周期性脉冲信号，通过测量脉冲的飞行时间实现距离测量，同时利用连续脉冲之间的相位关系提取多普勒信息进行速度测量。脉冲多普勒雷达采用相参检测技术，保持各脉冲间的相位相干性。回波信号经过正交检波后得到 I、Q 两路基带信号，通过相位比较器测量相邻脉冲间的相位差，从而计算出多普勒频移和目标速度。系统具有同时测距测速的能力，能够区分不同距离上的多个目标及其运动状态。通过脉冲压缩技术可以进一步提高距离分辨率。脉冲多普勒雷达广泛应用于空中交通管制、气象监测、导弹制导等领域，是现代雷达技术发展的重要方向。</Description>
+        </Item>
+    </GroupPrinciple>
+
+    <GroupStep visible="true">
+        <Item id="s1" title="设置目标速度" special="noLight" waveform="">
+            <Image>resources/assets/SSCS/huagui.png</Image>
+            <Description>请手动调整目标物体的运动位置，系统会根据该位置值换算出目标物体的运动速度（约0∼30 m/s），用于后续多普勒频率的计算。</Description>
+        </Item>
+        <Item id="s2" title="连续波发射信号" waveform="">
+            <Image>resources/assets/SSCS/9.png</Image>
+            <Description>请观察连续波发射信号的频谱特征。图中在工作频率附近（约 9.34 GHz）出现一条窄而高的谱线，其余频率处仅有较低噪声，说明发射的是单一频率、功率稳定的连续波。</Description>
+        </Item>
+        <Item id="s3" title="连续波接收信号" waveform="">
+            <Image>resources/assets/SSCS/10.png</Image>
+            <Description>请观察连续波接收信号的频谱特征，并与连续波发射信号进行对比。可以看到接收谱线中心频率基本不变，但幅度减小、噪声底升高，反映了传播损耗和目标反射对信号的影响。</Description>
+        </Item>
+        <Item id="s4" title="相位检波器输出信号" waveform="">
+            <Image>resources/assets/SSCS/11.png</Image>
+            <Description>请观察相位检波器输出信号的频谱特征。发射与接收信号经相干检波后变为低频差拍信号，在低频段出现明显谱线，其中主峰对应的频率即多普勒频率 fd​，与目标径向速度成正比。</Description>
+        </Item>
+        <Item id="s5" title="多普勒频率信号" waveform="">
+            <Image>resources/assets/SSCS/12.png</Image>
+            <Description>请观察多普勒频率信号的频域波形。图中横轴为频率（Hz），纵轴为电压（V），在雷达照射时间内信号保持近似恒幅输出，其持续时间对应观测时间，后续将依据该信号的多普勒频率计算目标运动速度。</Description>
+        </Item>
+        <Item id="s6" title="计算目标运动速度" waveform="">
+            <Image></Image>
+            <Description>根据测得的多普勒频移，利用公式 v=fd​⋅λ/2 计算目标的径向运动速度。其中v为目标速度，fd​为多普勒频率，λ为雷达工作波长。这是连续波多普勒雷达测速的核心计算过程，体现了多普勒效应在雷达测速中的实际应用。</Description>
+        </Item>
+         <Item id="s7" title="设置目标速度" special="noLight" waveform="">
+            <Image>resources/assets/SSCS/huagui.png</Image>
+            <Description>请重新调整目标物体的运动速度，为脉冲多普勒雷达测速实验做准备。</Description>
+        </Item>
+         <Item id="s8" title="连续振荡信号" waveform="">
+            <Image>resources/assets/SSCS/13.png</Image>
+            <Description>连续振荡信号为雷达发射机和本振产生的稳定载频正弦波，是形成脉冲载波以及实现相干检波的基础信号，频率稳定性直接影响测速精度。</Description>
+        </Item>
+         <Item id="s9" title="脉冲发射信号" waveform="">
+            <Image>resources/assets/SSCS/14.png</Image>
+            <Description>脉冲发射信号通过对连续振荡信号进行脉冲调制得到，在每个脉冲重复周期内发射一串载频脉冲，其脉宽和重复频率决定雷达的距离分辨率和测速模糊范围。</Description>
+        </Item>
+         <Item id="s10" title="回波信号(固定)" waveform="">
+            <Image>resources/assets/SSCS/15.png</Image>
+            <Description>回波信号（固定）表示来自地面或建筑物等固定目标的回波，由于没有径向速度，其相邻脉冲间相位基本不变，主要形成背景杂波，用于对比运动目标回波特性。</Description>
+        </Item>
+         <Item id="s11" title="回波信号(运动)" waveform="">
+            <Image>resources/assets/SSCS/16.png</Image>
+            <Description>回波信号（运动）表示来自运动目标的回波，相邻脉冲间会产生连续的相位变化，体现为多普勒频移，为后续相干处理和测速提供基础信息。</Description>
+        </Item>
+         <Item id="s12" title="相干检波器信号(固定)" waveform="">
+            <Image>resources/assets/SSCS/17.png</Image>
+            <Description>相干检波器对固定目标回波与本振信号进行混频，输出的基带信号幅度较大但频率接近零，主要表现为低频或直流成分，是脉冲多普勒中需要抑制的固定杂波。</Description>
+        </Item>
+         <Item id="s13" title="相干检波器信号(运动)" waveform="">
+            <Image>resources/assets/SSCS/18.png</Image>
+            <Description>相干检波器对运动目标回波进行混频后，输出的基带信号在时间上呈现周期性变化，等效频率即为多普勒频率，用于在后续处理中区分不同速度的运动目标。</Description>
+        </Item>
+         <Item id="s14" title="回波脉冲包络信号" waveform="">
+            <Image>resources/assets/SSCS/19.png</Image>
+            <Description>回波脉冲包络信号是对相干检波输出进行包络检波和抽样后得到的结果，反映各个距离单元内回波强度随脉冲序号的变化情况，是进行距离 — 多普勒处理的输入信号。</Description>
+        </Item>
+         <Item id="s15" title="多普勒频率信号" waveform="">
+            <Image>resources/assets/SSCS/20.png</Image>
+            <Description>请观察脉冲多普勒系统的频域波形。图中横轴为频率（Hz），纵轴为电压（V），在雷达照射时间内信号保持近似恒幅输出，其持续时间对应观测时间，后续将依据该信号的多普勒频率计算目标运动速度。</Description>
+        </Item>
+         <Item id="s16" title="计算目标运动速度" waveform="">
+            <Image></Image>
+            <Description>基于脉冲多普勒雷达测得的多普勒频移，利用相同的计算公式 v=fd​⋅λ/2 计算目标的径向运动速度。脉冲多普勒体制在保持高测速精度的同时，还能提供精确的距离信息，实现了距离 - 速度的综合测量能力。</Description>
+        </Item>
+    </GroupStep>
+
+    <GroupCourse visible="true">
+        <Item id="home" title="课程总目录">
+            <Image></Image>
+            <Description>回到目录</Description>
+        </Item>
+    </GroupCourse>
+
+</Experiment>
